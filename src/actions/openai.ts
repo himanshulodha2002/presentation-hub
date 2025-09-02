@@ -9,16 +9,24 @@ import { v4 as uuidv4 } from 'uuid'
 import {
   GoogleGenAI,
 } from '@google/genai'
-import { writeFile } from 'fs'
+import { mkdir, writeFile } from 'fs'
 import mime from 'mime'
 
 function saveBinaryFile(fileName: string, content: Buffer) {
-  writeFile(fileName, content, 'utf8', (err) => {
-    if (err) {
-      console.error(`Error writing file ${fileName}:`, err);
+  const path = require('path');
+  const dir = path.dirname(fileName);
+  mkdir(dir, { recursive: true }, (mkdirErr: any) => {
+    if (mkdirErr && mkdirErr.code !== 'EEXIST') {
+      console.error(`Error creating directory ${dir}:`, mkdirErr);
       return;
     }
-    console.log(`File ${fileName} saved to file system.`);
+    writeFile(fileName, content, 'utf8', (err) => {
+      if (err) {
+        console.error(`Error writing file ${fileName}:`, err);
+        return;
+      }
+      console.log(`File ${fileName} saved to file system.`);
+    });
   });
 }
 
