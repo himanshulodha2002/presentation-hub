@@ -1,18 +1,18 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { motion, useScroll, useTransform } from "framer-motion";
 import {
   ArrowRight,
+  ArrowUpRight,
   CheckCircle,
+  Play,
   Presentation,
   Sparkles,
   Wand2,
   Zap,
-  ArrowUpRight,
-  Play,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -46,7 +46,7 @@ export default function LandingPage() {
               <div className="absolute inset-0 rotate-45 scale-0 bg-white transition-transform duration-300 group-hover:scale-100" />
               <Presentation className="h-6 w-6 text-white relative transition-transform duration-300 group-hover:scale-110" />
             </div>
-            <span className="font-bold text-xl tracking-tight">Luneth</span>
+            <span className="font-bold text-xl tracking-tight">Presentation Hub</span>
           </Link>
           <div className="hidden md:flex items-center space-x-8">
             <Link
@@ -137,7 +137,7 @@ export default function LandingPage() {
               src="/Hero.png"
               width={1200}
               height={675}
-              alt="Luneth Interface"
+              alt="Presentation Hub Interface"
               className="relative rounded-lg border border-white/10 shadow-2xl"
             />
           </motion.div>
@@ -396,7 +396,7 @@ export default function LandingPage() {
                   <div className="absolute inset-0 rotate-45 scale-0 bg-white transition-transform duration-300 group-hover:scale-100" />
                   <Presentation className="h-6 w-6 text-white relative transition-transform duration-300 group-hover:scale-110" />
                 </div>
-                <span className="font-bold text-xl tracking-tight">Luneth</span>
+                <span className="font-bold text-xl tracking-tight">Presentation Hub</span>
               </Link>
               <p className="text-gray-400">
                 Create stunning presentations with the power of AI
@@ -464,7 +464,7 @@ export default function LandingPage() {
             </div>
           </div>
           <div className="mt-20 pt-8 border-t border-white/10 text-center text-gray-400">
-            <p>&copy; {new Date().getFullYear()} Luneth. All rights reserved.</p>
+            <p>&copy; {new Date().getFullYear()} Presentaion Hub. All rights reserved.</p>
           </div>
         </div>
       </footer>
@@ -544,7 +544,7 @@ const premiumFeatures = [
 const testimonials = [
   {
     content:
-      "Luneth has revolutionized how we create presentations. What used to take hours now takes minutes!",
+      "Presentation Hub has revolutionized how we create presentations. What used to take hours now takes minutes!",
     name: "Sarah Johnson",
     role: "Marketing Director",
     avatar: "/sarah.jpg",
@@ -558,7 +558,7 @@ const testimonials = [
   },
   {
     content:
-      "As a startup founder, Luneth has saved me countless hours in creating investor presentations.",
+      "As a startup founder, Presentation Hub has saved me countless hours in creating investor presentations.",
     name: "Emily Rodriguez",
     role: "CEO",
     avatar: "/emily.jpg",
