@@ -9,26 +9,11 @@ import { v4 as uuidv4 } from 'uuid'
 import {
   GoogleGenAI,
 } from '@google/genai'
-import { mkdir, writeFile } from 'fs'
+// import { mkdir, writeFile } from 'fs'
+import { put } from '@vercel/blob'
 import mime from 'mime'
 
-function saveBinaryFile(fileName: string, content: Buffer) {
-  const path = require('path');
-  const dir = path.dirname(fileName);
-  mkdir(dir, { recursive: true }, (mkdirErr: any) => {
-    if (mkdirErr && mkdirErr.code !== 'EEXIST') {
-      console.error(`Error creating directory ${dir}:`, mkdirErr);
-      return;
-    }
-    writeFile(fileName, content, 'utf8', (err) => {
-      if (err) {
-        console.error(`Error writing file ${fileName}:`, err);
-        return;
-      }
-      console.log(`File ${fileName} saved to file system.`);
-    });
-  });
-}
+// saveBinaryFile is no longer needed; using Vercel Blob instead
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -557,9 +542,13 @@ const generateImageUrl = async (prompt: string): Promise<string> => {
         const inlineData = chunk.candidates[0].content.parts[0].inlineData;
         const fileExtension = mime.getExtension(inlineData.mimeType || '');
         const buffer = Buffer.from(inlineData.data || '', 'base64');
-        const fullFileName = `${fileName}.${fileExtension}`;
-  saveBinaryFile(`public/${fullFileName}`, buffer);
-  imageFileName = `/${fullFileName}`;
+        const blobPath = `images/${fileName}.${fileExtension}`;
+        try {
+          const { url } = await put(blobPath, buffer, { access: 'public' });
+          imageFileName = url;
+        } catch (err) {
+          console.error('Failed to upload image to Vercel Blob:', err);
+        }
         // Only return the first image for now
         break;
       }
