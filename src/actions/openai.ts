@@ -506,7 +506,7 @@ const generateImageUrl = async (prompt: string): Promise<string> => {
   // Gemini Flash 2.0 streaming image generation (user-provided code)
   try {
     const ai = new GoogleGenAI({
-      apiKey: process.env.GOOGLE_GENAI_API_KEY || 'AIzaSyDea5raRIMEipE3AS7IQ0VjCpmNZq_u6Bc',
+      apiKey: process.env.GOOGLE_GENAI_API_KEY,
     });
     const config = {
       responseModalities: [
