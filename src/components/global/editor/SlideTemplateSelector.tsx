@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import { Button } from "@/components/ui/button";
 import {
     Dialog,
     DialogContent,
@@ -8,25 +8,25 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
-    BlankCard,
     AccentLeft,
     AccentRight,
+    BlankCard,
+    FourColumns,
+    FourImageColumns,
     ImageAndText,
+    TableLayout,
     TextAndImage,
-    TwoColumns,
-    TwoColumnsWithHeadings,
     ThreeColumns,
     ThreeColumnsWithHeadings,
-    FourColumns,
-    TwoImageColumns,
     ThreeImageColumns,
-    FourImageColumns,
-    TableLayout,
+    TwoColumns,
+    TwoColumnsWithHeadings,
+    TwoImageColumns,
 } from "@/lib/slideLayouts";
 import { LayoutSlides } from "@/lib/types";
+import React from "react";
 
 interface SlideTemplateSelectorProps {
     open: boolean;

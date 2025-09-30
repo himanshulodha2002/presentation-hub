@@ -1,18 +1,18 @@
 "use client";
 
-import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
-import { SlideTemplateSelector } from "./SlideTemplateSelector";
-import { LayoutSlides } from "@/lib/types";
-import { useSlideStore } from "@/store/useSlideStore";
-import { v4 } from "uuid";
 import {
     Tooltip,
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { LayoutSlides } from "@/lib/types";
+import { useSlideStore } from "@/store/useSlideStore";
+import { Plus } from "lucide-react";
+import React, { useState } from "react";
+import { v4 } from "uuid";
+import { SlideTemplateSelector } from "./SlideTemplateSelector";
 
 export function AddSlideButton() {
     const [showTemplateSelector, setShowTemplateSelector] = useState(false);
