@@ -27,23 +27,50 @@ export const generateCreativePrompt = async (userPrompt: string) => {
   })
 
   const finalPrompt = `
-    Create a coherent and relevant outline for the following prompt: ${userPrompt}.
-    The outline should consist of at least 6 points, with each point written as a single sentence.
-    Ensure the outline is well-structured and directly related to the topic. 
-    Return the output in the following JSON format:
-  
-    {
-      "outlines": [
-        "Point 1",
-        "Point 2",
-        "Point 3",
-        "Point 4",
-        "Point 5",
-        "Point 6"
-      ]
-    }
-  
-    Ensure that the JSON is valid and properly formatted. Do not include any other text or explanations outside the JSON.
+<role>
+You are an expert presentation strategist and content creator, specializing in developing comprehensive and engaging presentation outlines. Your role is to transform user ideas into well-structured, professional presentation frameworks that capture audience attention and deliver clear value.
+</role>
+
+<task_context>
+Your task is to analyze the user's presentation topic and create a coherent, compelling outline that follows best practices for presentation structure. The presentation should have a logical flow, engaging content points, and practical value for the intended audience.
+
+User's presentation topic: "${userPrompt}"
+</task_context>
+
+<outline_requirements>
+1. Create at least 6 main points that comprehensively cover the topic
+2. Each point should be a clear, actionable statement (not questions)
+3. Ensure logical progression from introduction to conclusion
+4. Include practical insights, examples, or actionable takeaways
+5. Make each point substantial enough to warrant its own slide
+6. Focus on value delivery and audience engagement
+</outline_requirements>
+
+<output_format>
+Return your response in this exact JSON format:
+
+{
+  "outlines": [
+    "Point 1: [Clear, specific statement]",
+    "Point 2: [Clear, specific statement]",
+    "Point 3: [Clear, specific statement]",
+    "Point 4: [Clear, specific statement]",
+    "Point 5: [Clear, specific statement]",
+    "Point 6: [Clear, specific statement]"
+  ]
+}
+
+Ensure the JSON is valid and contains no additional text or explanations.
+</output_format>
+
+<thinking_process>
+Consider:
+1. **Audience needs**: What would be most valuable for someone interested in this topic?
+2. **Logical flow**: How should ideas build upon each other?
+3. **Engagement**: What points will capture and maintain attention?
+4. **Actionability**: What concrete insights can the audience apply?
+5. **Completeness**: Does this outline comprehensively address the topic?
+</thinking_process>
     `
 
   try {
@@ -53,15 +80,15 @@ export const generateCreativePrompt = async (userPrompt: string) => {
         {
           role: 'system',
           content:
-            'You are a helpful AI that generates outlines for presentations.',
+            'You are an expert presentation strategist and content architect. You specialize in creating compelling, well-structured presentation outlines that engage audiences and deliver clear value. Your expertise lies in transforming ideas into coherent, professional presentation frameworks.',
         },
         {
           role: 'user',
           content: finalPrompt,
         },
       ],
-      max_tokens: 1000,
-      temperature: 0.0,
+      max_tokens: 1200,
+      temperature: 0.1,
     })
 
     const responseContent = completion.choices[0].message?.content
@@ -591,37 +618,68 @@ const replaceImagePlaceholders = async (layout: Slide) => {
 }
 
 export const generateLayoutsJson = async (outlineArray: string[]) => {
-  const prompt = `### Guidelines
-You are a highly creative AI that generates JSON-based layouts for presentations. I will provide you with a pattern and a format to follow, and for each outline, you must generate unique layouts and contents and give me the output in the JSON format expected.
-Our final JSON output is a combination of layouts and elements. The available LAYOUTS TYPES are as follows: "accentLeft", "accentRight", "imageAndText", "textAndImage", "twoColumns", "twoColumnsWithHeadings", "threeColumns", "threeColumnsWithHeadings", "fourColumns", "twoImageColumns", "threeImageColumns", "fourImageColumns", "tableLayout".
-The available CONTENT TYPES are "heading1", "heading2", "heading3", "heading4", "title", "paragraph", "table", "resizable-column", "image", "blockquote", "numberedList", "bulletList", "todoList", "calloutBox", "codeBlock", "tableOfContents", "divider", "column"
+  const prompt = `
+<role>
+You are an expert presentation designer and JSON architect, specialized in creating professional, visually appealing slide layouts for business and educational presentations. Your expertise lies in transforming content outlines into structured, engaging slide designs that optimize information delivery and visual impact.
+</role>
 
-Use these outlines as a starting point for the content of the presentations 
-  ${JSON.stringify(outlineArray)}
+<task_context>
+Your task is to generate comprehensive JSON-based slide layouts for a presentation. Each layout should be professionally designed, content-appropriate, and follow modern presentation design principles. You will create unique layouts for each outline point, ensuring visual variety and optimal content presentation.
 
-The output must be an array of JSON objects.
-  1. Write layouts based on the specific outline provided. Do not use types that are not mentioned in the example layouts.
-  2. Ensuring each layout is unique.
-  3. Adhere to the structure of existing layouts
-  4. Fill placeholder data into content fields where required.
-  5. Generate unique image placeholders for the 'content' property of image components and also alt text according to the outline.
-  6. Ensure proper formatting and schema alignment for the output JSON.
-7. First create LAYOUTS TYPES  at the top most level of the JSON output as follows ${JSON.stringify(
-    [
-      {
-        slideName: 'Blank card',
-        type: 'blank-card',
-        className: 'p-8 mx-auto flex justify-center items-center min-h-[200px]',
-        content: {},
-      },
-    ]
-  )}
+Presentation outlines to work with:
+${JSON.stringify(outlineArray)}
+</task_context>
 
-8.The content property of each LAYOUTS TYPE should start with "column" and within the columns content property you can use any  of the CONTENT TYPES I provided above. Resizable-column, column and other multi element contents should be an array because you can have more elements inside them nested. Static elements like title and paragraph should have content set to a string.Here is an example of what 1 layout with 1 column with 1 title inside would look like:
+<technical_specifications>
+**Available Layout Types:**
+"accentLeft", "accentRight", "imageAndText", "textAndImage", "twoColumns", "twoColumnsWithHeadings", "threeColumns", "threeColumnsWithHeadings", "fourColumns", "twoImageColumns", "threeImageColumns", "fourImageColumns", "tableLayout"
+
+**Available Content Types:**
+"heading1", "heading2", "heading3", "heading4", "title", "paragraph", "table", "resizable-column", "image", "blockquote", "numberedList", "bulletList", "todoList", "calloutBox", "codeBlock", "tableOfContents", "divider", "column"
+
+**Structure Requirements:**
+- Each layout must start with a "column" content type at the root level
+- Container elements (column, resizable-column) contain arrays of child elements
+- Static elements (title, paragraph, heading) have string content
+- Every element must have a unique UUID generated with uuidv4()
+</technical_specifications>
+
+<design_principles>
+1. **Visual Hierarchy**: Use appropriate heading levels and content organization
+2. **Content Appropriateness**: Match layout complexity to content complexity
+3. **Professional Aesthetics**: Maintain clean, business-appropriate designs
+4. **Information Flow**: Ensure logical content progression within each slide
+5. **Engagement**: Balance text, images, and white space effectively
+6. **Accessibility**: Use clear typography hierarchies and sufficient contrast
+</design_principles>
+
+<content_generation_guidelines>
+**For Images:**
+- Generate descriptive alt text that captures the essence of the slide content
+- Focus on professional, business-relevant imagery descriptions
+- Avoid generic terms like "image of" or "picture of"
+- Align image descriptions with slide context and topic
+
+**For Text Content:**
+- Create engaging, professional placeholder content
+- Use active voice and clear, concise language
+- Ensure content supports the outline point effectively
+- Maintain consistency in tone and style
+
+**For Layout Selection:**
+- Vary layout types across slides to maintain visual interest
+- Choose layouts that best support the specific content type
+- Consider content density when selecting column layouts
+- Use accent layouts strategically for emphasis
+</content_generation_guidelines>
+
+<output_format>
+Generate an array of JSON objects, each representing a complete slide layout. Follow this exact structure:
+**Example Single Layout Structure:**
 ${JSON.stringify([
   {
-    slideName: 'Blank card',
-    type: 'blank-card',
+    slideName: 'Title Slide',
+    type: 'blank-card', 
     className: 'p-8 mx-auto flex justify-center items-center min-h-[200px]',
     content: {
       id: uuidv4(),
@@ -633,15 +691,14 @@ ${JSON.stringify([
           type: 'title' as ContentType,
           name: 'Title',
           content: '',
-          placeholder: 'Untitled Card',
+          placeholder: 'Slide Title Here',
         },
       ],
     },
   },
-])}
+], null, 2)}
 
-
-9. Here is a final example of an example output for you to get an idea 
+**Complete Example Output for Multiple Slides:** 
 ${JSON.stringify([
   {
     id: uuidv4(),
@@ -719,13 +776,41 @@ ${JSON.stringify([
   },
 ])}
 
- For Images 
-  - The alt text should describe the image clearly and concisely.
-  - Focus on the main subject(s) of the image and any relevant details such as colors, shapes, people, or objects.
-  - Ensure the alt text aligns with the context of the presentation slide it will be used on (e.g., professional, educational, business-related).
-  - Avoid using terms like "image of" or "picture of," and instead focus directly on the content and meaning.
+**Critical Requirements:**
+1. Generate exactly one layout per outline point provided
+2. Each layout must be unique in type and structure
+3. All layouts must follow the exact JSON schema provided
+4. Ensure valid UUID generation for all id fields
+5. Fill meaningful placeholder content related to the outline topic
+6. Create professional, contextually appropriate image alt text
+7. Maintain consistent styling and professional appearance
 
-  Output the layouts in JSON format. Ensure there are no duplicate layouts across the array.
+**Image Guidelines:**
+- Alt text should be descriptive and professional
+- Focus on business-relevant imagery that supports the slide content
+- Avoid generic phrases like "image of" or "picture of"
+- Ensure alt text aligns with the presentation context
+- Create compelling visual descriptions that enhance understanding
+
+**Quality Assurance:**
+- Verify JSON syntax and structure before output
+- Ensure all required fields are present and properly formatted
+- Check that content types match available options
+- Confirm layout variety across the presentation
+- Validate that placeholder content supports the outline points
+</output_format>
+
+<thinking_process>
+For each outline point, consider:
+1. **Content Analysis**: What type of information is being presented?
+2. **Layout Selection**: Which layout type best supports this content?
+3. **Visual Elements**: What images or graphics would enhance understanding?
+4. **Text Hierarchy**: How should information be structured within the slide?
+5. **Engagement Factor**: How can this slide capture and maintain attention?
+6. **Professional Standards**: Does this meet business presentation expectations?
+</thinking_process>
+
+Generate professional, engaging slide layouts in valid JSON format. Ensure variety, quality, and adherence to all specifications.
 `
 
   //   `
@@ -770,12 +855,12 @@ ${JSON.stringify([
       messages: [
         {
           role: 'system',
-          content: 'You generate JSON layouts for presentations. Keep layouts simple and respond quickly.',
+          content: 'You are an expert presentation designer specializing in creating professional, engaging slide layouts. Generate high-quality JSON layouts that follow modern design principles and maintain visual consistency. Focus on creating layouts that effectively communicate the intended message while maintaining professional standards.',
         },
         { role: 'user', content: prompt },
       ],
-      max_tokens: 3000, // Further reduced
-      temperature: 0.3, // Further reduced for more deterministic output
+      max_tokens: 4000, // Increased for more detailed layouts
+      temperature: 0.2, // Reduced for more consistent, professional output
     }, {
       signal: controller.signal
     });
