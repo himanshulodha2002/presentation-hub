@@ -2,11 +2,23 @@ import { getAllProjects, getRecentProjects } from "@/actions/project";
 import { onAuthenticateUser } from "@/actions/user";
 import AppSidebar from "@/components/global/app-sidebar";
 import NotFound from "@/components/global/not-found";
+import { ProjectsGridSkeleton } from "@/components/global/project-card/skeleton";
 import Projects from "@/components/global/projects";
 import UpperInfoBar from "@/components/global/upper-info-bar";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { redirect } from "next/navigation";
-import React from "react";
+import React, { Suspense } from "react";
+
+// Separate component for projects data fetching
+async function ProjectsData() {
+    const allProjects = await getAllProjects();
+
+    if (allProjects.data && allProjects.data.length > 0) {
+        return <Projects projects={allProjects.data} />;
+    }
+    
+    return <NotFound />;
+}
 
 const RootPage = async () => {
     // Check if user is authenticated
@@ -15,16 +27,17 @@ const RootPage = async () => {
         redirect("/sign-in");
     }
 
-    // Get projects and recent projects for the dashboard
-    const allProjects = await getAllProjects();
-    const recentProjects = await getRecentProjects();
+    // Fetch recent projects in parallel (non-blocking)
+    const recentProjectsPromise = getRecentProjects();
 
     return (
         <SidebarProvider>
-            <AppSidebar
-                user={checkUser.user}
-                recentProjects={recentProjects.data || []}
-            />
+            <Suspense fallback={<div className="w-64" />}>
+                <AppSidebar
+                    user={checkUser.user}
+                    recentProjects={(await recentProjectsPromise).data || []}
+                />
+            </Suspense>
             <SidebarInset>
                 <UpperInfoBar user={checkUser.user} />
                 <div className="p-4">
@@ -40,11 +53,9 @@ const RootPage = async () => {
                             </div>
                         </div>
 
-                        {allProjects.data && allProjects.data.length > 0 ? (
-                            <Projects projects={allProjects.data} />
-                        ) : (
-                            <NotFound />
-                        )}
+                        <Suspense fallback={<ProjectsGridSkeleton count={8} />}>
+                            <ProjectsData />
+                        </Suspense>
                     </div>
                 </div>
             </SidebarInset>
