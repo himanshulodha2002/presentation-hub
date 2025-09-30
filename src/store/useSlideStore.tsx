@@ -12,6 +12,7 @@ interface SlideState {
     setSlides: (slides: Slide[]) => void,
     removeSlide: (id: string) => void,
     addSlideAtIndex: (slide: Slide, index: number) => void,
+    duplicateSlide: (slideId: string) => void,
     setProject: (id: Project) => void,
     setCurrentTheme: (theme: Theme) => void,
     getOrderedSlides: () => Slide[],
@@ -53,6 +54,22 @@ export const useSlideStore = create(
                 slide.slideOrder = index;
             });
             return { slides: newSlides, currentSlide: index };
+        }),
+        duplicateSlide: (slideId) => set((state) => {
+            const slideIndex = state.slides.findIndex((slide) => slide.id === slideId);
+            if (slideIndex === -1) return state;
+            
+            const slideToDuplicate = state.slides[slideIndex];
+            const duplicatedSlide = JSON.parse(JSON.stringify(slideToDuplicate));
+            duplicatedSlide.id = uuidv4();
+            
+            const newSlides = [...state.slides];
+            newSlides.splice(slideIndex + 1, 0, duplicatedSlide);
+            newSlides.forEach((slide, index) => {
+                slide.slideOrder = index;
+            });
+            
+            return { slides: newSlides, currentSlide: slideIndex + 1 };
         }),
         setProject: (project) => set({ project }),
         setCurrentTheme: (theme) => set({ currentTheme: theme }),

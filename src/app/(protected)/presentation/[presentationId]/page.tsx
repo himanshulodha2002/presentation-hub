@@ -13,6 +13,7 @@ import Navbar from "./_components/Navbar/Navbar";
 import Editor from "./_components/editor/Editor";
 import LayoutPreview from "./_components/editor-sidebar/leftSidebar/LayoutPreview";
 import EditorSidebar from "./_components/editor-sidebar/rightSidebar";
+import { AddSlideButton } from "@/components/global/editor/AddSlideButton";
 
 const Page = () => {
   const params = useParams();
@@ -73,6 +74,7 @@ const Page = () => {
           </div>
           <EditorSidebar />
         </div>
+        <AddSlideButton />
       </div>
     </DndProvider>
   );

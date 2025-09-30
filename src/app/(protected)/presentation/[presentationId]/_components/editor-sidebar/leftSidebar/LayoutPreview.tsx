@@ -3,11 +3,16 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { useSlideStore } from "@/store/useSlideStore";
 import React, { useEffect, useState } from "react";
 import DragabbleSlidePreview from "./DraggableSlidePreview";
+import { SlideTemplateSelector } from "@/components/global/editor/SlideTemplateSelector";
+import { LayoutSlides } from "@/lib/types";
+import { v4 } from "uuid";
 
 const LayoutPreview = () => {
-    const { getOrderedSlides, reorderSlides } = useSlideStore();
+    const { getOrderedSlides, reorderSlides, addSlideAtIndex } = useSlideStore();
     const slides = getOrderedSlides();
     const [loading, setLoading] = useState(true);
+    const [showTemplateSelector, setShowTemplateSelector] = useState(false);
+    const [insertIndex, setInsertIndex] = useState(0);
 
     useEffect(() => {
         if (typeof window !== "undefined") setLoading(false);
@@ -17,6 +22,18 @@ const LayoutPreview = () => {
         {
             reorderSlides(draIndex, hoverIndex);
         }
+    };
+
+    const handleAddSlide = (index: number) => {
+        setInsertIndex(index);
+        setShowTemplateSelector(true);
+    };
+
+    const handleTemplateSelect = (template: LayoutSlides) => {
+        addSlideAtIndex(
+            { ...template, id: v4(), slideOrder: insertIndex },
+            insertIndex
+        );
     };
 
     return (
@@ -47,11 +64,18 @@ const LayoutPreview = () => {
                                 slide={slide}
                                 index={index}
                                 moveSlide={moveSlide}
+                                onAddSlide={handleAddSlide}
                             />
                         ))}
                     </div>
                 )}
             </ScrollArea>
+            
+            <SlideTemplateSelector
+                open={showTemplateSelector}
+                onOpenChange={setShowTemplateSelector}
+                onSelectTemplate={handleTemplateSelect}
+            />
         </div>
     );
 };
