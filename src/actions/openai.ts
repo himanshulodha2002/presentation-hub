@@ -75,7 +75,7 @@ Consider:
 
   try {
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: 'gpt-4.1',
       messages: [
         {
           role: 'system',
@@ -532,8 +532,12 @@ Consider:
 const generateImageUrl = async (prompt: string): Promise<string> => {
   // Gemini Flash 2.0 streaming image generation (user-provided code)
   try {
+    if (!process.env.GOOGLE_GENAI_API_KEY) {
+      console.error('🔴 ERROR: GOOGLE_GENAI_API_KEY not set');
+      return 'https://placehold.co/1024x768/e2e8f0/64748b?text=Image+Unavailable';
+    }
     const ai = new GoogleGenAI({
-      apiKey: process.env.GOOGLE_GENAI_API_KEY || 'AIzaSyDea5raRIMEipE3AS7IQ0VjCpmNZq_u6Bc',
+      apiKey: process.env.GOOGLE_GENAI_API_KEY,
     });
     const config = {
       responseModalities: [
@@ -584,10 +588,10 @@ const generateImageUrl = async (prompt: string): Promise<string> => {
     if (imageFileName) {
       return imageFileName;
     }
-    return 'https://via.placeholder.com/1024';
+    return 'https://placehold.co/1024x768/e2e8f0/64748b?text=Image+Unavailable';
   } catch (error) {
     console.error('Failed to generate image:', error);
-    return 'https://via.placeholder.com/1024';
+    return 'https://placehold.co/1024x768/e2e8f0/64748b?text=Image+Unavailable';
   }
 }
 
@@ -851,7 +855,7 @@ Generate professional, engaging slide layouts in valid JSON format. Ensure varie
     const timeoutId = setTimeout(() => controller.abort(), 4000000); // 40 second timeout
     
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o',
+      model: 'gpt-4.1',
       messages: [
         {
           role: 'system',
@@ -859,7 +863,7 @@ Generate professional, engaging slide layouts in valid JSON format. Ensure varie
         },
         { role: 'user', content: prompt },
       ],
-      max_tokens: 4000, // Increased for more detailed layouts
+      max_tokens: 16000, // Increased to handle large presentations without truncation
       temperature: 0.2, // Reduced for more consistent, professional output
     }, {
       signal: controller.signal
@@ -868,28 +872,85 @@ Generate professional, engaging slide layouts in valid JSON format. Ensure varie
     clearTimeout(timeoutId);
 
     const responseContent = completion?.choices?.[0]?.message?.content
+    
+    // Log token usage for debugging
+    console.log('📊 Token usage:', {
+      prompt_tokens: completion?.usage?.prompt_tokens,
+      completion_tokens: completion?.usage?.completion_tokens,
+      total_tokens: completion?.usage?.total_tokens,
+    })
 
     if (!responseContent) {
+      console.log('🔴 ERROR: No content generated from OpenAI')
       return { status: 400, error: 'No content generated' }
+    }
+
+    console.log('📄 Raw response length:', responseContent.length)
+    console.log('📄 First 200 chars:', responseContent.substring(0, 200))
+    console.log('📄 Last 200 chars:', responseContent.substring(responseContent.length - 200))
+    
+    // Check if response might be truncated
+    const finishReason = completion?.choices?.[0]?.finish_reason
+    if (finishReason === 'length') {
+      console.log('⚠️ WARNING: Response was truncated due to max_tokens limit')
+      return { 
+        status: 400, 
+        error: 'AI response was truncated. Try reducing the number of slides or simplifying your content.' 
+      }
     }
 
     let jsonResponse
     try {
-      jsonResponse = JSON.parse(responseContent.replace(/```json|```/g, ''))
+      // Clean up the response content more thoroughly
+      let cleanedContent = responseContent.trim()
+      
+      // Remove markdown code blocks
+      cleanedContent = cleanedContent.replace(/```json\s*/g, '')
+      cleanedContent = cleanedContent.replace(/```\s*/g, '')
+      
+      // Remove any leading/trailing whitespace again
+      cleanedContent = cleanedContent.trim()
+      
+      if (!cleanedContent) {
+        console.log('🔴 ERROR: Content is empty after cleaning')
+        return { status: 400, error: 'Empty content after cleaning' }
+      }
+
+      console.log('🧹 Cleaned content length:', cleanedContent.length)
+      console.log('🧹 First 200 chars of cleaned:', cleanedContent.substring(0, 200))
+      
+      jsonResponse = JSON.parse(cleanedContent)
+      
+      if (!Array.isArray(jsonResponse)) {
+        console.log('🔴 ERROR: Response is not an array')
+        return { status: 400, error: 'Invalid JSON structure - expected an array' }
+      }
+      
       await Promise.all(jsonResponse.map(replaceImagePlaceholders))
     } catch (error) {
-      console.log('🔴 ERROR:', error)
-      throw new Error('Invalid JSON format received from AI')
+      console.log('🔴 ERROR parsing JSON:', error)
+      console.log('🔴 Content that failed to parse (first 500 chars):', responseContent.substring(0, 500))
+      console.log('🔴 Content that failed to parse (last 500 chars):', responseContent.substring(Math.max(0, responseContent.length - 500)))
+      
+      // Check if it's a truncation issue
+      if (error instanceof SyntaxError && error.message.includes('Unterminated')) {
+        return { 
+          status: 400, 
+          error: 'AI response was incomplete. Please try again with fewer slides or simpler content.' 
+        }
+      }
+      
+      return { status: 400, error: `Invalid JSON format received from AI: ${error instanceof Error ? error.message : 'Unknown error'}` }
     }
 
     console.log('🟢 Layouts generated successfully')
     return { status: 200, data: jsonResponse }
   } catch (error: any) {
-    console.log('🔴 ERROR:', error)
+    console.log('🔴 ERROR in generateLayoutsJson:', error)
     if (error.name === 'AbortError') {
       return { status: 504, error: 'Request timed out. Try simplifying your presentation content.' }
     }
-    throw new Error('Invalid JSON format received from AI')
+    return { status: 500, error: `Failed to generate layouts: ${error.message || 'Unknown error'}` }
   }
 }
 
