@@ -1,11 +1,11 @@
+import { SlideTemplateSelector } from "@/components/global/editor/SlideTemplateSelector";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
+import { LayoutSlides } from "@/lib/types";
 import { useSlideStore } from "@/store/useSlideStore";
 import React, { useEffect, useState } from "react";
-import DragabbleSlidePreview from "./DraggableSlidePreview";
-import { SlideTemplateSelector } from "@/components/global/editor/SlideTemplateSelector";
-import { LayoutSlides } from "@/lib/types";
 import { v4 } from "uuid";
+import DragabbleSlidePreview from "./DraggableSlidePreview";
 
 const LayoutPreview = () => {
     const { getOrderedSlides, reorderSlides, addSlideAtIndex } = useSlideStore();

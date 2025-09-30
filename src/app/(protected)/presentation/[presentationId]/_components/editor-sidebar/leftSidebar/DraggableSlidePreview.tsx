@@ -1,16 +1,3 @@
-import { Slide } from "@/lib/types";
-import { cn } from "@/lib/utils";
-import { useSlideStore } from "@/store/useSlideStore";
-import React, { useRef, useState } from "react";
-import { useDrag, useDrop } from "react-dnd";
-import ScaledPreview from "./ScaledPreview";
-import { Button } from "@/components/ui/button";
-import { Copy, MoreVertical, Plus, Trash } from "lucide-react";
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover";
 import {
     AlertDialog,
     AlertDialogAction,
@@ -21,6 +8,19 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
+import { Slide } from "@/lib/types";
+import { cn } from "@/lib/utils";
+import { useSlideStore } from "@/store/useSlideStore";
+import { Copy, MoreVertical, Plus, Trash } from "lucide-react";
+import React, { useRef, useState } from "react";
+import { useDrag, useDrop } from "react-dnd";
+import ScaledPreview from "./ScaledPreview";
 
 type Props = {
     slide: Slide;
