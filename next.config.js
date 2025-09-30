@@ -11,12 +11,22 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
+        hostname: 'ptictyardjhsymt6.public.blob.vercel-storage.com',
+        pathname: '**',
+      },
+      {
+        protocol: 'https',
         hostname: 'oaidalleapiprodscus.blob.core.windows.net',
         pathname: '**',
       },
       {
         protocol: 'https',
         hostname: 'via.placeholder.com',
+        pathname: '**',
+      },
+      {
+        protocol: 'https',
+        hostname: 'placehold.co',
         pathname: '**',
       },
       {

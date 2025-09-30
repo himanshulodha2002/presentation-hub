@@ -1,18 +1,18 @@
 "use client";
 
+import { deleteProject, recoverProject } from "@/actions/project";
+import PermanentDeleteButton from "@/app/(protected)/(pages)/(dashboardPages)/trash/_components/PermanentDeleteButton";
+import { Button } from "@/components/ui/button";
 import { itemVariants, themes, toastCustomStyles } from "@/lib/constants";
+import { timeAgo } from "@/lib/utils";
 import { useSlideStore } from "@/store/useSlideStore";
 import { JsonValue } from "@prisma/client/runtime/library";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import ThumbnailPreview from "./thumbnail-preview";
-import { timeAgo } from "@/lib/utils";
-import AlertDialogBox from "../alert-dialog";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { deleteProject, recoverProject } from "@/actions/project";
-import PermanentDeleteButton from "@/app/(protected)/(pages)/(dashboardPages)/trash/_components/PermanentDeleteButton";
+import AlertDialogBox from "../alert-dialog";
+import ThumbnailPreview from "./thumbnail-preview";
 
 type Props = {
   projectId: string;
@@ -21,6 +21,7 @@ type Props = {
   isDelete?: boolean;
   slideData?: JsonValue;
   themeName: string;
+  thumbnail?: string | null;
 };
 
 const ProjectCard = ({
@@ -30,6 +31,7 @@ const ProjectCard = ({
   isDelete,
   slideData,
   themeName,
+  thumbnail,
 }: Props) => {
   const { setSlides } = useSlideStore();
   const router = useRouter();
@@ -118,10 +120,21 @@ const ProjectCard = ({
         className="relative aspect-[16/10] overflow-hidden rounded-lg cursor-pointer"
         onClick={handleNavigation}
       >
-        <ThumbnailPreview
-          theme={theme}
-          slide={JSON.parse(JSON.stringify(slideData))?.[0]}
-        />
+        {thumbnail ? (
+          // Use Vercel Blob thumbnail for faster loading
+          <img
+            src={thumbnail}
+            alt={title}
+            className="w-full h-full object-cover"
+            loading="lazy"
+          />
+        ) : (
+          // Fallback to slide preview if no thumbnail
+          <ThumbnailPreview
+            theme={theme}
+            slide={JSON.parse(JSON.stringify(slideData))?.[0]}
+          />
+        )}
       </div>
       <div className="w-full">
         <div className="space-y-1">

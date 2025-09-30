@@ -41,9 +41,12 @@ model Project {
   isDeleted  Boolean  @default(false)
   isSellable Boolean  @default(false)
   varientId  String?
-  thumbnail  String?
+  thumbnail  String?  // Stores Vercel Blob URL for project thumbnail
   themeName  String   @default("light")
 
   User       User   @relation("OwnedProjects", fields: [userId], references: [id])
   Purchasers User[] @relation("PurchasedProjects")
+
+  @@index([userId, isDeleted])
+  @@index([updatedAt])
 }

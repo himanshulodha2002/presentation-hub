@@ -39,6 +39,7 @@ const Projects = ({ projects }: Props) => {
                         isDelete={project?.isDeleted}
                         slideData={project?.slides}
                         themeName={project.themeName}
+                        thumbnail={project.thumbnail}
                     />
                 ))
             ) : (
