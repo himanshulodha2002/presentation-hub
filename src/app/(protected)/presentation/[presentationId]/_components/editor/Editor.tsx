@@ -1,19 +1,3 @@
-import { v4 } from "uuid"
-import { cn } from "@/lib/utils"
-import { useDrag, useDrop } from "react-dnd"
-import { LayoutSlides, Slide } from "@/lib/types"
-import { Skeleton } from "@/components/ui/skeleton"
-import { useSlideStore } from "@/store/useSlideStore"
-import { ScrollArea } from "@/components/ui/scroll-area"
-import React, { useCallback, useEffect, useRef, useState } from "react"
-import MasterRecursiveComponent from "./MasterRecursiveComponent"
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "@/components/ui/popover"
-import { Button } from "@/components/ui/button"
-import { Copy, EllipsisVertical, Plus, Trash } from "lucide-react"
 import { updateSlides } from "@/actions/project"
 import { SlideTemplateSelector } from "@/components/global/editor/SlideTemplateSelector"
 import {
@@ -26,6 +10,22 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover"
+import { ScrollArea } from "@/components/ui/scroll-area"
+import { Skeleton } from "@/components/ui/skeleton"
+import { LayoutSlides, Slide } from "@/lib/types"
+import { cn } from "@/lib/utils"
+import { useSlideStore } from "@/store/useSlideStore"
+import { Copy, EllipsisVertical, Plus, Trash } from "lucide-react"
+import React, { useCallback, useEffect, useRef, useState } from "react"
+import { useDrag, useDrop } from "react-dnd"
+import { v4 } from "uuid"
+import MasterRecursiveComponent from "./MasterRecursiveComponent"
 
 type EditorProps = {
     isEditable: boolean
