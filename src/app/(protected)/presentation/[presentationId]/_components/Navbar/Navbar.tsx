@@ -60,7 +60,6 @@ const Navbar = ({ presentationId }: Props) => {
         >
           <Share2 className="w-4 h-4" />
         </Button>
-        {/* <SellTemplate /> */}
         <Button
           variant={"default"}
           className="flex items-center  gap-2"

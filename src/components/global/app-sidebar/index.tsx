@@ -31,12 +31,6 @@ const AppSidebar = ({
                     size={"lg"}
                     className="data-[state=open]:text-sidebar-accent-foreground"
                 >
-                    {/* <div className="flex aspect-square size-8 items-center justify-center rounded-lg text-sidebar-primary-foreground">
-                        <Avatar className="h-14 w-14 rounded-full">
-                            <AvatarImage src="/luneth.png" alt="luneth logo" />
-                            <AvatarFallback className="rounded-lg">LU</AvatarFallback>
-                        </Avatar>
-                    </div> */}
                     <span className="truncate text-primary text-xl font-semibold">
                         {" "}
                         Presentation Hub
