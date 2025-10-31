@@ -1,6 +1,8 @@
 "use client";
 import { getProjectById } from "@/actions/project";
 import { AddSlideButton } from "@/components/global/editor/AddSlideButton";
+import { FormattingToolbar } from "@/components/global/editor/FormattingToolbar";
+import { StatusBar } from "@/components/global/editor/StatusBar";
 import { themes } from "@/lib/constants";
 import { useSlideStore } from "@/store/useSlideStore";
 import { Loader2 } from "lucide-react";
@@ -19,6 +21,7 @@ const Page = () => {
   const params = useParams();
   const { setTheme } = useTheme();
   const [isLoading, setIsLoading] = useState(true);
+  const [zoom, setZoom] = useState(100);
   const { currentTheme, setCurrentTheme, setSlides, setProject } =
     useSlideStore();
 
@@ -56,12 +59,17 @@ const Page = () => {
     );
   }
 
+  const handleZoomChange = (newZoom: number) => {
+    setZoom(newZoom);
+  };
+
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="min-h-screen flex flex-col">
         <Navbar presentationId={params.presentationId as string} />
+        <FormattingToolbar />
         <div
-          className="flex-1 flex overflow-hidden pt-16"
+          className="flex-1 flex overflow-hidden pt-32 pb-8"
           style={{
             color: currentTheme.accentColor,
             fontFamily: currentTheme.fontFamily,
@@ -70,11 +78,12 @@ const Page = () => {
         >
           <LayoutPreview />
           <div className="flex-1 ml-64 ">
-            <Editor isEditable={true} />
+            <Editor isEditable={true} zoom={zoom} />
           </div>
           <EditorSidebar />
         </div>
         <AddSlideButton />
+        <StatusBar zoom={zoom} onZoomChange={handleZoomChange} />
       </div>
     </DndProvider>
   );
