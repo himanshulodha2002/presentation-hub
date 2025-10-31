@@ -86,9 +86,9 @@ const DragabbleSlidePreview = ({ index, moveSlide, slide, onAddSlide }: Props) =
             <div
                 ref={ref}
                 className={cn(
-                    "relative cursor-pointer group",
+                    "relative cursor-pointer group transition-all duration-200",
                     index === currentSlide ? "before:bg-blue-500" : "before:bg-transparent",
-                    isDragging ? "opacity-50" : "opacity-100"
+                    isDragging ? "opacity-50 scale-95" : "opacity-100 hover:scale-105"
                 )}
                 onClick={() => setCurrentSlide(index)}
             >
@@ -100,10 +100,10 @@ const DragabbleSlidePreview = ({ index, moveSlide, slide, onAddSlide }: Props) =
                     />
                     
                     {/* Quick actions on hover */}
-                    <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity z-20">
                         <Popover>
                             <PopoverTrigger asChild onClick={(e) => e.stopPropagation()}>
-                                <Button size="icon" variant="secondary" className="h-6 w-6">
+                                <Button size="icon" variant="secondary" className="h-6 w-6 shadow-lg">
                                     <MoreVertical className="h-3 w-3" />
                                 </Button>
                             </PopoverTrigger>

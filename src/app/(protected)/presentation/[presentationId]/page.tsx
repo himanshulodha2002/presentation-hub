@@ -1,6 +1,10 @@
 "use client";
 import { getProjectById } from "@/actions/project";
 import { AddSlideButton } from "@/components/global/editor/AddSlideButton";
+import { FormattingToolbar } from "@/components/global/editor/FormattingToolbar";
+import { QuickAccessToolbar } from "@/components/global/editor/QuickAccessToolbar";
+import { SlideNotesPanel } from "@/components/global/editor/SlideNotesPanel";
+import { StatusBar } from "@/components/global/editor/StatusBar";
 import { themes } from "@/lib/constants";
 import { useSlideStore } from "@/store/useSlideStore";
 import { Loader2 } from "lucide-react";
@@ -19,6 +23,8 @@ const Page = () => {
   const params = useParams();
   const { setTheme } = useTheme();
   const [isLoading, setIsLoading] = useState(true);
+  const [zoom, setZoom] = useState(100);
+  const [showNotes, setShowNotes] = useState(false);
   const { currentTheme, setCurrentTheme, setSlides, setProject } =
     useSlideStore();
 
@@ -56,25 +62,45 @@ const Page = () => {
     );
   }
 
+  const handleZoomChange = (newZoom: number) => {
+    setZoom(newZoom);
+  };
+
+  const handleToggleNotes = () => {
+    setShowNotes(!showNotes);
+  };
+
   return (
     <DndProvider backend={HTML5Backend}>
       <div className="min-h-screen flex flex-col">
-        <Navbar presentationId={params.presentationId as string} />
+        <Navbar 
+          presentationId={params.presentationId as string} 
+          onToggleNotes={handleToggleNotes}
+        />
+        <FormattingToolbar />
+        <QuickAccessToolbar />
         <div
-          className="flex-1 flex overflow-hidden pt-16"
+          className="flex-1 flex flex-col overflow-hidden pt-36 pb-8"
           style={{
             color: currentTheme.accentColor,
             fontFamily: currentTheme.fontFamily,
             backgroundColor: currentTheme.backgroundColor,
           }}
         >
-          <LayoutPreview />
-          <div className="flex-1 ml-64 ">
-            <Editor isEditable={true} />
+          <div className="flex-1 flex overflow-hidden">
+            <LayoutPreview />
+            <div className="flex-1 ml-64 ">
+              <Editor isEditable={true} zoom={zoom} />
+            </div>
+            <EditorSidebar />
           </div>
-          <EditorSidebar />
+          <SlideNotesPanel 
+            isVisible={showNotes} 
+            onClose={() => setShowNotes(false)} 
+          />
         </div>
         <AddSlideButton />
+        <StatusBar zoom={zoom} onZoomChange={handleZoomChange} />
       </div>
     </DndProvider>
   );

@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { Popover, PopoverTrigger } from "@/components/ui/popover"
 import { useSlideStore } from "@/store/useSlideStore"
 import { PopoverContent } from "@radix-ui/react-popover"
-import { LayoutTemplate, Palette, Type } from "lucide-react"
+import { LayoutTemplate, Palette, Type, LayoutGrid } from "lucide-react"
 import React, { useEffect, useRef, useState } from "react"
 import LayoutChooser from "./tabs/LayoutChooser"
 import { cn } from "@/lib/utils"
@@ -12,6 +12,7 @@ import { component } from "@/lib/constants"
 import ComponentCard from "./tabs/components-tabs/ComponentPreview"
 import ThemeChooser from "./tabs/ThemeChooser"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import { PresentationOverview } from "@/components/global/editor/PresentationOverview"
 
 const EditorSidebar = () => {
     const popOverRef = useRef<HTMLDivElement>(null)
@@ -21,6 +22,7 @@ const EditorSidebar = () => {
     const layoutButton = document.getElementById("layout")
     const styleButton = document.getElementById("style")
     const themeButton = document.getElementById("theme")
+    const overviewButton = document.getElementById("overview")
 
     const handleOpen = (e: React.MouseEvent) => {
         e.stopPropagation()
@@ -45,7 +47,8 @@ const EditorSidebar = () => {
         if (
             layoutButton?.getAttribute("data-state") === "closed" &&
             styleButton?.getAttribute("data-state") === "closed" &&
-            themeButton?.getAttribute("data-state") === "closed"
+            themeButton?.getAttribute("data-state") === "closed" &&
+            overviewButton?.getAttribute("data-state") === "closed"
         ) {
             setOpen(false)
         }
@@ -164,6 +167,32 @@ const EditorSidebar = () => {
                         }}
                     >
                         <ThemeChooser />
+                    </PopoverContent>
+                </Popover>
+                <Popover>
+                    <PopoverTrigger asChild id="overview">
+                        <Button
+                            variant="ghost"
+                            size={"icon"}
+                            className="size-10 rounded-full cursor-pointer m-0"
+                            onClick={(e) => {
+                                handleOpen(e)
+                            }}
+                        >
+                            <LayoutGrid className="size-5" />
+                            <span className="sr-only">Overview</span>
+                        </Button>
+                    </PopoverTrigger>
+                    <PopoverContent
+                        side="left"
+                        align="center"
+                        className="p-0 w-96 border-1 rounded-2xl relative right-6"
+                        style={{
+                            backgroundColor: currentTheme.backgroundColor,
+                            color: currentTheme.fontColor,
+                        }}
+                    >
+                        <PresentationOverview />
                     </PopoverContent>
                 </Popover>
             </div>
