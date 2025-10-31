@@ -1,18 +1,19 @@
 "use client";
 import { getProjectById } from "@/actions/project";
+import { AddSlideButton } from "@/components/global/editor/AddSlideButton";
 import { themes } from "@/lib/constants";
 import { useSlideStore } from "@/store/useSlideStore";
 import { Loader2 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { redirect, useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { toast } from "sonner";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
+import { toast } from "sonner";
 import Navbar from "./_components/Navbar/Navbar";
-import Editor from "./_components/editor/Editor";
 import LayoutPreview from "./_components/editor-sidebar/leftSidebar/LayoutPreview";
 import EditorSidebar from "./_components/editor-sidebar/rightSidebar";
+import Editor from "./_components/editor/Editor";
 
 const Page = () => {
   const params = useParams();
@@ -73,6 +74,7 @@ const Page = () => {
           </div>
           <EditorSidebar />
         </div>
+        <AddSlideButton />
       </div>
     </DndProvider>
   );
