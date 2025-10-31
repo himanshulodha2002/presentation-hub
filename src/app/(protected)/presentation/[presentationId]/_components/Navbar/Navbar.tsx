@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
+import { TransitionSelector } from "@/components/global/editor/TransitionSelector";
 import { useSlideStore } from "@/store/useSlideStore";
-import { Home, Play, Share2 } from "lucide-react";
+import { Home, Play, Share2, StickyNote } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
 import { toast } from "sonner";
@@ -8,9 +9,10 @@ import PresentationMode from "./PresentationMode";
 
 type Props = {
   presentationId: string;
+  onToggleNotes?: () => void;
 };
 
-const Navbar = ({ presentationId }: Props) => {
+const Navbar = ({ presentationId, onToggleNotes }: Props) => {
   const { currentTheme } = useSlideStore();
   const [isPresentationMode, setIsPresentationMode] = useState(false);
 
@@ -50,6 +52,16 @@ const Navbar = ({ presentationId }: Props) => {
       </div>
       
       <div className="flex items-center gap-2">
+        <TransitionSelector />
+        <Button
+          onClick={onToggleNotes}
+          variant={"ghost"}
+          size="sm"
+          className="flex items-center gap-2"
+        >
+          <StickyNote className="w-4 h-4" />
+          <span className="hidden sm:inline">Notes</span>
+        </Button>
         <Button
           onClick={handleCopy}
           variant={"ghost"}
