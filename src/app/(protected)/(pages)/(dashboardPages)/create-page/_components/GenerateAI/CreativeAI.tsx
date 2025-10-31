@@ -46,7 +46,6 @@ const CreativeAI = ({ onBack }: Props) => {
     setCurrentAiPrompt,
     outlines,
     resetOutlines,
-    addOutline,
     addMultipleOutlines,
   } = useCreativeAiStore();
   const [noOfCards, setNoOfCards] = useState(0);
@@ -231,7 +230,6 @@ const CreativeAI = ({ onBack }: Props) => {
       </div>
       <CardList
         outlines={outlines}
-        addOutline={addOutline}
         addMultipleOutlines={addMultipleOutlines}
         editingCard={editingCard}
         selectedCard={selectedCard}
