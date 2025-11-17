@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import UploadImage from "./UploadImage";
 
 type Props = {
@@ -24,15 +24,41 @@ const CustomImage = ({
     onContentChange,
     isEditable = true,
 }: Props) => {
+    const [imageError, setImageError] = useState(false);
+
+    // Check if URL is from Uploadcare (bypass Next.js optimization for these)
+    const isUploadcareUrl = src.includes('ucarecdn.com') || src.includes('ucarecdn.net');
+
+    // If image failed to load or is from Uploadcare, use unoptimized
+    const shouldBypassOptimization = imageError || isUploadcareUrl;
+
     return (
         <div className={`relative group w-full  h-full  rounded-lg`}>
-            <Image
-                src={src}
-                width={isPreview ? 48 : 800}
-                height={isPreview ? 48 : 800}
-                alt={alt}
-                className={`object-cover  w-full h-full rounded-lg ${className}`}
-            />
+            {imageError ? (
+                <div className="w-full h-full flex items-center justify-center bg-gray-100 rounded-lg">
+                    <div className="text-center p-4">
+                        <p className="text-sm text-gray-600 mb-2">Failed to load image</p>
+                        <p className="text-xs text-gray-400">URL: {src.substring(0, 50)}...</p>
+                    </div>
+                </div>
+            ) : (
+                <Image
+                    src={src}
+                    width={isPreview ? 48 : 800}
+                    height={isPreview ? 48 : 800}
+                    alt={alt}
+                    className={`object-cover  w-full h-full rounded-lg ${className}`}
+                    unoptimized={shouldBypassOptimization}
+                    onError={(e) => {
+                        console.error('🔴 Image failed to load:', src);
+                        console.error('🔴 Error event:', e);
+                        setImageError(true);
+                    }}
+                    onLoadingComplete={() => {
+                        console.log('✅ Image loaded successfully:', src);
+                    }}
+                />
+            )}
             {!isPreview && isEditable && (
                 <div className="absolute top-0 left-0 hidden group-hover:block">
                     <UploadImage
