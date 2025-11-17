@@ -39,17 +39,41 @@ const transitions = [
 export const TransitionSelector: React.FC<TransitionSelectorProps> = ({
     onTransitionChange,
 }) => {
-    const { currentTheme } = useSlideStore()
-    const [transition, setTransition] = useState("none")
-    const [duration, setDuration] = useState([500])
+    const { getCurrentSlideData, updateSlideTransition, currentTheme } = useSlideStore()
+    const currentSlideData = getCurrentSlideData()
+    const [transition, setTransition] = useState(currentSlideData?.transition?.type || "none")
+    const [duration, setDuration] = useState([currentSlideData?.transition?.duration || 500])
+
+    React.useEffect(() => {
+        // Load transition from current slide
+        if (currentSlideData?.transition) {
+            setTransition(currentSlideData.transition.type)
+            setDuration([currentSlideData.transition.duration])
+        } else {
+            setTransition("none")
+            setDuration([500])
+        }
+    }, [currentSlideData?.id])
 
     const handleTransitionChange = (value: string) => {
         setTransition(value)
+        if (currentSlideData) {
+            updateSlideTransition(currentSlideData.id, {
+                type: value,
+                duration: duration[0]
+            })
+        }
         onTransitionChange?.(value, duration[0])
     }
 
     const handleDurationChange = (value: number[]) => {
         setDuration(value)
+        if (currentSlideData) {
+            updateSlideTransition(currentSlideData.id, {
+                type: transition,
+                duration: value[0]
+            })
+        }
         onTransitionChange?.(transition, value[0])
     }
 

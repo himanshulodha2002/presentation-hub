@@ -25,6 +25,9 @@ interface SlideState {
         index: number,
         parentId: string,
     ) => void,
+    updateSlideNotes: (slideId: string, notes: string) => void,
+    updateSlideTransition: (slideId: string, transition: { type: string; duration: number }) => void,
+    getCurrentSlideData: () => Slide | undefined,
 }
 
 const defaultTheme: Theme = {
@@ -143,6 +146,21 @@ export const useSlideStore = create(
                     }))
                 };
             });
+        },
+        updateSlideNotes: (slideId: string, notes: string) => set((state) => ({
+            slides: state.slides.map((slide) =>
+                slide.id === slideId ? { ...slide, notes } : slide
+            )
+        })),
+        updateSlideTransition: (slideId: string, transition: { type: string; duration: number }) => set((state) => ({
+            slides: state.slides.map((slide) =>
+                slide.id === slideId ? { ...slide, transition } : slide
+            )
+        })),
+        getCurrentSlideData: () => {
+            const state = get();
+            const orderedSlides = state.getOrderedSlides();
+            return orderedSlides[state.currentSlide];
         }
     }), {
         name: 'slides-storage',

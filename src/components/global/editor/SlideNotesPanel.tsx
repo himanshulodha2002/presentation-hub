@@ -16,14 +16,24 @@ export const SlideNotesPanel: React.FC<SlideNotesPanelProps> = ({
     isVisible,
     onClose,
 }) => {
-    const { currentSlide, currentTheme } = useSlideStore()
+    const { getCurrentSlideData, updateSlideNotes, currentTheme } = useSlideStore()
     const [notes, setNotes] = useState<string>("")
+    const currentSlideData = getCurrentSlideData()
 
     useEffect(() => {
-        // In a real implementation, this would load notes from the slide data
-        // For now, we'll just clear it when the slide changes
-        setNotes("")
-    }, [currentSlide])
+        // Load notes from the current slide
+        if (currentSlideData) {
+            setNotes(currentSlideData.notes || "")
+        }
+    }, [currentSlideData?.id])
+
+    const handleNotesChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+        const newNotes = e.target.value
+        setNotes(newNotes)
+        if (currentSlideData) {
+            updateSlideNotes(currentSlideData.id, newNotes)
+        }
+    }
 
     if (!isVisible) return null
 
@@ -39,7 +49,7 @@ export const SlideNotesPanel: React.FC<SlideNotesPanelProps> = ({
                 <div className="flex items-center gap-2">
                     <StickyNote className="h-4 w-4" />
                     <Label className="text-sm font-medium">
-                        Notes for Slide {currentSlide + 1}
+                        Notes for Slide {(currentSlideData?.slideOrder ?? 0) + 1}
                     </Label>
                 </div>
                 <Button variant="ghost" size="sm" onClick={onClose}>
@@ -48,7 +58,7 @@ export const SlideNotesPanel: React.FC<SlideNotesPanelProps> = ({
             </div>
             <Textarea
                 value={notes}
-                onChange={(e) => setNotes(e.target.value)}
+                onChange={handleNotesChange}
                 placeholder="Click to add notes for this slide..."
                 className="min-h-[100px] resize-none"
             />
