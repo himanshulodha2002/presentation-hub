@@ -60,13 +60,23 @@ function UploadImage({ contentId, onContentChange }: Props) {
     console.log('🟢 [SUCCESS] Upload successful:', e.cdnUrl);
     console.log('🟢 [SUCCESS] Full event:', e);
 
+    // Handle the URL properly - remove trailing slash if present
+    let imageUrl = typeof e.cdnUrl === 'string' ? e.cdnUrl : '';
+
+    // Remove trailing slash from Uploadcare URL
+    if (imageUrl.endsWith('/')) {
+      imageUrl = imageUrl.slice(0, -1);
+    }
+
+    console.log('🟢 [SUCCESS] Cleaned URL:', imageUrl);
+
     setIsUploading(false);
     setUploadProgress(100);
     setUploadError(null);
 
     try {
       console.log('🟢 [SUCCESS] Calling onContentChange...');
-      onContentChange(contentId, e.cdnUrl);
+      onContentChange(contentId, imageUrl);
       console.log('🟢 [SUCCESS] onContentChange completed');
     } catch (error) {
       console.error('🔴 [ERROR] onContentChange failed:', error);
