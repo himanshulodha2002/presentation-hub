@@ -1,5 +1,3 @@
-'use server'
-
 import { GoogleGenAI } from '@google/genai'
 import { put } from '@vercel/blob'
 import mime from 'mime'
@@ -15,6 +13,16 @@ export type ImageProvider = 'cloudflare' | 'huggingface' | 'replicate' | 'gemini
 export interface ImageGenerationResponse {
   url: string
   error?: string
+}
+
+/**
+ * Replicate prediction response interface
+ */
+interface ReplicatePrediction {
+  id: string
+  status: 'starting' | 'processing' | 'succeeded' | 'failed' | 'canceled'
+  output?: string[] | null
+  error?: string | null
 }
 
 /**
@@ -199,17 +207,16 @@ async function generateImageReplicate(prompt: string): Promise<ImageGenerationRe
 
     // Use FLUX.1 Schnell - fastest and cheapest option
     const model = process.env.REPLICATE_MODEL || 'black-forest-labs/flux-schnell'
-    const version = 'bf0a9b4c37e1e64f68c1b1b2a7cce50c8f4e4e0e0c8f4e4e0e0c8f4e4e0e0c8f'
 
-    // Start prediction
-    const response = await fetch('https://api.replicate.com/v1/predictions', {
+    // Start prediction using model name directly
+    const response = await fetch('https://api.replicate.com/v1/models/' + model + '/predictions', {
       method: 'POST',
       headers: {
         'Authorization': `Token ${apiToken}`,
         'Content-Type': 'application/json',
+        'Prefer': 'wait',
       },
       body: JSON.stringify({
-        version: version,
         input: {
           prompt: prompt,
           num_outputs: 1,
@@ -228,10 +235,10 @@ async function generateImageReplicate(prompt: string): Promise<ImageGenerationRe
       }
     }
 
-    const prediction = await response.json()
+    const prediction = await response.json() as ReplicatePrediction
 
     // Poll for completion (Replicate is async)
-    let result = prediction
+    let result: ReplicatePrediction = prediction
     let attempts = 0
     const maxAttempts = 60 // 60 seconds max wait
 
@@ -244,7 +251,7 @@ async function generateImageReplicate(prompt: string): Promise<ImageGenerationRe
         },
       })
 
-      result = await statusResponse.json()
+      result = await statusResponse.json() as ReplicatePrediction
       attempts++
     }
 
