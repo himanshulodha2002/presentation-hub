@@ -21,6 +21,16 @@ const nextConfig = {
       },
       {
         protocol: "https",
+        hostname: "ucarecdn.net",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "*.ucarecdn.net",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
         hostname: "ptictyardjhsymt6.public.blob.vercel-storage.com",
         pathname: "**",
       },
