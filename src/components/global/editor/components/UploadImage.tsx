@@ -2,7 +2,7 @@
 
 import { FileUploaderRegular } from "@uploadcare/react-uploader/next";
 import "@uploadcare/react-uploader/core.css";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 
 type Props = {
   contentId: string;
@@ -20,7 +20,11 @@ function UploadImage({ contentId, onContentChange }: Props) {
   // Check if Uploadcare key is configured
   const uploadcareKey = process.env.NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY;
 
+  console.log('🔍 UploadImage component rendered for contentId:', contentId);
+  console.log('🔍 Uploadcare key configured:', !!uploadcareKey);
+
   if (!uploadcareKey) {
+    console.error('🔴 NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY is not configured');
     return (
       <div className="p-2 bg-red-100 text-red-700 rounded text-xs">
         Uploadcare not configured. Add NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY to .env
@@ -28,45 +32,70 @@ function UploadImage({ contentId, onContentChange }: Props) {
     );
   }
 
-  const handleFileUploadStart = () => {
+  const handleFileUploadStart = useCallback(() => {
+    console.log('🟢 [START] Upload started for contentId:', contentId);
     setIsUploading(true);
     setUploadError(null);
     setUploadProgress(0);
-    console.log('🟢 Upload started');
-  };
+  }, [contentId]);
 
-  const handleChangeEvent = (e: any) => {
-    // Track upload progress from change events
-    const progress = e?.detail?.uploadProgress || 0;
-    if (progress > 0 && progress < 100) {
+  const handleChangeEvent = useCallback((e: any) => {
+    console.log('🔍 [CHANGE] Event received:', e);
+    console.log('🔍 [CHANGE] Event detail:', e?.detail);
+
+    // Try to extract progress from various possible locations
+    const progress =
+      e?.detail?.uploadProgress ||
+      e?.detail?.progress ||
+      e?.progress ||
+      0;
+
+    if (progress > 0 && progress <= 100) {
       setUploadProgress(progress);
-      console.log(`🟢 Upload progress: ${progress}%`);
+      console.log(`🟢 [PROGRESS] ${progress}%`);
     }
-  };
+  }, []);
 
-  const handleFileUploadSuccess = (e: { cdnUrl: string | string[] | string[][] }) => {
-    console.log('🟢 Upload successful:', e.cdnUrl);
+  const handleFileUploadSuccess = useCallback((e: { cdnUrl: string | string[] | string[][] }) => {
+    console.log('🟢 [SUCCESS] Upload successful:', e.cdnUrl);
+    console.log('🟢 [SUCCESS] Full event:', e);
+
     setIsUploading(false);
     setUploadProgress(100);
     setUploadError(null);
 
     try {
+      console.log('🟢 [SUCCESS] Calling onContentChange...');
       onContentChange(contentId, e.cdnUrl);
+      console.log('🟢 [SUCCESS] onContentChange completed');
     } catch (error) {
-      console.error('🔴 Error calling onContentChange:', error);
+      console.error('🔴 [ERROR] onContentChange failed:', error);
       setUploadError('Failed to update image');
+      setIsUploading(false);
     }
-  };
+  }, [contentId, onContentChange]);
 
-  const handleFileUploadFailed = (e: any) => {
+  const handleFileUploadFailed = useCallback((e: any) => {
+    console.error('🔴 [FAILED] Upload failed:', e);
+    console.error('🔴 [FAILED] Error detail:', e?.detail);
+
     const errorMessage = e?.detail?.message || e?.message || 'Upload failed';
-    console.error('🔴 Upload error:', errorMessage);
+    console.error('🔴 [FAILED] Error message:', errorMessage);
+
     setIsUploading(false);
     setUploadError(errorMessage);
-  };
+    setUploadProgress(0);
+  }, []);
+
+  console.log('🔍 Render state:', { isUploading, uploadProgress, uploadError });
 
   return (
     <div className="relative">
+      {/* Debug info - remove this later */}
+      <div className="text-xs text-gray-500 mb-1">
+        Status: {isUploading ? 'Uploading' : 'Ready'} | Progress: {uploadProgress}%
+      </div>
+
       {isUploading && (
         <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-10 rounded">
           <div className="bg-white p-3 rounded-lg shadow-lg">
@@ -80,6 +109,17 @@ function UploadImage({ contentId, onContentChange }: Props) {
             <div className="text-xs text-gray-500 mt-1 text-center">
               {uploadProgress}%
             </div>
+            <button
+              onClick={() => {
+                console.log('🔴 Force reset upload state');
+                setIsUploading(false);
+                setUploadError(null);
+                setUploadProgress(0);
+              }}
+              className="mt-2 text-xs text-red-600 underline"
+            >
+              Cancel / Reset
+            </button>
           </div>
         </div>
       )}
@@ -87,6 +127,12 @@ function UploadImage({ contentId, onContentChange }: Props) {
       {uploadError && (
         <div className="absolute top-0 left-0 right-0 bg-red-100 text-red-700 text-xs p-2 rounded z-10">
           {uploadError}
+          <button
+            onClick={() => setUploadError(null)}
+            className="ml-2 underline"
+          >
+            Dismiss
+          </button>
         </div>
       )}
 
