@@ -29,6 +29,15 @@ const CustomImage = ({
     // Check if URL is from Uploadcare (bypass Next.js optimization for these)
     const isUploadcareUrl = src.includes('ucarecdn.com') || src.includes('ucarecdn.net');
 
+    // Add preview transformation to Uploadcare URLs if needed
+    let finalSrc = src;
+    if (isUploadcareUrl && !src.includes('/-/')) {
+      // If URL doesn't have transformations, add preview transformation
+      // This ensures the image is publicly accessible
+      finalSrc = src.endsWith('/') ? src + '-/preview/' : src + '/-/preview/';
+      console.log('🔍 Transformed Uploadcare URL:', finalSrc);
+    }
+
     // If image failed to load or is from Uploadcare, use unoptimized
     const shouldBypassOptimization = imageError || isUploadcareUrl;
 
@@ -43,19 +52,20 @@ const CustomImage = ({
                 </div>
             ) : (
                 <Image
-                    src={src}
+                    src={finalSrc}
                     width={isPreview ? 48 : 800}
                     height={isPreview ? 48 : 800}
                     alt={alt}
                     className={`object-cover  w-full h-full rounded-lg ${className}`}
                     unoptimized={shouldBypassOptimization}
                     onError={(e) => {
-                        console.error('🔴 Image failed to load:', src);
+                        console.error('🔴 Image failed to load:', finalSrc);
+                        console.error('🔴 Original src:', src);
                         console.error('🔴 Error event:', e);
                         setImageError(true);
                     }}
                     onLoadingComplete={() => {
-                        console.log('✅ Image loaded successfully:', src);
+                        console.log('✅ Image loaded successfully:', finalSrc);
                     }}
                 />
             )}

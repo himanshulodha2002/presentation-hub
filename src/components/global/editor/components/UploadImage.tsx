@@ -60,7 +60,7 @@ function UploadImage({ contentId, onContentChange }: Props) {
     console.log('🟢 [SUCCESS] Upload successful:', e.cdnUrl);
     console.log('🟢 [SUCCESS] Full event:', e);
 
-    // Handle the URL properly - remove trailing slash if present
+    // Handle the URL properly
     let imageUrl = typeof e.cdnUrl === 'string' ? e.cdnUrl : '';
 
     // Remove trailing slash from Uploadcare URL
@@ -68,14 +68,27 @@ function UploadImage({ contentId, onContentChange }: Props) {
       imageUrl = imageUrl.slice(0, -1);
     }
 
+    // Transform ucarecdn.com URLs to use the proper CDN subdomain format
+    // Uploadcare returns: https://ucarecdn.com/UUID/
+    // But we need: https://ucarecdn.com/UUID (without trailing slash)
+    // The CDN should handle this automatically
+
     console.log('🟢 [SUCCESS] Cleaned URL:', imageUrl);
+
+    // Verify the URL is valid
+    if (!imageUrl || !imageUrl.includes('ucarecdn')) {
+      console.error('🔴 [ERROR] Invalid Uploadcare URL:', imageUrl);
+      setUploadError('Invalid image URL received from Uploadcare');
+      setIsUploading(false);
+      return;
+    }
 
     setIsUploading(false);
     setUploadProgress(100);
     setUploadError(null);
 
     try {
-      console.log('🟢 [SUCCESS] Calling onContentChange...');
+      console.log('🟢 [SUCCESS] Calling onContentChange with URL:', imageUrl);
       onContentChange(contentId, imageUrl);
       console.log('🟢 [SUCCESS] onContentChange completed');
     } catch (error) {
