@@ -6,7 +6,7 @@ import { currentUser } from '@clerk/nextjs/server'
 import OpenAI from 'openai'
 import { v4 as uuidv4 } from 'uuid'
 
-import { generateImage } from '@/lib/imageProviders'
+import { generateImage, processWithRateLimit } from '@/lib/imageProviders'
 
 // Removed Google GenAI import - now using centralized image provider system
 // import { mkdir, writeFile } from 'fs'
@@ -552,12 +552,20 @@ const findImageComponents = (layout: ContentItem): ContentItem[] => {
 
 const replaceImagePlaceholders = async (layout: Slide) => {
   const imageComponents = findImageComponents(layout.content)
-  console.log('🟢 Found image components:', imageComponents)
+  console.log('🟢 Found image components:', imageComponents.length)
+
+  // Process images sequentially to avoid overwhelming the API
   for (const component of imageComponents) {
-    console.log('🟢 Generating image for component:', component.alt)
-    component.content = await generateImageUrl(
-      component.alt || 'Placeholder Image'
-    )
+    try {
+      console.log('🟢 Generating image for:', component.alt?.substring(0, 50) || 'Untitled')
+      component.content = await generateImageUrl(
+        component.alt || 'Placeholder Image'
+      )
+    } catch (error) {
+      console.error('🔴 Failed to generate image:', error)
+      // Use placeholder on error instead of failing
+      component.content = 'https://placehold.co/1024x768/e2e8f0/64748b?text=Image+Generation+Failed'
+    }
   }
 }
 
@@ -865,8 +873,14 @@ Generate professional, engaging slide layouts in valid JSON format. Ensure varie
         console.log('🔴 ERROR: Response is not an array')
         return { status: 400, error: 'Invalid JSON structure - expected an array' }
       }
-      
-      await Promise.all(jsonResponse.map(replaceImagePlaceholders))
+
+      // Process slides with rate limiting (2 slides at a time) to prevent API overload
+      console.log(`🟢 Processing ${jsonResponse.length} slides for image generation...`)
+      await processWithRateLimit(
+        jsonResponse,
+        replaceImagePlaceholders,
+        2 // Process 2 slides at a time
+      )
     } catch (error) {
       console.log('🔴 ERROR parsing JSON:', error)
       console.log('🔴 Content that failed to parse (first 500 chars):', responseContent.substring(0, 500))

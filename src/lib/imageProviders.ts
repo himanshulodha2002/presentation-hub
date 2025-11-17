@@ -3,6 +3,33 @@ import { put } from '@vercel/blob'
 import mime from 'mime'
 
 /**
+ * Fetch with timeout helper
+ */
+async function fetchWithTimeout(
+  url: string,
+  options: RequestInit = {},
+  timeoutMs: number = 30000
+): Promise<Response> {
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs)
+
+  try {
+    const response = await fetch(url, {
+      ...options,
+      signal: controller.signal,
+    })
+    clearTimeout(timeoutId)
+    return response
+  } catch (error) {
+    clearTimeout(timeoutId)
+    if ((error as Error).name === 'AbortError') {
+      throw new Error(`Request timed out after ${timeoutMs}ms`)
+    }
+    throw error
+  }
+}
+
+/**
  * Supported image generation providers
  */
 export type ImageProvider = 'cloudflare' | 'huggingface' | 'replicate' | 'gemini'
@@ -63,7 +90,7 @@ async function generateImageCloudflare(prompt: string): Promise<ImageGenerationR
     }
 
     // Use FLUX.1 Schnell model - fast and free on Workers AI
-    const response = await fetch(
+    const response = await fetchWithTimeout(
       `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/@cf/black-forest-labs/flux-1-schnell`,
       {
         method: 'POST',
@@ -75,7 +102,8 @@ async function generateImageCloudflare(prompt: string): Promise<ImageGenerationR
           prompt: prompt,
           num_steps: 4, // Fast generation
         }),
-      }
+      },
+      45000 // 45 second timeout for image generation
     )
 
     if (!response.ok) {
@@ -129,7 +157,7 @@ async function generateImageHuggingFace(prompt: string): Promise<ImageGeneration
     // Use model from env or default to Stable Diffusion XL
     const model = process.env.HUGGINGFACE_MODEL || 'stabilityai/stable-diffusion-xl-base-1.0'
 
-    const response = await fetch(
+    const response = await fetchWithTimeout(
       `https://api-inference.huggingface.co/models/${model}`,
       {
         method: 'POST',
@@ -144,7 +172,8 @@ async function generateImageHuggingFace(prompt: string): Promise<ImageGeneration
             guidance_scale: 7.5,
           },
         }),
-      }
+      },
+      60000 // 60 second timeout (HF can be slower on free tier)
     )
 
     if (!response.ok) {
@@ -209,22 +238,26 @@ async function generateImageReplicate(prompt: string): Promise<ImageGenerationRe
     const model = process.env.REPLICATE_MODEL || 'black-forest-labs/flux-schnell'
 
     // Start prediction using model name directly
-    const response = await fetch('https://api.replicate.com/v1/models/' + model + '/predictions', {
-      method: 'POST',
-      headers: {
-        'Authorization': `Token ${apiToken}`,
-        'Content-Type': 'application/json',
-        'Prefer': 'wait',
-      },
-      body: JSON.stringify({
-        input: {
-          prompt: prompt,
-          num_outputs: 1,
-          aspect_ratio: '16:9',
-          output_format: 'png',
+    const response = await fetchWithTimeout(
+      'https://api.replicate.com/v1/models/' + model + '/predictions',
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Token ${apiToken}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'wait',
         },
-      }),
-    })
+        body: JSON.stringify({
+          input: {
+            prompt: prompt,
+            num_outputs: 1,
+            aspect_ratio: '16:9',
+            output_format: 'png',
+          },
+        }),
+      },
+      30000 // 30 second timeout for initial request
+    )
 
     if (!response.ok) {
       const errorText = await response.text()
@@ -240,19 +273,32 @@ async function generateImageReplicate(prompt: string): Promise<ImageGenerationRe
     // Poll for completion (Replicate is async)
     let result: ReplicatePrediction = prediction
     let attempts = 0
-    const maxAttempts = 60 // 60 seconds max wait
+    const maxAttempts = 30 // 30 seconds max wait (reduced from 60)
 
     while (result.status !== 'succeeded' && result.status !== 'failed' && attempts < maxAttempts) {
       await new Promise(resolve => setTimeout(resolve, 1000)) // Wait 1 second
 
-      const statusResponse = await fetch(`https://api.replicate.com/v1/predictions/${result.id}`, {
-        headers: {
-          'Authorization': `Token ${apiToken}`,
-        },
-      })
+      try {
+        const statusResponse = await fetchWithTimeout(
+          `https://api.replicate.com/v1/predictions/${result.id}`,
+          {
+            headers: {
+              'Authorization': `Token ${apiToken}`,
+            },
+          },
+          10000 // 10 second timeout for status checks
+        )
 
-      result = await statusResponse.json() as ReplicatePrediction
-      attempts++
+        result = await statusResponse.json() as ReplicatePrediction
+        attempts++
+      } catch (error) {
+        console.error('🔴 Replicate polling error:', error)
+        // Return timeout error instead of continuing to poll
+        return {
+          url: 'https://placehold.co/1024x768/e2e8f0/64748b?text=Polling+Timeout',
+          error: 'Failed to check prediction status'
+        }
+      }
     }
 
     if (result.status === 'failed') {
@@ -274,7 +320,7 @@ async function generateImageReplicate(prompt: string): Promise<ImageGenerationRe
     const imageUrl = result.output[0]
 
     // Download and upload to Vercel Blob for consistent storage
-    const imageResponse = await fetch(imageUrl)
+    const imageResponse = await fetchWithTimeout(imageUrl, {}, 30000)
     const imageBuffer = Buffer.from(await imageResponse.arrayBuffer())
 
     const fileName = `replicate_image_${Date.now()}`
@@ -409,6 +455,31 @@ export async function generateImage(prompt: string): Promise<string> {
   }
 
   return result.url
+}
+
+/**
+ * Process async operations with rate limiting
+ * Limits concurrent operations to prevent API overload
+ */
+export async function processWithRateLimit<T, R>(
+  items: T[],
+  processor: (item: T) => Promise<R>,
+  concurrencyLimit: number = 3
+): Promise<R[]> {
+  const results: R[] = []
+
+  for (let i = 0; i < items.length; i += concurrencyLimit) {
+    const batch = items.slice(i, i + concurrencyLimit)
+    const batchResults = await Promise.all(batch.map(processor))
+    results.push(...batchResults)
+
+    // Small delay between batches to prevent rate limiting
+    if (i + concurrencyLimit < items.length) {
+      await new Promise(resolve => setTimeout(resolve, 500))
+    }
+  }
+
+  return results
 }
 
 /**
