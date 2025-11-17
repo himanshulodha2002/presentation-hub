@@ -28,20 +28,23 @@ function UploadImage({ contentId, onContentChange }: Props) {
     );
   }
 
-  const handleUploadStart = () => {
+  const handleFileUploadStart = () => {
     setIsUploading(true);
     setUploadError(null);
     setUploadProgress(0);
     console.log('🟢 Upload started');
   };
 
-  const handleUploadProgress = (e: { detail: { progress: number } }) => {
-    const progress = e.detail?.progress || 0;
-    setUploadProgress(progress);
-    console.log(`🟢 Upload progress: ${progress}%`);
+  const handleChangeEvent = (e: any) => {
+    // Track upload progress from change events
+    const progress = e?.detail?.uploadProgress || 0;
+    if (progress > 0 && progress < 100) {
+      setUploadProgress(progress);
+      console.log(`🟢 Upload progress: ${progress}%`);
+    }
   };
 
-  const handleUploadSuccess = (e: { cdnUrl: string | string[] | string[][] }) => {
+  const handleFileUploadSuccess = (e: { cdnUrl: string | string[] | string[][] }) => {
     console.log('🟢 Upload successful:', e.cdnUrl);
     setIsUploading(false);
     setUploadProgress(100);
@@ -55,7 +58,7 @@ function UploadImage({ contentId, onContentChange }: Props) {
     }
   };
 
-  const handleUploadError = (e: any) => {
+  const handleFileUploadFailed = (e: any) => {
     const errorMessage = e?.detail?.message || e?.message || 'Upload failed';
     console.error('🔴 Upload error:', errorMessage);
     setIsUploading(false);
@@ -92,10 +95,10 @@ function UploadImage({ contentId, onContentChange }: Props) {
         classNameUploader="uc-light"
         pubkey={uploadcareKey}
         multiple={false}
-        onFileUploadSuccess={handleUploadSuccess}
-        onFileUploadFailed={handleUploadError}
-        onUploadStart={handleUploadStart}
-        onUploadProgress={handleUploadProgress}
+        onFileUploadSuccess={handleFileUploadSuccess}
+        onFileUploadFailed={handleFileUploadFailed}
+        onFileUploadStart={handleFileUploadStart}
+        onChange={handleChangeEvent}
         maxLocalFileSizeBytes={10000000}
         imgOnly={true}
         accept="image/*"
