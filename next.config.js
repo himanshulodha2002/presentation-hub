@@ -3,13 +3,8 @@ const nextConfig = {
   // Disable strict mode to help with hydration errors
   reactStrictMode: false,
 
-  // Configure external packages
-  serverExternalPackages: ["pptxgenjs"],
-
-  // Ensure Prisma works with serverless
-  experimental: {
-    serverComponentsExternalPackages: ['@prisma/client', 'prisma'],
-  },
+  // Configure external packages (including Prisma for serverless)
+  serverExternalPackages: ["pptxgenjs", "@prisma/client", "prisma"],
 
   // Configure image domains with remotePatterns
   images: {
