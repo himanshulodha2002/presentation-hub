@@ -15,6 +15,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip"
+import { useEditor } from "@/contexts/EditorContext"
 import { useSlideStore } from "@/store/useSlideStore"
 import {
     AlignCenter,
@@ -29,15 +30,11 @@ import {
     Undo,
 } from "lucide-react"
 import React from "react"
+import { toast } from "sonner"
 
-interface FormattingToolbarProps {
-    onFormatChange?: (format: string, value: string | boolean) => void
-}
-
-export const FormattingToolbar: React.FC<FormattingToolbarProps> = ({
-    onFormatChange,
-}) => {
+export const FormattingToolbar: React.FC = () => {
     const { currentTheme } = useSlideStore()
+    const { applyFormatting, undo, redo } = useEditor()
     const [fontSize, setFontSize] = React.useState("16")
     const [fontFamily, setFontFamily] = React.useState("Inter")
 
@@ -46,16 +43,19 @@ export const FormattingToolbar: React.FC<FormattingToolbarProps> = ({
 
     const handleFontSizeChange = (value: string) => {
         setFontSize(value)
-        onFormatChange?.("fontSize", value)
+        applyFormatting("fontSize", value)
+        toast.success(`Font size: ${value}px`)
     }
 
     const handleFontFamilyChange = (value: string) => {
         setFontFamily(value)
-        onFormatChange?.("fontFamily", value)
+        applyFormatting("fontFamily", value)
+        toast.success(`Font: ${value}`)
     }
 
-    const handleFormatClick = (format: string) => {
-        onFormatChange?.(format, true)
+    const handleFormatClick = (format: string, label: string) => {
+        applyFormatting(format)
+        toast.success(label)
     }
 
     return (
@@ -104,7 +104,7 @@ export const FormattingToolbar: React.FC<FormattingToolbarProps> = ({
                             variant="ghost"
                             size="sm"
                             className="h-8 w-8 p-0"
-                            onClick={() => handleFormatClick("undo")}
+                            onClick={() => { undo(); toast.success("Undo") }}
                         >
                             <Undo className="h-4 w-4" />
                         </Button>
@@ -118,7 +118,7 @@ export const FormattingToolbar: React.FC<FormattingToolbarProps> = ({
                             variant="ghost"
                             size="sm"
                             className="h-8 w-8 p-0"
-                            onClick={() => handleFormatClick("redo")}
+                            onClick={() => { redo(); toast.success("Redo") }}
                         >
                             <Redo className="h-4 w-4" />
                         </Button>
@@ -135,7 +135,7 @@ export const FormattingToolbar: React.FC<FormattingToolbarProps> = ({
                             variant="ghost"
                             size="sm"
                             className="h-8 w-8 p-0"
-                            onClick={() => handleFormatClick("bold")}
+                            onClick={() => handleFormatClick("bold", "Bold")}
                         >
                             <Bold className="h-4 w-4" />
                         </Button>
@@ -149,7 +149,7 @@ export const FormattingToolbar: React.FC<FormattingToolbarProps> = ({
                             variant="ghost"
                             size="sm"
                             className="h-8 w-8 p-0"
-                            onClick={() => handleFormatClick("italic")}
+                            onClick={() => handleFormatClick("italic", "Italic")}
                         >
                             <Italic className="h-4 w-4" />
                         </Button>
@@ -163,7 +163,7 @@ export const FormattingToolbar: React.FC<FormattingToolbarProps> = ({
                             variant="ghost"
                             size="sm"
                             className="h-8 w-8 p-0"
-                            onClick={() => handleFormatClick("underline")}
+                            onClick={() => handleFormatClick("underline", "Underline")}
                         >
                             <Underline className="h-4 w-4" />
                         </Button>
@@ -180,12 +180,12 @@ export const FormattingToolbar: React.FC<FormattingToolbarProps> = ({
                             variant="ghost"
                             size="sm"
                             className="h-8 w-8 p-0"
-                            onClick={() => handleFormatClick("alignLeft")}
+                            onClick={() => handleFormatClick("alignLeft", "Left align")}
                         >
                             <AlignLeft className="h-4 w-4" />
                         </Button>
                     </TooltipTrigger>
-                    <TooltipContent>Align Left (Ctrl+L)</TooltipContent>
+                    <TooltipContent>Align Left</TooltipContent>
                 </Tooltip>
 
                 <Tooltip>
@@ -194,12 +194,12 @@ export const FormattingToolbar: React.FC<FormattingToolbarProps> = ({
                             variant="ghost"
                             size="sm"
                             className="h-8 w-8 p-0"
-                            onClick={() => handleFormatClick("alignCenter")}
+                            onClick={() => handleFormatClick("alignCenter", "Center align")}
                         >
                             <AlignCenter className="h-4 w-4" />
                         </Button>
                     </TooltipTrigger>
-                    <TooltipContent>Align Center (Ctrl+E)</TooltipContent>
+                    <TooltipContent>Align Center</TooltipContent>
                 </Tooltip>
 
                 <Tooltip>
@@ -208,12 +208,12 @@ export const FormattingToolbar: React.FC<FormattingToolbarProps> = ({
                             variant="ghost"
                             size="sm"
                             className="h-8 w-8 p-0"
-                            onClick={() => handleFormatClick("alignRight")}
+                            onClick={() => handleFormatClick("alignRight", "Right align")}
                         >
                             <AlignRight className="h-4 w-4" />
                         </Button>
                     </TooltipTrigger>
-                    <TooltipContent>Align Right (Ctrl+R)</TooltipContent>
+                    <TooltipContent>Align Right</TooltipContent>
                 </Tooltip>
 
                 <Separator orientation="vertical" className="h-6" />
@@ -225,7 +225,7 @@ export const FormattingToolbar: React.FC<FormattingToolbarProps> = ({
                             variant="ghost"
                             size="sm"
                             className="h-8 w-8 p-0"
-                            onClick={() => handleFormatClick("bulletList")}
+                            onClick={() => handleFormatClick("bulletList", "Bullet list")}
                         >
                             <List className="h-4 w-4" />
                         </Button>
@@ -239,7 +239,7 @@ export const FormattingToolbar: React.FC<FormattingToolbarProps> = ({
                             variant="ghost"
                             size="sm"
                             className="h-8 w-8 p-0"
-                            onClick={() => handleFormatClick("numberedList")}
+                            onClick={() => handleFormatClick("numberedList", "Numbered list")}
                         >
                             <ListOrdered className="h-4 w-4" />
                         </Button>

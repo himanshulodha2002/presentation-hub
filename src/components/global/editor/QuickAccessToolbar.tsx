@@ -15,21 +15,47 @@ import {
     Type,
 } from "lucide-react"
 import React from "react"
+import { toast } from "sonner"
 
-interface QuickAccessToolbarProps {
-    onInsertText?: () => void
-    onInsertImage?: () => void
-    onInsertShape?: () => void
-    onInsertTable?: () => void
-}
-
-export const QuickAccessToolbar: React.FC<QuickAccessToolbarProps> = ({
-    onInsertText,
-    onInsertImage,
-    onInsertShape,
-    onInsertTable,
-}) => {
+export const QuickAccessToolbar: React.FC = () => {
     const { currentTheme } = useSlideStore()
+
+    const handleInsertText = () => {
+        document.execCommand('insertHTML', false, '<p>New text box</p>')
+        toast.success("Text box inserted")
+    }
+
+    const handleInsertImage = () => {
+        const url = prompt('Enter image URL:')
+        if (url) {
+            document.execCommand('insertImage', false, url)
+            toast.success("Image inserted")
+        }
+    }
+
+    const handleInsertShape = () => {
+        // Insert a simple colored div as a shape
+        document.execCommand('insertHTML', false, '<div style="width: 100px; height: 100px; background-color: #3b82f6; display: inline-block; margin: 10px;"></div>')
+        toast.success("Shape inserted")
+    }
+
+    const handleInsertTable = () => {
+        const rows = prompt('Number of rows:', '3')
+        const cols = prompt('Number of columns:', '3')
+        if (rows && cols) {
+            let tableHTML = '<table border="1" style="border-collapse: collapse; width: 100%; margin: 10px 0;"><tbody>'
+            for (let i = 0; i < parseInt(rows); i++) {
+                tableHTML += '<tr>'
+                for (let j = 0; j < parseInt(cols); j++) {
+                    tableHTML += '<td style="border: 1px solid #ccc; padding: 8px;">Cell</td>'
+                }
+                tableHTML += '</tr>'
+            }
+            tableHTML += '</tbody></table>'
+            document.execCommand('insertHTML', false, tableHTML)
+            toast.success("Table inserted")
+        }
+    }
 
     return (
         <TooltipProvider>
@@ -48,7 +74,7 @@ export const QuickAccessToolbar: React.FC<QuickAccessToolbarProps> = ({
                             variant="ghost"
                             size="sm"
                             className="h-8 w-8 p-0"
-                            onClick={onInsertText}
+                            onClick={handleInsertText}
                         >
                             <Type className="h-4 w-4" />
                         </Button>
@@ -62,7 +88,7 @@ export const QuickAccessToolbar: React.FC<QuickAccessToolbarProps> = ({
                             variant="ghost"
                             size="sm"
                             className="h-8 w-8 p-0"
-                            onClick={onInsertImage}
+                            onClick={handleInsertImage}
                         >
                             <Image className="h-4 w-4" />
                         </Button>
@@ -76,7 +102,7 @@ export const QuickAccessToolbar: React.FC<QuickAccessToolbarProps> = ({
                             variant="ghost"
                             size="sm"
                             className="h-8 w-8 p-0"
-                            onClick={onInsertShape}
+                            onClick={handleInsertShape}
                         >
                             <Shapes className="h-4 w-4" />
                         </Button>
@@ -90,7 +116,7 @@ export const QuickAccessToolbar: React.FC<QuickAccessToolbarProps> = ({
                             variant="ghost"
                             size="sm"
                             className="h-8 w-8 p-0"
-                            onClick={onInsertTable}
+                            onClick={handleInsertTable}
                         >
                             <Table className="h-4 w-4" />
                         </Button>
