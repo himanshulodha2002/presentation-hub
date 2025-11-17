@@ -2,7 +2,7 @@
 
 import { FileUploaderRegular } from "@uploadcare/react-uploader/next";
 import "@uploadcare/react-uploader/core.css";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 
 type Props = {
   contentId: string;
@@ -16,19 +16,9 @@ function UploadImage({ contentId, onContentChange }: Props) {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
-  const uploaderRef = useRef<any>(null);
 
   // Check if Uploadcare key is configured
   const uploadcareKey = process.env.NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY;
-
-  useEffect(() => {
-    // Cleanup on unmount
-    return () => {
-      if (uploaderRef.current) {
-        uploaderRef.current = null;
-      }
-    };
-  }, []);
 
   if (!uploadcareKey) {
     return (
@@ -98,7 +88,6 @@ function UploadImage({ contentId, onContentChange }: Props) {
       )}
 
       <FileUploaderRegular
-        ref={uploaderRef}
         sourceList="local, url, dropbox"
         classNameUploader="uc-light"
         pubkey={uploadcareKey}
