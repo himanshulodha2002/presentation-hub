@@ -6,6 +6,11 @@ const nextConfig = {
   // Configure external packages
   serverExternalPackages: ["pptxgenjs"],
 
+  // Ensure Prisma works with serverless
+  experimental: {
+    serverComponentsExternalPackages: ['@prisma/client', 'prisma'],
+  },
+
   // Configure image domains with remotePatterns
   images: {
     remotePatterns: [
