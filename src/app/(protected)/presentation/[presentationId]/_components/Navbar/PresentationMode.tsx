@@ -15,6 +15,9 @@ const PresentationMode = ({ onClose }: Props) => {
   const { getOrderedSlides, currentTheme } = useSlideStore();
 
   const slides = getOrderedSlides();
+  const currentSlide = slides[currentSlideIndex];
+  const transitionType = currentSlide?.transition?.type || "fade";
+  const transitionDuration = (currentSlide?.transition?.duration || 500) / 1000; // Convert to seconds
 
   const gotToPreviousSlide = () => {
     setCurrentSlideIndex((prev) => Math.max(prev - 1, 0));
@@ -49,6 +52,45 @@ const PresentationMode = ({ onClose }: Props) => {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [slides.length, currentSlideIndex, onClose]);
 
+  // Define transition variants based on transition type
+  const getTransitionVariants = () => {
+    switch (transitionType) {
+      case "slide":
+        return {
+          initial: { x: "100%", opacity: 0 },
+          animate: { x: 0, opacity: 1 },
+          exit: { x: "-100%", opacity: 0 },
+        };
+      case "zoom":
+        return {
+          initial: { scale: 0, opacity: 0 },
+          animate: { scale: 1, opacity: 1 },
+          exit: { scale: 2, opacity: 0 },
+        };
+      case "split":
+        return {
+          initial: { scaleX: 0, opacity: 0 },
+          animate: { scaleX: 1, opacity: 1 },
+          exit: { scaleX: 0, opacity: 0 },
+        };
+      case "reveal":
+        return {
+          initial: { clipPath: "inset(0 100% 0 0)", opacity: 1 },
+          animate: { clipPath: "inset(0 0% 0 0)", opacity: 1 },
+          exit: { clipPath: "inset(0 0 0 100%)", opacity: 1 },
+        };
+      case "fade":
+      default:
+        return {
+          initial: { opacity: 0 },
+          animate: { opacity: 1 },
+          exit: { opacity: 0 },
+        };
+    }
+  };
+
+  const transitionVariants = getTransitionVariants();
+
   return (
     <div className="fixed inset-0 bg-black flex items-center justify-center z-50">
       <div
@@ -62,10 +104,10 @@ const PresentationMode = ({ onClose }: Props) => {
         <AnimatePresence mode="wait">
           <motion.div
             key={currentSlideIndex}
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.2 }}
-            transition={{ duration: 0.5 }}
+            initial={transitionVariants.initial}
+            animate={transitionVariants.animate}
+            exit={transitionVariants.exit}
+            transition={{ duration: transitionDuration, ease: "easeInOut" }}
             className={`w-full h-full pointer-events-none ${slides[currentSlideIndex].className}`}
             style={{
               backgroundColor: currentTheme.slideBackgroundColor,
