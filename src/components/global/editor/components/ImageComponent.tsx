@@ -32,10 +32,12 @@ const CustomImage = ({
     // Add preview transformation to Uploadcare URLs if needed
     let finalSrc = src;
     if (isUploadcareUrl && !src.includes('/-/')) {
-      // If URL doesn't have transformations, add preview transformation
-      // This ensures the image is publicly accessible
-      finalSrc = src.endsWith('/') ? src + '-/preview/' : src + '/-/preview/';
-      console.log('🔍 Transformed Uploadcare URL:', finalSrc);
+      // Remove trailing slash first
+      const cleanUrl = src.endsWith('/') ? src.slice(0, -1) : src;
+      // Add preview transformation (no trailing slash at end)
+      finalSrc = cleanUrl + '/-/preview/';
+      console.log('🔍 Original URL:', src);
+      console.log('🔍 Transformed URL:', finalSrc);
     }
 
     // If image failed to load or is from Uploadcare, use unoptimized
