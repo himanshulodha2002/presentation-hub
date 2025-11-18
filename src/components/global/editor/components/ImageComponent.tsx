@@ -29,15 +29,12 @@ const CustomImage = ({
     // Check if URL is from Uploadcare (bypass Next.js optimization for these)
     const isUploadcareUrl = src.includes('ucarecdn.com') || src.includes('ucarecdn.net');
 
-    // Add preview transformation to Uploadcare URLs if needed
+    // Clean Uploadcare URLs - just remove trailing slash, no transformations
     let finalSrc = src;
-    if (isUploadcareUrl && !src.includes('/-/')) {
-      // Remove trailing slash first
-      const cleanUrl = src.endsWith('/') ? src.slice(0, -1) : src;
-      // Add preview transformation (no trailing slash at end)
-      finalSrc = cleanUrl + '/-/preview/';
+    if (isUploadcareUrl && src.endsWith('/')) {
+      finalSrc = src.slice(0, -1);
       console.log('🔍 Original URL:', src);
-      console.log('🔍 Transformed URL:', finalSrc);
+      console.log('🔍 Cleaned URL (removed trailing slash):', finalSrc);
     }
 
     // If image failed to load or is from Uploadcare, use unoptimized
