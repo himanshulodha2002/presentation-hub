@@ -1,8 +1,7 @@
 "use client";
 
-import { FileUploaderRegular } from "@uploadcare/react-uploader/next";
-import "@uploadcare/react-uploader/core.css";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useRef } from "react";
+import { Upload } from "lucide-react";
 
 type Props = {
   contentId: string;
@@ -16,165 +15,154 @@ function UploadImage({ contentId, onContentChange }: Props) {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Check if Uploadcare key is configured
-  const uploadcareKey = process.env.NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY;
+  const handleFileChange = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
 
-  console.log('🔍 UploadImage component rendered for contentId:', contentId);
-  console.log('🔍 Uploadcare key configured:', !!uploadcareKey);
-
-  if (!uploadcareKey) {
-    console.error('🔴 NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY is not configured');
-    return (
-      <div className="p-2 bg-red-100 text-red-700 rounded text-xs">
-        Uploadcare not configured. Add NEXT_PUBLIC_UPLOADCARE_PUBLIC_KEY to .env
-      </div>
-    );
-  }
-
-  const handleFileUploadStart = useCallback(() => {
-    console.log('🟢 [START] Upload started for contentId:', contentId);
-    setIsUploading(true);
-    setUploadError(null);
-    setUploadProgress(0);
-  }, [contentId]);
-
-  const handleChangeEvent = useCallback((e: any) => {
-    console.log('🔍 [CHANGE] Event received:', e);
-    console.log('🔍 [CHANGE] Event detail:', e?.detail);
-
-    // Try to extract progress from various possible locations
-    const progress =
-      e?.detail?.uploadProgress ||
-      e?.detail?.progress ||
-      e?.progress ||
-      0;
-
-    if (progress > 0 && progress <= 100) {
-      setUploadProgress(progress);
-      console.log(`🟢 [PROGRESS] ${progress}%`);
-    }
-  }, []);
-
-  const handleFileUploadSuccess = useCallback((e: { cdnUrl: string | string[] | string[][] }) => {
-    console.log('🟢 [SUCCESS] Upload successful:', e.cdnUrl);
-    console.log('🟢 [SUCCESS] Full event:', e);
-
-    // Handle the URL properly
-    let imageUrl = typeof e.cdnUrl === 'string' ? e.cdnUrl : '';
-
-    // Remove trailing slash from Uploadcare URL
-    if (imageUrl.endsWith('/')) {
-      imageUrl = imageUrl.slice(0, -1);
-    }
-
-    // Transform generic ucarecdn.com URLs to use the custom CDN domain
-    // Uploadcare returns: https://ucarecdn.com/UUID/
-    // But we need: https://1brirju07k.ucarecdn.net/UUID/
-    if (imageUrl.includes('ucarecdn.com')) {
-      imageUrl = imageUrl.replace('ucarecdn.com', '1brirju07k.ucarecdn.net');
-      console.log('🔍 [TRANSFORM] Replaced generic domain with custom CDN domain');
-    }
-
-    console.log('🟢 [SUCCESS] Final URL:', imageUrl);
-
-    // Verify the URL is valid
-    if (!imageUrl || (!imageUrl.includes('ucarecdn.net') && !imageUrl.includes('ucarecdn.com'))) {
-      console.error('🔴 [ERROR] Invalid Uploadcare URL:', imageUrl);
-      setUploadError('Invalid image URL received from Uploadcare');
-      setIsUploading(false);
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      setUploadError('Please select an image file');
       return;
     }
 
-    setIsUploading(false);
-    setUploadProgress(100);
+    // Validate file size (10MB max)
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (file.size > maxSize) {
+      setUploadError('File size must be less than 10MB');
+      return;
+    }
+
+    console.log('🟢 [START] Upload started for contentId:', contentId);
+    console.log('🟢 [START] File:', file.name, file.type, file.size);
+
+    setIsUploading(true);
     setUploadError(null);
+    setUploadProgress(0);
 
     try {
-      console.log('🟢 [SUCCESS] Calling onContentChange with URL:', imageUrl);
-      onContentChange(contentId, imageUrl);
-      console.log('🟢 [SUCCESS] onContentChange completed');
-    } catch (error) {
-      console.error('🔴 [ERROR] onContentChange failed:', error);
-      setUploadError('Failed to update image');
+      const formData = new FormData();
+      formData.append('file', file);
+
+      // Simulate progress (since fetch doesn't support upload progress natively)
+      const progressInterval = setInterval(() => {
+        setUploadProgress((prev) => {
+          if (prev >= 90) return prev;
+          return prev + 10;
+        });
+      }, 100);
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      clearInterval(progressInterval);
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.error || 'Upload failed');
+      }
+
+      const data = await response.json();
+      console.log('🟢 [SUCCESS] Upload successful:', data.url);
+
+      setUploadProgress(100);
       setIsUploading(false);
+      setUploadError(null);
+
+      // Update the image URL
+      onContentChange(contentId, data.url);
+      console.log('🟢 [SUCCESS] Image URL updated');
+
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    } catch (error) {
+      console.error('🔴 [ERROR] Upload failed:', error);
+      setIsUploading(false);
+      setUploadError(error instanceof Error ? error.message : 'Upload failed');
+      setUploadProgress(0);
+
+      // Reset file input
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   }, [contentId, onContentChange]);
 
-  const handleFileUploadFailed = useCallback((e: any) => {
-    console.error('🔴 [FAILED] Upload failed:', e);
-    console.error('🔴 [FAILED] Error detail:', e?.detail);
-
-    const errorMessage = e?.detail?.message || e?.message || 'Upload failed';
-    console.error('🔴 [FAILED] Error message:', errorMessage);
-
-    setIsUploading(false);
-    setUploadError(errorMessage);
-    setUploadProgress(0);
+  const handleButtonClick = useCallback(() => {
+    fileInputRef.current?.click();
   }, []);
 
-  console.log('🔍 Render state:', { isUploading, uploadProgress, uploadError });
+  const handleCancelUpload = useCallback(() => {
+    console.log('🔴 Cancel upload');
+    setIsUploading(false);
+    setUploadError(null);
+    setUploadProgress(0);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
+  }, []);
 
   return (
     <div className="relative">
-      {/* Debug info - remove this later */}
-      <div className="text-xs text-gray-500 mb-1">
-        Status: {isUploading ? 'Uploading' : 'Ready'} | Progress: {uploadProgress}%
-      </div>
+      {/* Hidden file input */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        onChange={handleFileChange}
+        className="hidden"
+        disabled={isUploading}
+      />
 
+      {/* Upload button */}
+      <button
+        onClick={handleButtonClick}
+        disabled={isUploading}
+        className="flex items-center gap-2 px-3 py-2 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white rounded-lg text-sm transition-colors"
+      >
+        <Upload size={16} />
+        {isUploading ? 'Uploading...' : 'Upload Image'}
+      </button>
+
+      {/* Progress overlay */}
       {isUploading && (
-        <div className="absolute inset-0 bg-black/50 flex items-center justify-center z-10 rounded">
-          <div className="bg-white p-3 rounded-lg shadow-lg">
-            <div className="text-sm font-medium mb-2">Uploading...</div>
-            <div className="w-48 h-2 bg-gray-200 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-blue-500 transition-all duration-300"
-                style={{ width: `${uploadProgress}%` }}
-              />
-            </div>
-            <div className="text-xs text-gray-500 mt-1 text-center">
-              {uploadProgress}%
-            </div>
-            <button
-              onClick={() => {
-                console.log('🔴 Force reset upload state');
-                setIsUploading(false);
-                setUploadError(null);
-                setUploadProgress(0);
-              }}
-              className="mt-2 text-xs text-red-600 underline"
-            >
-              Cancel / Reset
-            </button>
+        <div className="absolute top-full left-0 mt-2 bg-white p-3 rounded-lg shadow-lg border border-gray-200 min-w-[200px] z-10">
+          <div className="text-sm font-medium mb-2">Uploading...</div>
+          <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-blue-500 transition-all duration-300"
+              style={{ width: `${uploadProgress}%` }}
+            />
           </div>
+          <div className="text-xs text-gray-500 mt-1 text-center">
+            {uploadProgress}%
+          </div>
+          <button
+            onClick={handleCancelUpload}
+            className="mt-2 text-xs text-red-600 hover:text-red-700 underline w-full"
+          >
+            Cancel
+          </button>
         </div>
       )}
 
+      {/* Error message */}
       {uploadError && (
-        <div className="absolute top-0 left-0 right-0 bg-red-100 text-red-700 text-xs p-2 rounded z-10">
+        <div className="absolute top-full left-0 mt-2 bg-red-100 text-red-700 text-xs p-2 rounded border border-red-200 min-w-[200px] z-10">
           {uploadError}
           <button
             onClick={() => setUploadError(null)}
-            className="ml-2 underline"
+            className="ml-2 underline hover:no-underline"
           >
             Dismiss
           </button>
         </div>
       )}
-
-      <FileUploaderRegular
-        sourceList="local, url, dropbox"
-        classNameUploader="uc-light"
-        pubkey={uploadcareKey}
-        multiple={false}
-        onFileUploadSuccess={handleFileUploadSuccess}
-        onFileUploadFailed={handleFileUploadFailed}
-        onFileUploadStart={handleFileUploadStart}
-        onChange={handleChangeEvent}
-        maxLocalFileSizeBytes={10000000}
-        imgOnly={true}
-        accept="image/*"
-      />
     </div>
   );
 }

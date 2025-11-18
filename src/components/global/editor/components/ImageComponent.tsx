@@ -26,19 +26,11 @@ const CustomImage = ({
 }: Props) => {
     const [imageError, setImageError] = useState(false);
 
-    // Check if URL is from Uploadcare (bypass Next.js optimization for these)
-    const isUploadcareUrl = src.includes('ucarecdn.com') || src.includes('ucarecdn.net');
-
-    // Clean Uploadcare URLs - just remove trailing slash, no transformations
-    let finalSrc = src;
-    if (isUploadcareUrl && src.endsWith('/')) {
-      finalSrc = src.slice(0, -1);
-      console.log('🔍 Original URL:', src);
-      console.log('🔍 Cleaned URL (removed trailing slash):', finalSrc);
-    }
-
-    // If image failed to load or is from Uploadcare, use unoptimized
-    const shouldBypassOptimization = imageError || isUploadcareUrl;
+    // Check if URL is from external source (should be unoptimized)
+    const isExternalUrl = src.includes('blob.vercel-storage.com') ||
+                          src.includes('ucarecdn') ||
+                          src.includes('unsplash.com') ||
+                          src.includes('cloudinary.com');
 
     return (
         <div className={`relative group w-full  h-full  rounded-lg`}>
@@ -51,20 +43,19 @@ const CustomImage = ({
                 </div>
             ) : (
                 <Image
-                    src={finalSrc}
+                    src={src}
                     width={isPreview ? 48 : 800}
                     height={isPreview ? 48 : 800}
                     alt={alt}
                     className={`object-cover  w-full h-full rounded-lg ${className}`}
-                    unoptimized={shouldBypassOptimization}
+                    unoptimized={isExternalUrl}
                     onError={(e) => {
-                        console.error('🔴 Image failed to load:', finalSrc);
-                        console.error('🔴 Original src:', src);
+                        console.error('🔴 Image failed to load:', src);
                         console.error('🔴 Error event:', e);
                         setImageError(true);
                     }}
                     onLoadingComplete={() => {
-                        console.log('✅ Image loaded successfully:', finalSrc);
+                        console.log('✅ Image loaded successfully:', src);
                     }}
                 />
             )}

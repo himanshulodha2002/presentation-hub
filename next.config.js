@@ -9,33 +9,16 @@ const nextConfig = {
   // Configure image domains with remotePatterns
   images: {
     remotePatterns: [
-      // Uploadcare domains (both .com and .net with all subdomains)
-      {
-        protocol: "https",
-        hostname: "ucarecdn.com",
-      },
-      {
-        protocol: "https",
-        hostname: "*.ucarecdn.com",
-      },
-      {
-        protocol: "https",
-        hostname: "ucarecdn.net",
-      },
-      {
-        protocol: "https",
-        hostname: "*.ucarecdn.net",
-      },
-      // Vercel Blob Storage
-      {
-        protocol: "https",
-        hostname: "ptictyardjhsymt6.public.blob.vercel-storage.com",
-      },
+      // Vercel Blob Storage (primary image storage)
       {
         protocol: "https",
         hostname: "**.public.blob.vercel-storage.com",
       },
-      // OpenAI DALL-E
+      {
+        protocol: "https",
+        hostname: "**.blob.vercel-storage.com",
+      },
+      // OpenAI DALL-E (for AI-generated images)
       {
         protocol: "https",
         hostname: "oaidalleapiprodscus.blob.core.windows.net",
