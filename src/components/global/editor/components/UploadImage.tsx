@@ -68,15 +68,18 @@ function UploadImage({ contentId, onContentChange }: Props) {
       imageUrl = imageUrl.slice(0, -1);
     }
 
-    // Transform ucarecdn.com URLs to use the proper CDN subdomain format
+    // Transform generic ucarecdn.com URLs to use the custom CDN domain
     // Uploadcare returns: https://ucarecdn.com/UUID/
-    // But we need: https://ucarecdn.com/UUID (without trailing slash)
-    // The CDN should handle this automatically
+    // But we need: https://1brirju07k.ucarecdn.net/UUID/
+    if (imageUrl.includes('ucarecdn.com')) {
+      imageUrl = imageUrl.replace('ucarecdn.com', '1brirju07k.ucarecdn.net');
+      console.log('🔍 [TRANSFORM] Replaced generic domain with custom CDN domain');
+    }
 
-    console.log('🟢 [SUCCESS] Cleaned URL:', imageUrl);
+    console.log('🟢 [SUCCESS] Final URL:', imageUrl);
 
     // Verify the URL is valid
-    if (!imageUrl || !imageUrl.includes('ucarecdn')) {
+    if (!imageUrl || (!imageUrl.includes('ucarecdn.net') && !imageUrl.includes('ucarecdn.com'))) {
       console.error('🔴 [ERROR] Invalid Uploadcare URL:', imageUrl);
       setUploadError('Invalid image URL received from Uploadcare');
       setIsUploading(false);
