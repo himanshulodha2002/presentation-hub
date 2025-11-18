@@ -82,7 +82,7 @@ const Page = () => {
           <FormattingToolbar />
           <QuickAccessToolbar />
           <div
-            className="flex-1 flex flex-col overflow-hidden pt-36 pb-8"
+            className="flex-1 flex flex-col overflow-hidden pt-40 pb-8"
             style={{
               color: currentTheme.accentColor,
               fontFamily: currentTheme.fontFamily,

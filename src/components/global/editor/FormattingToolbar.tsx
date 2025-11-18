@@ -61,7 +61,7 @@ export const FormattingToolbar: React.FC = () => {
     return (
         <TooltipProvider>
             <div
-                className="flex items-center gap-2 p-2 border-b"
+                className="fixed top-16 left-0 right-0 z-40 flex items-center gap-2 p-2 border-b"
                 style={{
                     backgroundColor: currentTheme.navbarColor || currentTheme.backgroundColor,
                     color: currentTheme.accentColor,

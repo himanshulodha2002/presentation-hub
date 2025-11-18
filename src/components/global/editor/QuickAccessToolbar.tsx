@@ -60,7 +60,7 @@ export const QuickAccessToolbar: React.FC = () => {
     return (
         <TooltipProvider>
             <div
-                className="flex items-center gap-1 px-3 py-2 border-b"
+                className="fixed top-28 left-0 right-0 z-40 flex items-center gap-1 px-3 py-2 border-b"
                 style={{
                     backgroundColor: currentTheme.backgroundColor,
                     color: currentTheme.accentColor,
