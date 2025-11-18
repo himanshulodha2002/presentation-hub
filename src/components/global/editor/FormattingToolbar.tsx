@@ -24,6 +24,7 @@ import {
     Bold,
     Grid3x3,
     Italic,
+    Link,
     List,
     ListOrdered,
     Redo,
@@ -57,6 +58,20 @@ export const FormattingToolbar: React.FC = () => {
     const handleFormatClick = (format: string, label: string) => {
         applyFormatting(format)
         toast.success(label)
+    }
+
+    const handleInsertLink = () => {
+        const selection = window.getSelection()
+        if (!selection || selection.toString().length === 0) {
+            toast.error("Please select text first")
+            return
+        }
+
+        const url = prompt("Enter URL (e.g., https://example.com):")
+        if (url) {
+            document.execCommand('createLink', false, url)
+            toast.success("Link added")
+        }
     }
 
     return (
@@ -170,6 +185,20 @@ export const FormattingToolbar: React.FC = () => {
                         </Button>
                     </TooltipTrigger>
                     <TooltipContent>Underline (Ctrl+U)</TooltipContent>
+                </Tooltip>
+
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0"
+                            onClick={handleInsertLink}
+                        >
+                            <Link className="h-4 w-4" />
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Insert Link (Ctrl+K)</TooltipContent>
                 </Tooltip>
 
                 <Separator orientation="vertical" className="h-6" />
