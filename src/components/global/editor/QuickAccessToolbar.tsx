@@ -13,12 +13,14 @@ import {
     Shapes,
     Table,
     Type,
+    Upload,
 } from "lucide-react"
-import React from "react"
+import React, { useRef } from "react"
 import { toast } from "sonner"
 
 export const QuickAccessToolbar: React.FC = () => {
     const { currentTheme } = useSlideStore()
+    const fileInputRef = useRef<HTMLInputElement>(null)
 
     const handleInsertText = () => {
         document.execCommand('insertHTML', false, '<p>New text box</p>')
@@ -28,15 +30,67 @@ export const QuickAccessToolbar: React.FC = () => {
     const handleInsertImage = () => {
         const url = prompt('Enter image URL:')
         if (url) {
-            document.execCommand('insertImage', false, url)
+            document.execCommand('insertHTML', false, `<img src="${url}" alt="Inserted image" style="max-width: 100%; height: auto; margin: 10px 0;" />`)
             toast.success("Image inserted")
         }
     }
 
+    const handleUploadImage = () => {
+        fileInputRef.current?.click()
+    }
+
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0]
+        if (file) {
+            if (!file.type.startsWith('image/')) {
+                toast.error("Please select an image file")
+                return
+            }
+
+            const reader = new FileReader()
+            reader.onload = (event) => {
+                const base64 = event.target?.result as string
+                document.execCommand('insertHTML', false, `<img src="${base64}" alt="Uploaded image" style="max-width: 100%; height: auto; margin: 10px 0;" />`)
+                toast.success("Image uploaded and inserted")
+            }
+            reader.readAsDataURL(file)
+        }
+        // Reset input so same file can be selected again
+        e.target.value = ''
+    }
+
     const handleInsertShape = () => {
-        // Insert a simple colored div as a shape
-        document.execCommand('insertHTML', false, '<div style="width: 100px; height: 100px; background-color: #3b82f6; display: inline-block; margin: 10px;"></div>')
-        toast.success("Shape inserted")
+        const shapes = ['Rectangle', 'Circle', 'Arrow Right', 'Line', 'Triangle']
+        const choice = prompt(`Choose a shape:\n1. Rectangle\n2. Circle\n3. Arrow Right\n4. Line\n5. Triangle\n\nEnter number (1-5):`)
+
+        if (!choice) return
+
+        let shapeHTML = ''
+        const shapeNumber = parseInt(choice)
+
+        switch (shapeNumber) {
+            case 1: // Rectangle
+                shapeHTML = '<div style="width: 150px; height: 100px; background-color: #3b82f6; display: inline-block; margin: 10px; border-radius: 4px;"></div>'
+                break
+            case 2: // Circle
+                shapeHTML = '<div style="width: 100px; height: 100px; background-color: #10b981; display: inline-block; margin: 10px; border-radius: 50%;"></div>'
+                break
+            case 3: // Arrow Right
+                shapeHTML = '<div style="width: 0; height: 0; border-top: 25px solid transparent; border-bottom: 25px solid transparent; border-left: 50px solid #f59e0b; display: inline-block; margin: 10px;"></div>'
+                break
+            case 4: // Line
+                shapeHTML = '<hr style="width: 200px; height: 3px; background-color: #6366f1; border: none; margin: 10px; display: inline-block;" />'
+                break
+            case 5: // Triangle
+                shapeHTML = '<div style="width: 0; height: 0; border-left: 50px solid transparent; border-right: 50px solid transparent; border-bottom: 87px solid #ef4444; display: inline-block; margin: 10px;"></div>'
+                break
+            default:
+                toast.error("Invalid choice")
+                return
+        }
+
+        document.execCommand('insertHTML', false, shapeHTML)
+        toast.success(`${shapes[shapeNumber - 1]} inserted`)
     }
 
     const handleInsertTable = () => {
@@ -93,8 +147,29 @@ export const QuickAccessToolbar: React.FC = () => {
                             <Image className="h-4 w-4" />
                         </Button>
                     </TooltipTrigger>
-                    <TooltipContent>Insert Image</TooltipContent>
+                    <TooltipContent>Insert Image from URL</TooltipContent>
                 </Tooltip>
+
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0"
+                            onClick={handleUploadImage}
+                        >
+                            <Upload className="h-4 w-4" />
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Upload Image</TooltipContent>
+                </Tooltip>
+                <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="hidden"
+                />
 
                 <Tooltip>
                     <TooltipTrigger asChild>

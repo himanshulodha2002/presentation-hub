@@ -111,7 +111,7 @@ const DragableSlideContent: React.FC<DragableSlideProps> = ({
     handleAddSlide,
 }) => {
     const slideRef = useRef<HTMLDivElement>(null)
-    const { currentSlide, currentTheme, setCurrentSlide, updateContentItem } =
+    const { currentSlide, currentTheme, setCurrentSlide, updateContentItem, showGrid } =
         useSlideStore()
     const [showDeleteDialog, setShowDeleteDialog] = useState(false)
         
@@ -185,6 +185,22 @@ const DragableSlideContent: React.FC<DragableSlideProps> = ({
                             slideId={slide.id}
                             onContentChange={handelContentChange}
                         />
+                        {/* Slide number */}
+                        <div className="absolute bottom-4 right-4 text-xs opacity-50 pointer-events-none">
+                            {index + 1}
+                        </div>
+                        {/* Grid overlay */}
+                        {showGrid && isEditable && (
+                            <div
+                                className="absolute inset-0 pointer-events-none"
+                                style={{
+                                    backgroundImage: `
+                                        repeating-linear-gradient(0deg, rgba(59, 130, 246, 0.15) 0px, rgba(59, 130, 246, 0.15) 1px, transparent 1px, transparent 50px),
+                                        repeating-linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0px, rgba(59, 130, 246, 0.15) 1px, transparent 1px, transparent 50px)
+                                    `,
+                                }}
+                            />
+                        )}
                     </div>
                     {isEditable && (
                         <Popover>
@@ -272,6 +288,7 @@ const Editor = ({ isEditable, zoom = 100 }: EditorProps) => {
         removeSlide,
         duplicateSlide,
         setCurrentSlide,
+        showGrid,
     } = useSlideStore()
     const orderedSlides = getOrderedSlides()
 

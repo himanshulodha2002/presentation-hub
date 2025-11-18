@@ -22,6 +22,7 @@ import {
     AlignLeft,
     AlignRight,
     Bold,
+    Grid3x3,
     Italic,
     List,
     ListOrdered,
@@ -33,7 +34,7 @@ import React from "react"
 import { toast } from "sonner"
 
 export const FormattingToolbar: React.FC = () => {
-    const { currentTheme } = useSlideStore()
+    const { currentTheme, showGrid, setShowGrid } = useSlideStore()
     const { applyFormatting, undo, redo } = useEditor()
     const [fontSize, setFontSize] = React.useState("16")
     const [fontFamily, setFontFamily] = React.useState("Inter")
@@ -245,6 +246,26 @@ export const FormattingToolbar: React.FC = () => {
                         </Button>
                     </TooltipTrigger>
                     <TooltipContent>Numbered List</TooltipContent>
+                </Tooltip>
+
+                <Separator orientation="vertical" className="h-6" />
+
+                {/* Grid Toggle */}
+                <Tooltip>
+                    <TooltipTrigger asChild>
+                        <Button
+                            variant={showGrid ? "default" : "ghost"}
+                            size="sm"
+                            className="h-8 w-8 p-0"
+                            onClick={() => {
+                                setShowGrid(!showGrid)
+                                toast.success(showGrid ? "Grid hidden" : "Grid visible")
+                            }}
+                        >
+                            <Grid3x3 className="h-4 w-4" />
+                        </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>Toggle Grid (Ctrl+G)</TooltipContent>
                 </Tooltip>
             </div>
         </TooltipProvider>

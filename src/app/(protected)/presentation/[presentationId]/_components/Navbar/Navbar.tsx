@@ -1,11 +1,18 @@
 import { Button } from "@/components/ui/button";
 import { TransitionSelector } from "@/components/global/editor/TransitionSelector";
 import { useSlideStore } from "@/store/useSlideStore";
-import { Home, Play, Share2, StickyNote } from "lucide-react";
+import { Home, Play, Share2, StickyNote, Monitor, ChevronDown } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import Link from "next/link";
 import React, { useState } from "react";
 import { toast } from "sonner";
 import PresentationMode from "./PresentationMode";
+import PresenterView from "./PresenterView";
 
 type Props = {
   presentationId: string;
@@ -15,6 +22,7 @@ type Props = {
 const Navbar = ({ presentationId, onToggleNotes }: Props) => {
   const { currentTheme } = useSlideStore();
   const [isPresentationMode, setIsPresentationMode] = useState(false);
+  const [isPresenterView, setIsPresenterView] = useState(false);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(
@@ -71,18 +79,35 @@ const Navbar = ({ presentationId, onToggleNotes }: Props) => {
           <Share2 className="w-4 h-4" />
           <span className="hidden sm:inline">Share</span>
         </Button>
-        <Button
-          variant={"default"}
-          size="sm"
-          className="flex items-center gap-2"
-          onClick={() => setIsPresentationMode(true)}
-        >
-          <Play className="w-4 h-4" />
-          <span className="hidden sm:inline">Present</span>
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant={"default"}
+              size="sm"
+              className="flex items-center gap-2"
+            >
+              <Play className="w-4 h-4" />
+              <span className="hidden sm:inline">Present</span>
+              <ChevronDown className="w-3 h-3" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem onClick={() => setIsPresentationMode(true)}>
+              <Play className="w-4 h-4 mr-2" />
+              Present (Full Screen)
+            </DropdownMenuItem>
+            <DropdownMenuItem onClick={() => setIsPresenterView(true)}>
+              <Monitor className="w-4 h-4 mr-2" />
+              Presenter View
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
       {isPresentationMode && (
         <PresentationMode onClose={() => setIsPresentationMode(false)} />
+      )}
+      {isPresenterView && (
+        <PresenterView onClose={() => setIsPresenterView(false)} />
       )}
     </nav>
   );

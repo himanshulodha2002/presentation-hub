@@ -9,6 +9,7 @@ interface SlideState {
     project: Project | null,
     currentTheme: Theme,
     currentSlide: number,
+    showGrid: boolean,
     setSlides: (slides: Slide[]) => void,
     removeSlide: (id: string) => void,
     addSlideAtIndex: (slide: Slide, index: number) => void,
@@ -28,6 +29,7 @@ interface SlideState {
     updateSlideNotes: (slideId: string, notes: string) => void,
     updateSlideTransition: (slideId: string, transition: { type: string; duration: number }) => void,
     getCurrentSlideData: () => Slide | undefined,
+    setShowGrid: (show: boolean) => void,
 }
 
 const defaultTheme: Theme = {
@@ -46,7 +48,9 @@ export const useSlideStore = create(
         project: null,
         currentTheme: defaultTheme,
         currentSlide: 0,
+        showGrid: false,
         setSlides: (slides) => set({ slides }),
+        setShowGrid: (show) => set({ showGrid: show }),
         removeSlide: (id) => set((state) => ({
             slides: state.slides.filter((slide) => slide.id !== id)
         })),

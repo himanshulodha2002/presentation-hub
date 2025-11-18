@@ -123,6 +123,10 @@ const PresentationMode = ({ onClose }: Props) => {
               isPreview={false}
               isEditable={false}
             />
+            {/* Slide number */}
+            <div className="absolute bottom-8 right-8 text-sm text-white/50 pointer-events-none">
+              {currentSlideIndex + 1} / {slides.length}
+            </div>
           </motion.div>
         </AnimatePresence>
         <Button
