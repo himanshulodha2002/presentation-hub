@@ -9,7 +9,8 @@ const nextConfig = {
   // Configure image domains with remotePatterns
   images: {
     remotePatterns: [
-      // Uploadcare domains (both .com and .net with all subdomains)
+      // Uploadcare domains (DEPRECATED - kept for backward compatibility with existing images)
+      // New uploads use Vercel Blob Storage
       {
         protocol: "https",
         hostname: "ucarecdn.com",
