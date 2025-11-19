@@ -9,6 +9,7 @@ interface SlideState {
     project: Project | null,
     currentTheme: Theme,
     currentSlide: number,
+    showGrid: boolean,
     setSlides: (slides: Slide[]) => void,
     removeSlide: (id: string) => void,
     addSlideAtIndex: (slide: Slide, index: number) => void,
@@ -25,6 +26,10 @@ interface SlideState {
         index: number,
         parentId: string,
     ) => void,
+    updateSlideNotes: (slideId: string, notes: string) => void,
+    updateSlideTransition: (slideId: string, transition: { type: string; duration: number }) => void,
+    getCurrentSlideData: () => Slide | undefined,
+    setShowGrid: (show: boolean) => void,
 }
 
 const defaultTheme: Theme = {
@@ -43,7 +48,9 @@ export const useSlideStore = create(
         project: null,
         currentTheme: defaultTheme,
         currentSlide: 0,
+        showGrid: false,
         setSlides: (slides) => set({ slides }),
+        setShowGrid: (show) => set({ showGrid: show }),
         removeSlide: (id) => set((state) => ({
             slides: state.slides.filter((slide) => slide.id !== id)
         })),
@@ -143,6 +150,21 @@ export const useSlideStore = create(
                     }))
                 };
             });
+        },
+        updateSlideNotes: (slideId: string, notes: string) => set((state) => ({
+            slides: state.slides.map((slide) =>
+                slide.id === slideId ? { ...slide, notes } : slide
+            )
+        })),
+        updateSlideTransition: (slideId: string, transition: { type: string; duration: number }) => set((state) => ({
+            slides: state.slides.map((slide) =>
+                slide.id === slideId ? { ...slide, transition } : slide
+            )
+        })),
+        getCurrentSlideData: () => {
+            const state = get();
+            const orderedSlides = state.getOrderedSlides();
+            return orderedSlides[state.currentSlide];
         }
     }), {
         name: 'slides-storage',

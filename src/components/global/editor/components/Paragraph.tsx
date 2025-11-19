@@ -1,33 +1,67 @@
 import { cn } from "@/lib/utils";
 import React, { useEffect, useRef } from "react";
 
-interface ParagraphProps
-    extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+interface ParagraphProps {
     className?: string;
     styles?: React.CSSProperties;
     isPreview?: boolean;
+    value?: string;
+    placeholder?: string;
+    onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
-const Paragraph = React.forwardRef<HTMLTextAreaElement, ParagraphProps>(
-    ({ className, styles, isPreview = false, ...props }, ref) => {
-        const textareaRef = useRef<HTMLTextAreaElement>(null);
+const Paragraph = React.forwardRef<HTMLDivElement, ParagraphProps>(
+    ({ className, styles, isPreview = false, value = "", placeholder, onChange, ...props }, ref) => {
+        const divRef = useRef<HTMLDivElement>(null);
+        const isUpdating = useRef(false);
+
+        // Sync value to content
         useEffect(() => {
-            const textarea = textareaRef.current;
-            if (textarea && !isPreview) {
-                const adjustHeight = () => {
-                    textarea.style.height = "0";
-                    textarea.style.height = `${textarea.scrollHeight}px`;
-                };
-                textarea.addEventListener("input", adjustHeight);
-                adjustHeight();
-                return () => textarea.removeEventListener("input", adjustHeight);
+            if (divRef.current && !isUpdating.current) {
+                if (divRef.current.innerHTML !== value) {
+                    divRef.current.innerHTML = value || "";
+                }
             }
-        }, [isPreview]);
+        }, [value]);
+
+        const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
+            if (onChange && !isUpdating.current) {
+                isUpdating.current = true;
+                const content = (e.target as HTMLDivElement).innerHTML;
+                // Create synthetic event
+                const syntheticEvent = {
+                    target: { value: content },
+                    currentTarget: { value: content },
+                } as React.ChangeEvent<HTMLTextAreaElement>;
+                onChange(syntheticEvent);
+                setTimeout(() => {
+                    isUpdating.current = false;
+                }, 0);
+            }
+        };
+
+        const handlePaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
+            e.preventDefault();
+            const text = e.clipboardData.getData('text/plain');
+            document.execCommand('insertText', false, text);
+        };
+
         return (
-            <textarea
+            <div
+                ref={(el) => {
+                    (divRef.current as HTMLDivElement | null) = el;
+                    if (typeof ref === "function") ref(el);
+                    else if (ref) ref.current = el;
+                }}
+                contentEditable={!isPreview}
+                suppressContentEditableWarning
+                onInput={handleInput}
+                onPaste={handlePaste}
+                data-placeholder={placeholder}
                 className={cn(
-                    `w-full bg-transparent font-normal text-gray-900  placeholder:text-gray-300 focus:outline-none resize-none overflow-hidden leading-tight`,
+                    "w-full bg-transparent font-normal text-gray-900 focus:outline-none leading-tight",
                     `${isPreview ? "text-[0.5rem]" : "text-lg"}`,
+                    "empty:before:content-[attr(data-placeholder)] empty:before:text-gray-300",
                     className
                 )}
                 style={{
@@ -37,15 +71,10 @@ const Paragraph = React.forwardRef<HTMLTextAreaElement, ParagraphProps>(
                     boxSizing: "content-box",
                     lineHeight: "1.5em",
                     minHeight: "1.5em",
+                    whiteSpace: "pre-wrap",
+                    wordWrap: "break-word",
                     ...styles,
                 }}
-                ref={(el) => {
-                    (textareaRef.current as HTMLTextAreaElement | null) = el;
-
-                    if (typeof ref === "function") ref(el);
-                    else if (ref) ref.current = el;
-                }}
-                readOnly={isPreview}
                 {...props}
             />
         );

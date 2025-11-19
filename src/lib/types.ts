@@ -27,6 +27,11 @@ export interface Slide {
   content: ContentItem;
   slideOrder: number;
   className?: string;
+  notes?: string;
+  transition?: {
+    type: string;
+    duration: number;
+  };
 }
 export interface ContentItem {
   id: string;
