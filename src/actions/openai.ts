@@ -15,6 +15,7 @@ import mime from 'mime'
 import {
   generateOutlinePrompt,
   generateLayoutPrompt,
+  generateImagePrompt,
   OUTLINE_SYSTEM_MESSAGE,
   LAYOUT_SYSTEM_MESSAGE,
 } from '@/lib/prompts'
@@ -489,8 +490,24 @@ export const generateCreativePrompt = async (userPrompt: string) => {
 //   },
 // ]
 
+/**
+ * Generate image using Google Gemini 2.0 Flash
+ *
+ * Takes an enhanced, detailed image generation prompt and produces
+ * a professional, high-quality image suitable for presentation slides.
+ *
+ * The prompt should be detailed and specific, including:
+ * - Subject description with attributes
+ * - Visual style (photography, illustration, etc.)
+ * - Composition and framing details
+ * - Lighting and mood specifications
+ * - Professional quality markers
+ *
+ * @param prompt - Enhanced image generation prompt (detailed description)
+ * @returns URL of the generated image stored in Vercel Blob, or placeholder on error
+ */
 const generateImageUrl = async (prompt: string): Promise<string> => {
-  // Gemini Flash 2.0 streaming image generation (user-provided code)
+  // Gemini Flash 2.0 streaming image generation
   try {
     if (!process.env.GOOGLE_GENAI_API_KEY) {
       console.error('🔴 ERROR: GOOGLE_GENAI_API_KEY not set');
@@ -574,10 +591,14 @@ const replaceImagePlaceholders = async (layout: Slide) => {
   const imageComponents = findImageComponents(layout.content)
   console.log('🟢 Found image components:', imageComponents)
   for (const component of imageComponents) {
-    console.log('🟢 Generating image for component:', component.alt)
-    component.content = await generateImageUrl(
-      component.alt || 'Placeholder Image'
-    )
+    const basicDescription = component.alt || 'Placeholder Image'
+    console.log('🟢 Generating image for component:', basicDescription)
+
+    // Enhance the basic alt text into a detailed, professional image generation prompt
+    const enhancedPrompt = generateImagePrompt(basicDescription)
+    console.log('🟢 Enhanced prompt:', enhancedPrompt.substring(0, 100) + '...')
+
+    component.content = await generateImageUrl(enhancedPrompt)
   }
 }
 
