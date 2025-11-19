@@ -6,12 +6,10 @@ import { currentUser } from '@clerk/nextjs/server'
 import OpenAI from 'openai'
 import { v4 as uuidv4 } from 'uuid'
 
-import {
-  GoogleGenAI,
-} from '@google/genai'
-// import { mkdir, writeFile } from 'fs'
-import { put } from '@vercel/blob'
-import mime from 'mime'
+// Import centralized image provider system
+import { generateImage, processWithRateLimit } from '@/lib/imageProviders'
+
+// Import centralized prompt engineering functions
 import {
   generateOutlinePrompt,
   generateLayoutPrompt,
@@ -19,8 +17,6 @@ import {
   OUTLINE_SYSTEM_MESSAGE,
   LAYOUT_SYSTEM_MESSAGE,
 } from '@/lib/prompts'
-
-// saveBinaryFile is no longer needed; using Vercel Blob instead
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
@@ -491,10 +487,11 @@ export const generateCreativePrompt = async (userPrompt: string) => {
 // ]
 
 /**
- * Generate image using Google Gemini 2.0 Flash
+ * Generate image using configured image provider
  *
- * Takes an enhanced, detailed image generation prompt and produces
- * a professional, high-quality image suitable for presentation slides.
+ * This function uses the centralized image provider system which supports
+ * multiple providers (Cloudflare, Hugging Face, Replicate, Gemini) selected
+ * via the IMAGE_GENERATION_PROVIDER environment variable.
  *
  * The prompt should be detailed and specific, including:
  * - Subject description with attributes
@@ -504,72 +501,10 @@ export const generateCreativePrompt = async (userPrompt: string) => {
  * - Professional quality markers
  *
  * @param prompt - Enhanced image generation prompt (detailed description)
- * @returns URL of the generated image stored in Vercel Blob, or placeholder on error
+ * @returns URL of the generated image, or placeholder on error
  */
 const generateImageUrl = async (prompt: string): Promise<string> => {
-  // Gemini Flash 2.0 streaming image generation
-  try {
-    if (!process.env.GOOGLE_GENAI_API_KEY) {
-      console.error('🔴 ERROR: GOOGLE_GENAI_API_KEY not set');
-      return 'https://placehold.co/1024x768/e2e8f0/64748b?text=Image+Unavailable';
-    }
-    const ai = new GoogleGenAI({
-      apiKey: process.env.GOOGLE_GENAI_API_KEY,
-    });
-    const config = {
-      responseModalities: [
-        'IMAGE',
-        'TEXT',
-      ],
-    };
-    const model = 'gemini-2.0-flash-preview-image-generation';
-    const contents = [
-      {
-        role: 'user',
-        parts: [
-          {
-            text: prompt,
-          },
-        ],
-      },
-    ];
-
-    const response = await ai.models.generateContentStream({
-      model,
-      config,
-      contents,
-    });
-    let fileIndex = 0;
-    let imageFileName = '';
-    for await (const chunk of response) {
-      if (!chunk.candidates || !chunk.candidates[0].content || !chunk.candidates[0].content.parts) {
-        continue;
-      }
-      if (chunk.candidates?.[0]?.content?.parts?.[0]?.inlineData) {
-        const fileName = `generated_image_${Date.now()}_${fileIndex++}`;
-        const inlineData = chunk.candidates[0].content.parts[0].inlineData;
-        const fileExtension = mime.getExtension(inlineData.mimeType || '');
-        const buffer = Buffer.from(inlineData.data || '', 'base64');
-        const blobPath = `images/${fileName}.${fileExtension}`;
-        try {
-          const { url } = await put(blobPath, buffer, { access: 'public' });
-          imageFileName = url;
-        } catch (err) {
-          console.error('Failed to upload image to Vercel Blob:', err);
-        }
-        // Only return the first image for now
-        break;
-      }
-      // Optionally handle text description here if needed
-    }
-    if (imageFileName) {
-      return imageFileName;
-    }
-    return 'https://placehold.co/1024x768/e2e8f0/64748b?text=Image+Unavailable';
-  } catch (error) {
-    console.error('Failed to generate image:', error);
-    return 'https://placehold.co/1024x768/e2e8f0/64748b?text=Image+Unavailable';
-  }
+  return await generateImage(prompt)
 }
 
 const findImageComponents = (layout: ContentItem): ContentItem[] => {
@@ -589,16 +524,24 @@ const findImageComponents = (layout: ContentItem): ContentItem[] => {
 
 const replaceImagePlaceholders = async (layout: Slide) => {
   const imageComponents = findImageComponents(layout.content)
-  console.log('🟢 Found image components:', imageComponents)
+  console.log('🟢 Found image components:', imageComponents.length)
+
+  // Process images sequentially to avoid overwhelming the API
   for (const component of imageComponents) {
-    const basicDescription = component.alt || 'Placeholder Image'
-    console.log('🟢 Generating image for component:', basicDescription)
+    try {
+      const basicDescription = component.alt || 'Placeholder Image'
+      console.log('🟢 Generating image for:', basicDescription.substring(0, 50))
 
-    // Enhance the basic alt text into a detailed, professional image generation prompt
-    const enhancedPrompt = generateImagePrompt(basicDescription)
-    console.log('🟢 Enhanced prompt:', enhancedPrompt.substring(0, 100) + '...')
+      // Enhance the basic alt text into a detailed, professional image generation prompt
+      const enhancedPrompt = generateImagePrompt(basicDescription)
+      console.log('🟢 Enhanced prompt:', enhancedPrompt.substring(0, 100) + '...')
 
-    component.content = await generateImageUrl(enhancedPrompt)
+      component.content = await generateImageUrl(enhancedPrompt)
+    } catch (error) {
+      console.error('🔴 Failed to generate image:', error)
+      // Use placeholder on error instead of failing
+      component.content = 'https://placehold.co/1024x768/e2e8f0/64748b?text=Image+Generation+Failed'
+    }
   }
 }
 
@@ -637,11 +580,11 @@ export const generateLayoutsJson = async (outlineArray: string[]) => {
 
   try {
     console.log('🟢 Generating layouts...')
-    
+
     // Create AbortController for timeout
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 4000000); // 40 second timeout
-    
+
     const completion = await openai.chat.completions.create({
       model: 'gpt-4.1',
       messages: [
@@ -656,11 +599,11 @@ export const generateLayoutsJson = async (outlineArray: string[]) => {
     }, {
       signal: controller.signal
     });
-    
+
     clearTimeout(timeoutId);
 
     const responseContent = completion?.choices?.[0]?.message?.content
-    
+
     // Log token usage for debugging
     console.log('📊 Token usage:', {
       prompt_tokens: completion?.usage?.prompt_tokens,
@@ -676,14 +619,14 @@ export const generateLayoutsJson = async (outlineArray: string[]) => {
     console.log('📄 Raw response length:', responseContent.length)
     console.log('📄 First 200 chars:', responseContent.substring(0, 200))
     console.log('📄 Last 200 chars:', responseContent.substring(responseContent.length - 200))
-    
+
     // Check if response might be truncated
     const finishReason = completion?.choices?.[0]?.finish_reason
     if (finishReason === 'length') {
       console.log('⚠️ WARNING: Response was truncated due to max_tokens limit')
-      return { 
-        status: 400, 
-        error: 'AI response was truncated. Try reducing the number of slides or simplifying your content.' 
+      return {
+        status: 400,
+        error: 'AI response was truncated. Try reducing the number of slides or simplifying your content.'
       }
     }
 
@@ -691,14 +634,14 @@ export const generateLayoutsJson = async (outlineArray: string[]) => {
     try {
       // Clean up the response content more thoroughly
       let cleanedContent = responseContent.trim()
-      
+
       // Remove markdown code blocks
       cleanedContent = cleanedContent.replace(/```json\s*/g, '')
       cleanedContent = cleanedContent.replace(/```\s*/g, '')
-      
+
       // Remove any leading/trailing whitespace again
       cleanedContent = cleanedContent.trim()
-      
+
       if (!cleanedContent) {
         console.log('🔴 ERROR: Content is empty after cleaning')
         return { status: 400, error: 'Empty content after cleaning' }
@@ -706,28 +649,34 @@ export const generateLayoutsJson = async (outlineArray: string[]) => {
 
       console.log('🧹 Cleaned content length:', cleanedContent.length)
       console.log('🧹 First 200 chars of cleaned:', cleanedContent.substring(0, 200))
-      
+
       jsonResponse = JSON.parse(cleanedContent)
-      
+
       if (!Array.isArray(jsonResponse)) {
         console.log('🔴 ERROR: Response is not an array')
         return { status: 400, error: 'Invalid JSON structure - expected an array' }
       }
-      
-      await Promise.all(jsonResponse.map(replaceImagePlaceholders))
+
+      // Process slides with rate limiting (2 slides at a time) to prevent API overload
+      console.log(`🟢 Processing ${jsonResponse.length} slides for image generation...`)
+      await processWithRateLimit(
+        jsonResponse,
+        replaceImagePlaceholders,
+        2 // Process 2 slides at a time
+      )
     } catch (error) {
       console.log('🔴 ERROR parsing JSON:', error)
       console.log('🔴 Content that failed to parse (first 500 chars):', responseContent.substring(0, 500))
       console.log('🔴 Content that failed to parse (last 500 chars):', responseContent.substring(Math.max(0, responseContent.length - 500)))
-      
+
       // Check if it's a truncation issue
       if (error instanceof SyntaxError && error.message.includes('Unterminated')) {
-        return { 
-          status: 400, 
-          error: 'AI response was incomplete. Please try again with fewer slides or simpler content.' 
+        return {
+          status: 400,
+          error: 'AI response was incomplete. Please try again with fewer slides or simpler content.'
         }
       }
-      
+
       return { status: 400, error: `Invalid JSON format received from AI: ${error instanceof Error ? error.message : 'Unknown error'}` }
     }
 

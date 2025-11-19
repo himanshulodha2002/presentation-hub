@@ -1,4 +1,5 @@
 import { updateSlides } from "@/actions/project"
+import { SlideContextMenu } from "@/components/global/editor/SlideContextMenu"
 import { SlideTemplateSelector } from "@/components/global/editor/SlideTemplateSelector"
 import {
     AlertDialog,
@@ -18,17 +19,20 @@ import {
 } from "@/components/ui/popover"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Skeleton } from "@/components/ui/skeleton"
+import { useKeyboardShortcuts } from "@/hooks/useKeyboardShortcuts"
 import { LayoutSlides, Slide } from "@/lib/types"
 import { cn } from "@/lib/utils"
 import { useSlideStore } from "@/store/useSlideStore"
 import { Copy, EllipsisVertical, Plus, Trash } from "lucide-react"
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { useDrag, useDrop } from "react-dnd"
+import { toast } from "sonner"
 import { v4 } from "uuid"
 import MasterRecursiveComponent from "./MasterRecursiveComponent"
 
 type EditorProps = {
     isEditable: boolean
+    zoom?: number
 }
 
 interface DropZoneProps {
@@ -107,7 +111,7 @@ const DragableSlideContent: React.FC<DragableSlideProps> = ({
     handleAddSlide,
 }) => {
     const slideRef = useRef<HTMLDivElement>(null)
-    const { currentSlide, currentTheme, setCurrentSlide, updateContentItem } =
+    const { currentSlide, currentTheme, setCurrentSlide, updateContentItem, showGrid } =
         useSlideStore()
     const [showDeleteDialog, setShowDeleteDialog] = useState(false)
         
@@ -153,69 +157,91 @@ const DragableSlideContent: React.FC<DragableSlideProps> = ({
 
     return (
         <>
-            <div
-                ref={slideRef}
-                className={cn(
-                    "w-full rounded-lg shadow-lg relative p-0 min-h-[400px] max-h-[800px]",
-                    "shadow-xl transition-shadow duration-300",
-                    "flex flex-col",
-                    index === currentSlide
-                        ? "ring-2 ring-blue-500 ring-offset-2"
-                        : "",
-                    slide.className,
-                    isDragging ? "opacity-50" : "opacity-100"
-                )}
-                style={{ backgroundImage: currentTheme.gradientBackground }}
-                onClick={() => setCurrentSlide(index)}
+            <SlideContextMenu
+                onDuplicate={() => handleDuplicate(slide.id)}
+                onDelete={() => setShowDeleteDialog(true)}
+                onAddAfter={() => handleAddSlide(index + 1)}
             >
-                <div className="size-full flex-grow overflow-hidden">
-                    <MasterRecursiveComponent
-                        content={slide.content}
-                        isEditable={isEditable}
-                        isPreview={false}
-                        slideId={slide.id}
-                        onContentChange={handelContentChange}
-                    />
+                <div
+                    ref={slideRef}
+                    className={cn(
+                        "w-full rounded-lg shadow-lg relative p-0 min-h-[400px] max-h-[800px]",
+                        "shadow-xl transition-shadow duration-300",
+                        "flex flex-col",
+                        index === currentSlide
+                            ? "ring-2 ring-blue-500 ring-offset-2"
+                            : "",
+                        slide.className,
+                        isDragging ? "opacity-50" : "opacity-100"
+                    )}
+                    style={{ backgroundImage: currentTheme.gradientBackground }}
+                    onClick={() => setCurrentSlide(index)}
+                >
+                    <div className="size-full flex-grow overflow-hidden">
+                        <MasterRecursiveComponent
+                            content={slide.content}
+                            isEditable={isEditable}
+                            isPreview={false}
+                            slideId={slide.id}
+                            onContentChange={handelContentChange}
+                        />
+                        {/* Slide number */}
+                        <div className="absolute bottom-4 right-4 text-xs opacity-50 pointer-events-none">
+                            {index + 1}
+                        </div>
+                        {/* Grid overlay */}
+                        {showGrid && isEditable && (
+                            <div
+                                className="absolute inset-0 pointer-events-none"
+                                style={{
+                                    backgroundImage: `
+                                        repeating-linear-gradient(0deg, rgba(59, 130, 246, 0.15) 0px, rgba(59, 130, 246, 0.15) 1px, transparent 1px, transparent 50px),
+                                        repeating-linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0px, rgba(59, 130, 246, 0.15) 1px, transparent 1px, transparent 50px)
+                                    `,
+                                }}
+                            />
+                        )}
+                    </div>
+                    {isEditable && (
+                        <Popover>
+                            <PopoverTrigger asChild className="absolute top-2 left-2">
+                                <Button size={"sm"} variant={"outline"}>
+                                    <EllipsisVertical className="size-5" />
+                                    <span className="sr-only">Slide Options</span>
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent className="w-fit p-2">
+                                <div className="flex flex-col gap-1">
+                                    <Button
+                                        variant={"ghost"}
+                                        className="justify-start"
+                                        onClick={() => handleDuplicate(slide.id)}
+                                    >
+                                        <Copy className="size-4 mr-2" />
+                                        Duplicate Slide
+                                    </Button>
+                                    <Button
+                                        variant={"ghost"}
+                                        className="justify-start"
+                                        onClick={() => handleAddSlide(index + 1)}
+                                    >
+                                        <Plus className="size-4 mr-2" />
+                                        Add Slide After
+                                    </Button>
+                                    <Button
+                                        variant={"ghost"}
+                                        className="justify-start text-red-500 hover:text-red-600"
+                                        onClick={() => setShowDeleteDialog(true)}
+                                    >
+                                        <Trash className="size-4 mr-2" />
+                                        Delete Slide
+                                    </Button>
+                                </div>
+                            </PopoverContent>
+                        </Popover>
+                    )}
                 </div>
-                {isEditable && (
-                    <Popover>
-                        <PopoverTrigger asChild className="absolute top-2 left-2">
-                            <Button size={"sm"} variant={"outline"}>
-                                <EllipsisVertical className="size-5" />
-                                <span className="sr-only">Slide Options</span>
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-fit p-2">
-                            <div className="flex flex-col gap-1">
-                                <Button
-                                    variant={"ghost"}
-                                    className="justify-start"
-                                    onClick={() => handleDuplicate(slide.id)}
-                                >
-                                    <Copy className="size-4 mr-2" />
-                                    Duplicate Slide
-                                </Button>
-                                <Button
-                                    variant={"ghost"}
-                                    className="justify-start"
-                                    onClick={() => handleAddSlide(index + 1)}
-                                >
-                                    <Plus className="size-4 mr-2" />
-                                    Add Slide After
-                                </Button>
-                                <Button
-                                    variant={"ghost"}
-                                    className="justify-start text-red-500 hover:text-red-600"
-                                    onClick={() => setShowDeleteDialog(true)}
-                                >
-                                    <Trash className="size-4 mr-2" />
-                                    Delete Slide
-                                </Button>
-                            </div>
-                        </PopoverContent>
-                    </Popover>
-                )}
-            </div>
+            </SlideContextMenu>
             
             <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
                 <AlertDialogContent>
@@ -246,7 +272,7 @@ export const DragableSlide: React.FC<DragableSlideProps> = (props) => {
     }
 }
 
-const Editor = ({ isEditable }: EditorProps) => {
+const Editor = ({ isEditable, zoom = 100 }: EditorProps) => {
     const slideRefs = useRef<(HTMLDivElement | null)[]>([])
     const autoSaveTimerRef = useRef<NodeJS.Timeout | null>(null)
     const [isLoading, setLoading] = useState(true)
@@ -261,6 +287,8 @@ const Editor = ({ isEditable }: EditorProps) => {
         addSlideAtIndex,
         removeSlide,
         duplicateSlide,
+        setCurrentSlide,
+        showGrid,
     } = useSlideStore()
     const orderedSlides = getOrderedSlides()
 
@@ -319,6 +347,55 @@ const Editor = ({ isEditable }: EditorProps) => {
         )
     }
 
+    // Keyboard shortcuts
+    useKeyboardShortcuts([
+        {
+            key: "Delete",
+            action: () => {
+                if (isEditable && orderedSlides.length > 1) {
+                    const currentSlideId = orderedSlides[currentSlide]?.id
+                    if (currentSlideId) {
+                        removeSlide(currentSlideId)
+                        toast.success("Slide deleted")
+                    }
+                }
+            },
+            description: "Delete current slide",
+        },
+        {
+            key: "d",
+            ctrlKey: true,
+            action: () => {
+                if (isEditable) {
+                    const currentSlideId = orderedSlides[currentSlide]?.id
+                    if (currentSlideId) {
+                        duplicateSlide(currentSlideId)
+                        toast.success("Slide duplicated")
+                    }
+                }
+            },
+            description: "Duplicate current slide",
+        },
+        {
+            key: "ArrowUp",
+            action: () => {
+                if (currentSlide > 0) {
+                    setCurrentSlide(currentSlide - 1)
+                }
+            },
+            description: "Previous slide",
+        },
+        {
+            key: "ArrowDown",
+            action: () => {
+                if (currentSlide < orderedSlides.length - 1) {
+                    setCurrentSlide(currentSlide + 1)
+                }
+            },
+            description: "Next slide",
+        },
+    ])
+
     useEffect(() => {
         if (slideRefs.current[currentSlide]) {
             slideRefs.current[currentSlide]?.scrollIntoView({
@@ -374,7 +451,12 @@ const Editor = ({ isEditable }: EditorProps) => {
             ) : (
                 <>
                     <ScrollArea className="flex-1 mt-8">
-                        <div className="px-4 pb-4 space-y-4 pt-2">
+                        <div 
+                            className="px-4 pb-4 space-y-4 pt-2 transition-transform duration-200 origin-top"
+                            style={{
+                                transform: `scale(${zoom / 100})`,
+                            }}
+                        >
                             {isEditable && (
                                 <DropZone
                                     index={0}

@@ -3,36 +3,69 @@
 import { cn } from "@/lib/utils";
 import React, { useEffect, useRef } from "react";
 
-interface HeadingProps
-    extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+interface HeadingProps {
     className?: string;
     styles?: React.CSSProperties;
     isPreview?: boolean;
+    value?: string;
+    placeholder?: string;
+    onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
 }
 
 const createHeading = (displayName: string, defaultClassName: string) => {
-    const Heading = React.forwardRef<HTMLTextAreaElement, HeadingProps>(
-        ({ styles, isPreview = false, className, ...props }, ref) => {
-            const textareaRef = useRef<HTMLTextAreaElement>(null);
-            useEffect(() => {
-                const textarea = textareaRef.current;
-                if (textarea && !isPreview) {
-                    const adjustHeight = () => {
-                        textarea.style.height = "0";
-                        textarea.style.height = `${textarea.scrollHeight}px`;
-                    };
+    const Heading = React.forwardRef<HTMLDivElement, HeadingProps>(
+        ({ styles, isPreview = false, className, value = "", placeholder, onChange, ...props }, ref) => {
+            const divRef = useRef<HTMLDivElement>(null);
+            const isUpdating = useRef(false);
 
-                    textarea.addEventListener("input", adjustHeight);
-                    adjustHeight();
-                    return () => textarea.removeEventListener("input", adjustHeight);
+            // Sync value to content
+            useEffect(() => {
+                if (divRef.current && !isUpdating.current) {
+                    if (divRef.current.innerHTML !== value) {
+                        divRef.current.innerHTML = value || "";
+                    }
                 }
-            }, [isPreview]);
+            }, [value]);
+
+            const handleInput = (e: React.FormEvent<HTMLDivElement>) => {
+                if (onChange && !isUpdating.current) {
+                    isUpdating.current = true;
+                    const content = (e.target as HTMLDivElement).innerHTML;
+                    // Create synthetic event
+                    const syntheticEvent = {
+                        target: { value: content },
+                        currentTarget: { value: content },
+                    } as React.ChangeEvent<HTMLTextAreaElement>;
+                    onChange(syntheticEvent);
+                    setTimeout(() => {
+                        isUpdating.current = false;
+                    }, 0);
+                }
+            };
+
+            const handlePaste = (e: React.ClipboardEvent<HTMLDivElement>) => {
+                e.preventDefault();
+                const text = e.clipboardData.getData('text/plain');
+                document.execCommand('insertText', false, text);
+            };
+
             const previewClassName = isPreview ? "text-xs" : "";
 
             return (
-                <textarea
+                <div
+                    ref={(el) => {
+                        (divRef.current as HTMLDivElement | null) = el;
+                        if (typeof ref === "function") ref(el);
+                        else if (ref) ref.current = el;
+                    }}
+                    contentEditable={!isPreview}
+                    suppressContentEditableWarning
+                    onInput={handleInput}
+                    onPaste={handlePaste}
+                    data-placeholder={placeholder}
                     className={cn(
-                        `w-full bg-transparent ${defaultClassName} ${previewClassName} font-normal text-gray-900 placeholder:text-gray-300 focus:outline-none  resize-none overflow-hidden leading-tight`,
+                        `w-full bg-transparent ${defaultClassName} ${previewClassName} font-normal text-gray-900 focus:outline-none leading-tight`,
+                        "empty:before:content-[attr(data-placeholder)] empty:before:text-gray-300",
                         className
                     )}
                     style={{
@@ -42,16 +75,12 @@ const createHeading = (displayName: string, defaultClassName: string) => {
                         boxSizing: "content-box",
                         lineHeight: "1.2em",
                         minHeight: "1.2em",
+                        whiteSpace: "pre-wrap",
+                        wordWrap: "break-word",
                         ...styles,
                     }}
-                    ref={(el) => {
-                        (textareaRef.current as HTMLTextAreaElement | null) = el;
-                        if (typeof ref === "function") ref(el);
-                        else if (ref) ref.current = el;
-                    }}
-                    readOnly={isPreview}
                     {...props}
-                ></textarea>
+                />
             );
         }
     );
