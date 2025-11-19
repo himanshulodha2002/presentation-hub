@@ -6,13 +6,10 @@ import { currentUser } from '@clerk/nextjs/server'
 import OpenAI from 'openai'
 import { v4 as uuidv4 } from 'uuid'
 
-import {
-  GoogleGenAI,
-} from '@google/genai'
-// import { mkdir, writeFile } from 'fs'
-import { put } from '@vercel/blob'
-import mime from 'mime'
+import { generateImage, processWithRateLimit } from '@/lib/imageProviders'
 
+// Removed Google GenAI import - now using centralized image provider system
+// import { mkdir, writeFile } from 'fs'
 // saveBinaryFile is no longer needed; using Vercel Blob instead
 
 const openai = new OpenAI({
@@ -529,70 +526,13 @@ Consider:
 //   },
 // ]
 
+/**
+ * Generate image URL using the configured image provider
+ * Provider is selected via IMAGE_GENERATION_PROVIDER environment variable
+ * Supported providers: cloudflare, huggingface, replicate, gemini (default)
+ */
 const generateImageUrl = async (prompt: string): Promise<string> => {
-  // Gemini Flash 2.0 streaming image generation (user-provided code)
-  try {
-    if (!process.env.GOOGLE_GENAI_API_KEY) {
-      console.error('🔴 ERROR: GOOGLE_GENAI_API_KEY not set');
-      return 'https://placehold.co/1024x768/e2e8f0/64748b?text=Image+Unavailable';
-    }
-    const ai = new GoogleGenAI({
-      apiKey: process.env.GOOGLE_GENAI_API_KEY,
-    });
-    const config = {
-      responseModalities: [
-        'IMAGE',
-        'TEXT',
-      ],
-    };
-    const model = 'gemini-2.0-flash-preview-image-generation';
-    const contents = [
-      {
-        role: 'user',
-        parts: [
-          {
-            text: prompt,
-          },
-        ],
-      },
-    ];
-
-    const response = await ai.models.generateContentStream({
-      model,
-      config,
-      contents,
-    });
-    let fileIndex = 0;
-    let imageFileName = '';
-    for await (const chunk of response) {
-      if (!chunk.candidates || !chunk.candidates[0].content || !chunk.candidates[0].content.parts) {
-        continue;
-      }
-      if (chunk.candidates?.[0]?.content?.parts?.[0]?.inlineData) {
-        const fileName = `generated_image_${Date.now()}_${fileIndex++}`;
-        const inlineData = chunk.candidates[0].content.parts[0].inlineData;
-        const fileExtension = mime.getExtension(inlineData.mimeType || '');
-        const buffer = Buffer.from(inlineData.data || '', 'base64');
-        const blobPath = `images/${fileName}.${fileExtension}`;
-        try {
-          const { url } = await put(blobPath, buffer, { access: 'public' });
-          imageFileName = url;
-        } catch (err) {
-          console.error('Failed to upload image to Vercel Blob:', err);
-        }
-        // Only return the first image for now
-        break;
-      }
-      // Optionally handle text description here if needed
-    }
-    if (imageFileName) {
-      return imageFileName;
-    }
-    return 'https://placehold.co/1024x768/e2e8f0/64748b?text=Image+Unavailable';
-  } catch (error) {
-    console.error('Failed to generate image:', error);
-    return 'https://placehold.co/1024x768/e2e8f0/64748b?text=Image+Unavailable';
-  }
+  return await generateImage(prompt)
 }
 
 const findImageComponents = (layout: ContentItem): ContentItem[] => {
@@ -612,12 +552,20 @@ const findImageComponents = (layout: ContentItem): ContentItem[] => {
 
 const replaceImagePlaceholders = async (layout: Slide) => {
   const imageComponents = findImageComponents(layout.content)
-  console.log('🟢 Found image components:', imageComponents)
+  console.log('🟢 Found image components:', imageComponents.length)
+
+  // Process images sequentially to avoid overwhelming the API
   for (const component of imageComponents) {
-    console.log('🟢 Generating image for component:', component.alt)
-    component.content = await generateImageUrl(
-      component.alt || 'Placeholder Image'
-    )
+    try {
+      console.log('🟢 Generating image for:', component.alt?.substring(0, 50) || 'Untitled')
+      component.content = await generateImageUrl(
+        component.alt || 'Placeholder Image'
+      )
+    } catch (error) {
+      console.error('🔴 Failed to generate image:', error)
+      // Use placeholder on error instead of failing
+      component.content = 'https://placehold.co/1024x768/e2e8f0/64748b?text=Image+Generation+Failed'
+    }
   }
 }
 
@@ -925,8 +873,14 @@ Generate professional, engaging slide layouts in valid JSON format. Ensure varie
         console.log('🔴 ERROR: Response is not an array')
         return { status: 400, error: 'Invalid JSON structure - expected an array' }
       }
-      
-      await Promise.all(jsonResponse.map(replaceImagePlaceholders))
+
+      // Process slides with rate limiting (2 slides at a time) to prevent API overload
+      console.log(`🟢 Processing ${jsonResponse.length} slides for image generation...`)
+      await processWithRateLimit(
+        jsonResponse,
+        replaceImagePlaceholders,
+        2 // Process 2 slides at a time
+      )
     } catch (error) {
       console.log('🔴 ERROR parsing JSON:', error)
       console.log('🔴 Content that failed to parse (first 500 chars):', responseContent.substring(0, 500))

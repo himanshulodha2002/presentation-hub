@@ -9,45 +9,59 @@ const nextConfig = {
   // Configure image domains with remotePatterns
   images: {
     remotePatterns: [
+      // Uploadcare domains (both .com and .net with all subdomains)
       {
         protocol: "https",
         hostname: "ucarecdn.com",
-        pathname: "/**",
       },
+      {
+        protocol: "https",
+        hostname: "*.ucarecdn.com",
+      },
+      {
+        protocol: "https",
+        hostname: "ucarecdn.net",
+      },
+      {
+        protocol: "https",
+        hostname: "*.ucarecdn.net",
+      },
+      // Vercel Blob Storage
       {
         protocol: "https",
         hostname: "ptictyardjhsymt6.public.blob.vercel-storage.com",
-        pathname: "**",
       },
+      {
+        protocol: "https",
+        hostname: "**.public.blob.vercel-storage.com",
+      },
+      // OpenAI DALL-E
       {
         protocol: "https",
         hostname: "oaidalleapiprodscus.blob.core.windows.net",
-        pathname: "**",
       },
+      // Placeholder services
       {
         protocol: "https",
         hostname: "via.placeholder.com",
-        pathname: "**",
       },
       {
         protocol: "https",
         hostname: "placehold.co",
-        pathname: "**",
       },
+      // Cloudinary
       {
         protocol: "https",
         hostname: "res.cloudinary.com",
-        pathname: "**",
       },
+      // Unsplash
       {
         protocol: "https",
         hostname: "plus.unsplash.com",
-        pathname: "**",
       },
       {
         protocol: "https",
         hostname: "images.unsplash.com",
-        pathname: "**",
       },
     ],
     // Add dangerouslyAllowSVG for potential SVG image support
