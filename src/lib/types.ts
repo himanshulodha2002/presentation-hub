@@ -51,6 +51,7 @@ export interface ContentItem {
   language?: string;
   bgColor?: string;
   isTransparent?: boolean;
+  rows?: ContentItem[][];
 }
 
 export interface DragItem {

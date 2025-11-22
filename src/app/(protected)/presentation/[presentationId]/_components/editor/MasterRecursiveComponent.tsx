@@ -1,5 +1,10 @@
 "use client"
 
+import BlockQuote from "@/components/global/editor/components/BlockQuote"
+import CalloutBox from "@/components/global/editor/components/CalloutBox"
+import CodeBlock from "@/components/global/editor/components/CodeBlock"
+import ColumnComponent from "@/components/global/editor/components/ColumnComponent"
+import Divider from "@/components/global/editor/components/Divider"
 import {
     Heading1,
     Heading2,
@@ -7,24 +12,19 @@ import {
     Heading4,
     Title,
 } from "@/components/global/editor/components/Headings"
+import CustomImage from "@/components/global/editor/components/ImageComponent"
+import NumberedList, {
+    BulletList,
+    TodoList,
+} from "@/components/global/editor/components/ListComponent"
+import Paragraph from "@/components/global/editor/components/Paragraph"
+import TableComponet from "@/components/global/editor/components/TableComponent"
+import TableOfContents from "@/components/global/editor/components/TableOfContents"
 import { ContentItem } from "@/lib/types"
 import { cn } from "@/lib/utils"
 import { motion } from "framer-motion"
 import React, { useCallback } from "react"
 import DropZone from "./DropZone"
-import Paragraph from "@/components/global/editor/components/Paragraph"
-import TableComponet from "@/components/global/editor/components/TableComponent"
-import ColumnComponent from "@/components/global/editor/components/ColumnComponent"
-import CustomImage from "@/components/global/editor/components/ImageComponent"
-import BlockQuote from "@/components/global/editor/components/BlockQuote"
-import NumberedList, {
-    BulletList,
-    TodoList,
-} from "@/components/global/editor/components/ListComponent"
-import CalloutBox from "@/components/global/editor/components/CalloutBox"
-import CodeBlock from "@/components/global/editor/components/CodeBlock"
-import TableOfContents from "@/components/global/editor/components/TableOfContents"
-import Divider from "@/components/global/editor/components/Divider"
 
 type MasterRecursiveComponentProps = {
     content: ContentItem
@@ -104,10 +104,41 @@ const ContentRenderer: React.FC<MasterRecursiveComponentProps> = React.memo(
                 )
 
             case "table":
+                let tableContent: string[][] = []
+                if (
+                    Array.isArray(content.content) &&
+                    content.content.length > 0 &&
+                    Array.isArray(content.content[0])
+                ) {
+                    tableContent = content.content as string[][]
+                } else if (content.rows && Array.isArray(content.rows)) {
+                    const headers = Array.isArray(content.content)
+                        ? (content.content as ContentItem[]).map((c) =>
+                              typeof c.content === "string"
+                                  ? c.content
+                                  : c.placeholder || ""
+                          )
+                        : []
+                    const body = content.rows.map((row) =>
+                        row.map((cell) =>
+                            typeof cell.content === "string"
+                                ? cell.content
+                                : cell.placeholder || ""
+                        )
+                    )
+                    if (headers.length > 0) {
+                        tableContent = [headers, ...body]
+                    } else {
+                        tableContent = body
+                    }
+                } else {
+                    tableContent = []
+                }
+
                 return (
                     <motion.div className="size-full" {...animationProps}>
                         <TableComponet
-                            content={content.content as string[][]}
+                            content={tableContent}
                             onChange={(newContent) => {
                                 onContentChange(
                                     content.id,
