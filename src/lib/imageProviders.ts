@@ -343,7 +343,7 @@ async function generateImageReplicate(prompt: string): Promise<ImageGenerationRe
 }
 
 /**
- * Google Gemini 2.0 Flash Image Generation (original implementation)
+ * Google Gemini 2.5 Flash Image Generation
  */
 async function generateImageGemini(prompt: string): Promise<ImageGenerationResponse> {
   try {
@@ -363,11 +363,7 @@ async function generateImageGemini(prompt: string): Promise<ImageGenerationRespo
       responseModalities: ['IMAGE', 'TEXT'],
     }
 
-    // Support both Gemini 2.0 and 2.5 models
-    // Default to gemini-2.0-flash-preview-image-generation for backward compatibility
-    const model = process.env.GEMINI_IMAGE_MODEL || 'gemini-2.0-flash-preview-image-generation'
-    console.log(`🎨 Using Gemini model: ${model}`)
-
+    const model = 'gemini-2.5-flash-image'
     const contents = [
       {
         role: 'user',

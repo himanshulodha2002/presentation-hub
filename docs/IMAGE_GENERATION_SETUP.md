@@ -257,18 +257,14 @@ IMAGE_GENERATION_PROVIDER=cloudflare
    ```bash
    IMAGE_GENERATION_PROVIDER=gemini  # or leave blank (default)
    GOOGLE_GENAI_API_KEY=your_api_key_here
-
-   # Optional: Choose which Gemini model to use (defaults to 2.0)
-   GEMINI_IMAGE_MODEL=gemini-2.5-flash-image  # or gemini-2.0-flash-preview-image-generation
    ```
 
 3. **Test Configuration**
    - Restart your development server
    - Generate a presentation with AI
 
-**Available Models:**
-- `gemini-2.0-flash-preview-image-generation` (default, stable)
-- `gemini-2.5-flash-image` (newer, improved quality and capabilities)
+**Model:**
+- `gemini-2.5-flash-image` (Google's latest image generation model)
 
 **Pricing:**
 - Free tier: Limited requests
