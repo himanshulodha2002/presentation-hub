@@ -264,7 +264,7 @@ IMAGE_GENERATION_PROVIDER=cloudflare
    - Generate a presentation with AI
 
 **Model:**
-- `gemini-2.0-flash-preview-image-generation`
+- `gemini-2.5-flash-image` (Google's latest image generation model)
 
 **Pricing:**
 - Free tier: Limited requests
