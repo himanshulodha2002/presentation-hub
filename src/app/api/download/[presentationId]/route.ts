@@ -1,5 +1,4 @@
 import { getSharedProjectById } from '@/actions/project';
-import { SLIDE_DIMENSIONS } from '@/lib/constants';
 import { NextRequest, NextResponse } from 'next/server';
 import PptxGenJS from 'pptxgenjs';
 
@@ -66,13 +65,11 @@ export async function GET(
     console.log('Slide count:', Array.isArray(res.data.slides) ? res.data.slides.length : 0);
 
     try {
-      // Create a new presentation with standard 16:9 dimensions
+      // Create a new presentation (use library default widescreen layout)
       const pptx = new PptxGenJS();
       
-      // Set layout to standard 16:9 widescreen (10" x 5.625")
+      // Set layout to standard widescreen without forcing explicit dimensions
       pptx.layout = 'LAYOUT_WIDE';
-      pptx.defineLayout({ name: 'STANDARD_16_9', width: SLIDE_DIMENSIONS.PPTX_WIDTH, height: SLIDE_DIMENSIONS.PPTX_HEIGHT });
-      pptx.layout = 'STANDARD_16_9';
       
       // Set presentation properties
       pptx.title = res.data.title || 'Presentation';
