@@ -65,8 +65,11 @@ export async function GET(
     console.log('Slide count:', Array.isArray(res.data.slides) ? res.data.slides.length : 0);
 
     try {
-      // Create a new presentation with more basic approach
+      // Create a new presentation (use library default widescreen layout)
       const pptx = new PptxGenJS();
+      
+      // Set layout to standard widescreen without forcing explicit dimensions
+      pptx.layout = 'LAYOUT_WIDE';
       
       // Set presentation properties
       pptx.title = res.data.title || 'Presentation';

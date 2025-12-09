@@ -43,6 +43,13 @@ import {
     TodoListComponent,
 } from "./slideComponents";
 
+// Standard slide dimensions for 16:9 aspect ratio (UI sizing)
+export const SLIDE_DIMENSIONS = {
+    ASPECT_RATIO: 16 / 9,
+    WIDTH: 960, // Standard width in pixels for 16:9 presentation
+    HEIGHT: 540, // Standard height in pixels (960 / 16 * 9)
+} as const;
+
 export const data = {
     user: {
         name: "John Doe",

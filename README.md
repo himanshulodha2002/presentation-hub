@@ -4,7 +4,9 @@ A modern web application for creating AI-powered presentations using Next.js, Op
 
 ## Features
 
-- 🤖 AI-powered presentation generation
+- 🤖 AI-powered presentation generation with **multiple AI providers**
+  - OpenAI (GPT-4o)
+  - Google Gemini 2.0 Flash (Recommended)
 - 🎨 Modern UI with Tailwind CSS and Radix UI components
 - 🔒 Authentication with Clerk
 - 📊 Interactive presentation editor
@@ -13,6 +15,7 @@ A modern web application for creating AI-powered presentations using Next.js, Op
 - 📱 Responsive design
 - 🔄 Real-time updates
 - 📦 PPTX export functionality
+- 🖼️ AI image generation with multiple providers
 
 ## Tech Stack
 
@@ -24,24 +27,41 @@ A modern web application for creating AI-powered presentations using Next.js, Op
 - **Database**: Prisma
 - **State Management**: Zustand
 - **Form Handling**: React Hook Form
-- **AI Integration**: OpenAI
+- **AI Integration**: OpenAI / Google Gemini (configurable)
+- **Image Generation**: Cloudflare, Hugging Face, Replicate, Gemini
 - **Presentation Generation**: pptxgenjs
-
 ## Prerequisites
 
 - Node.js 18+ or Bun
-- OpenAI API key
-- Clerk account and credentials
-
+- **AI Provider** (choose one):
+  - OpenAI API key, **OR**
+  - Google Gemini API key (Recommended - better quality & cost)
 ## Environment Variables
 
-Create a `.env` file in the root directory with the following variables:
+Create a `.env.local` file in the root directory. See `.env.example` for all options.
+
+**Minimum required:**
 
 ```env
+# Choose your AI provider (openai or gemini)
+AI_PROVIDER=gemini
+
+# If using OpenAI
 OPENAI_API_KEY=your_openai_api_key
+
+# If using Gemini (Recommended)
+GEMINI_API_KEY=your_gemini_api_key
+
+# Authentication
 CLERK_SECRET_KEY=your_clerk_secret_key
 NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=your_clerk_publishable_key
+
+# Database
+DATABASE_URL=your_database_url
 ```
+
+**For detailed setup instructions, see:**
+- [Image Generation Setup Guide](docs/IMAGE_GENERATION_SETUP.md)
 
 ## Getting Started
 

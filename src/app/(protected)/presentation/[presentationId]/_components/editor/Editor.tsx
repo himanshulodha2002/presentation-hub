@@ -165,7 +165,7 @@ const DragableSlideContent: React.FC<DragableSlideProps> = ({
                 <div
                     ref={slideRef}
                     className={cn(
-                        "w-full rounded-lg shadow-lg relative p-0 min-h-[400px] max-h-[800px]",
+                        "w-full aspect-video rounded-lg shadow-lg relative p-0",
                         "shadow-xl transition-shadow duration-300",
                         "flex flex-col",
                         index === currentSlide
