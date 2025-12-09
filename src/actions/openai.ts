@@ -3,8 +3,10 @@
 import { client } from '@/lib/prisma'
 import { ContentItem, ContentType, Slide } from '@/lib/types'
 import { currentUser } from '@clerk/nextjs/server'
-import OpenAI from 'openai'
 import { v4 as uuidv4 } from 'uuid'
+
+// Import centralized AI provider system
+import { generateAICompletion, getCurrentProvider } from '@/lib/ai-providers'
 
 // Import centralized image provider system
 import { generateImage, processWithRateLimit } from '@/lib/imageProviders'
@@ -18,22 +20,13 @@ import {
   LAYOUT_SYSTEM_MESSAGE,
 } from '@/lib/prompts'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-  baseURL: "https://models.inference.ai.azure.com",
-})
-
 export const generateCreativePrompt = async (userPrompt: string) => {
-  const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY,
-    baseURL: "https://models.inference.ai.azure.com",
-  })
-
   const finalPrompt = generateOutlinePrompt(userPrompt)
 
   try {
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4.1',
+    console.log(`🟢 Generating outline with ${getCurrentProvider()}...`)
+    
+    const completion = await generateAICompletion({
       messages: [
         {
           role: 'system',
@@ -46,14 +39,17 @@ export const generateCreativePrompt = async (userPrompt: string) => {
       ],
       max_tokens: 1200,
       temperature: 0.1,
+      response_format: { type: 'json_object' },
     })
 
-    const responseContent = completion.choices[0].message?.content
+    const responseContent = completion.content
     if (responseContent) {
       try {
         // Strip markdown code block markers and any whitespace
         const cleanJson = responseContent.replace(/```json\n?|\n?```/g, '').trim()
         const jsonResponse = JSON.parse(cleanJson)
+        
+        console.log('📊 Token usage:', completion.usage)
         return { status: 200, data: jsonResponse }
       } catch (error) {
         console.error('Invalid JSON received:', responseContent, error)
@@ -579,14 +575,9 @@ export const generateLayoutsJson = async (outlineArray: string[]) => {
   // `
 
   try {
-    console.log('🟢 Generating layouts...')
+    console.log(`🟢 Generating layouts with ${getCurrentProvider()}...`)
 
-    // Create AbortController for timeout
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 4000000); // 40 second timeout
-
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4.1',
+    const completion = await generateAICompletion({
       messages: [
         {
           role: 'system',
@@ -596,23 +587,16 @@ export const generateLayoutsJson = async (outlineArray: string[]) => {
       ],
       max_tokens: 16000, // Increased to handle large presentations without truncation
       temperature: 0.2, // Reduced for more consistent, professional output
-    }, {
-      signal: controller.signal
-    });
-
-    clearTimeout(timeoutId);
-
-    const responseContent = completion?.choices?.[0]?.message?.content
-
-    // Log token usage for debugging
-    console.log('📊 Token usage:', {
-      prompt_tokens: completion?.usage?.prompt_tokens,
-      completion_tokens: completion?.usage?.completion_tokens,
-      total_tokens: completion?.usage?.total_tokens,
+      response_format: { type: 'json_object' },
     })
 
+    const responseContent = completion.content
+
+    // Log token usage for debugging
+    console.log('📊 Token usage:', completion.usage)
+
     if (!responseContent) {
-      console.log('🔴 ERROR: No content generated from OpenAI')
+      console.log('🔴 ERROR: No content generated from AI')
       return { status: 400, error: 'No content generated' }
     }
 
@@ -621,7 +605,7 @@ export const generateLayoutsJson = async (outlineArray: string[]) => {
     console.log('📄 Last 200 chars:', responseContent.substring(responseContent.length - 200))
 
     // Check if response might be truncated
-    const finishReason = completion?.choices?.[0]?.finish_reason
+    const finishReason = completion.finish_reason
     if (finishReason === 'length') {
       console.log('⚠️ WARNING: Response was truncated due to max_tokens limit')
       return {
