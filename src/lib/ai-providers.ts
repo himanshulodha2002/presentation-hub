@@ -55,7 +55,7 @@ const geminiClient = GEMINI_API_KEY ? new GoogleGenerativeAI(GEMINI_API_KEY) : n
 // Default models (based on official docs Dec 2024)
 const DEFAULT_MODELS = {
   openai: 'gpt-4o',
-  gemini: 'gemini-2.5-flash', // Stable, recommended
+  gemini: 'gemini-3-pro-preview', // Stable, recommended
 } as const
 
 // ============================================================================

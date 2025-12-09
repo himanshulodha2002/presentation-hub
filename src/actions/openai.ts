@@ -636,9 +636,18 @@ export const generateLayoutsJson = async (outlineArray: string[]) => {
 
       jsonResponse = JSON.parse(cleanedContent)
 
+      // Normalize responses: accept array, or {slides: [...]} or single slide object
       if (!Array.isArray(jsonResponse)) {
-        console.log('🔴 ERROR: Response is not an array')
-        return { status: 400, error: 'Invalid JSON structure - expected an array' }
+        if (jsonResponse && Array.isArray(jsonResponse.slides)) {
+          jsonResponse = jsonResponse.slides
+          console.log('ℹ️ Normalized response using slides property')
+        } else if (jsonResponse && typeof jsonResponse === 'object') {
+          jsonResponse = [jsonResponse]
+          console.log('ℹ️ Normalized response wrapping single object into array')
+        } else {
+          console.log('🔴 ERROR: Response is not an array')
+          return { status: 400, error: 'Invalid JSON structure - expected an array' }
+        }
       }
 
       // Process slides with rate limiting (2 slides at a time) to prevent API overload
