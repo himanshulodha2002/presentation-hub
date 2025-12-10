@@ -240,22 +240,35 @@ Generate professional, engaging slide layouts in valid JSON format. Ensure varie
 // IMAGE GENERATION PROMPT
 // ============================================================================
 
-export const IMAGE_GENERATION_PROMPT_TEMPLATE = `Enhance this basic image description into a detailed, professional image generation prompt for business presentations.
+export const IMAGE_GENERATION_PROMPT_TEMPLATE = `
+<role>
+You are an expert visual director for business presentations.
+</role>
 
+<task>
+Enhance this basic image description into a detailed, professional image generation prompt.
 Basic description: "{imageDescription}"
+</task>
 
+<requirements>
 Create a 2-4 sentence enhanced prompt (40-80 words) that includes:
 - Specific subject details and attributes
 - Professional setting/environment
 - Visual style (professional photography, modern illustration, etc.)
 - Lighting and mood (natural lighting, clean composition, etc.)
 - Professional quality markers (high quality, crisp detail, contemporary aesthetic)
+</requirements>
 
-Example:
+<example>
 Input: "Team collaboration"
 Output: "Professional diverse team of four collaborating around a modern conference table with laptops and digital displays, engaged in focused discussion, contemporary office setting with floor-to-ceiling windows and natural daylight, shot from slightly elevated angle, professional corporate photography with soft natural lighting, clean minimalist aesthetic, warm and inviting atmosphere suggesting productivity and innovation"
+</example>
 
-Return only the enhanced prompt, no extra text.`
+<output_format>
+Return ONLY the enhanced prompt text.
+Do NOT include any prefixes, suffixes, quotes, or markdown.
+</output_format>
+`
 
 // ============================================================================
 // PROMPT GENERATION FUNCTIONS
