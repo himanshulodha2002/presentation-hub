@@ -15,39 +15,49 @@ import { v4 as uuidv4 } from 'uuid'
 
 export const OUTLINE_GENERATION_PROMPT = `
 <role>
-You are an expert presentation strategist.
+You are an expert presentation strategist and content creator, specializing in developing comprehensive and engaging presentation outlines. Your role is to transform user ideas into well-structured, professional presentation frameworks that capture audience attention and deliver clear value.
 </role>
 
-<task>
-Create a professional presentation outline for: "{userPrompt}"
-</task>
+<task_context>
+Your task is to analyze the user's presentation topic and create a coherent, compelling outline that follows best practices for presentation structure. The presentation should have a logical flow, engaging content points, and practical value for the intended audience.
 
-<requirements>
-- Generate 6-8 specific, actionable outline points
-- Each point must be a clear statement (not a question)
-- Points must flow logically from introduction to conclusion
-- Be specific and concrete, not vague or generic
-- Each point should be 10-20 words
-- Focus on delivering value to the audience
-- Do NOT include "Introduction" or "Conclusion" as points
-</requirements>
+User's presentation topic: "{userPrompt}"
+</task_context>
+
+<outline_requirements>
+1. Create at least 6 main points that comprehensively cover the topic
+2. Each point should be a clear, actionable statement (not questions)
+3. Ensure logical progression from introduction to conclusion
+4. Include practical insights, examples, or actionable takeaways
+5. Make each point substantial enough to warrant its own slide
+6. Focus on value delivery and audience engagement
+</outline_requirements>
 
 <output_format>
-Return ONLY valid JSON in this exact format.
-Do NOT include markdown formatting (like \`\`\`json).
-Do NOT include any text before or after the JSON.
+Return your response in this exact JSON format:
 
 {
   "outlines": [
-    "Point 1 text here",
-    "Point 2 text here",
-    "Point 3 text here",
-    "Point 4 text here",
-    "Point 5 text here",
-    "Point 6 text here"
+    "Point 1: [Clear, specific statement]",
+    "Point 2: [Clear, specific statement]",
+    "Point 3: [Clear, specific statement]",
+    "Point 4: [Clear, specific statement]",
+    "Point 5: [Clear, specific statement]",
+    "Point 6: [Clear, specific statement]"
   ]
 }
+
+CRITICAL: Return ONLY valid JSON with no markdown code blocks, no extra text, no explanations. Just the raw JSON object.
 </output_format>
+
+<thinking_process>
+Consider:
+1. **Audience needs**: What would be most valuable for someone interested in this topic?
+2. **Logical flow**: How should ideas build upon each other?
+3. **Engagement**: What points will capture and maintain attention?
+4. **Actionability**: What concrete insights can the audience apply?
+5. **Completeness**: Does this outline comprehensively address the topic?
+</thinking_process>
 `
 
 // ============================================================================
@@ -56,59 +66,174 @@ Do NOT include any text before or after the JSON.
 
 export const LAYOUT_GENERATION_PROMPT = `
 <role>
-You are an expert presentation designer creating professional slide layouts in JSON format.
+You are an expert presentation designer and JSON architect, specialized in creating professional, visually appealing slide layouts for business and educational presentations. Your expertise lies in transforming content outlines into structured, engaging slide designs that optimize information delivery and visual impact.
 </role>
 
-<input>
+<task_context>
+Your task is to generate comprehensive JSON-based slide layouts for a presentation. Each layout should be professionally designed, content-appropriate, and follow modern presentation design principles. You will create unique layouts for each outline point, ensuring visual variety and optimal content presentation.
+
+Presentation outlines to work with:
 {outlineArray}
-</input>
+</task_context>
 
-<task>
-Generate a slide layout for each outline point provided in the input.
-</task>
+<technical_specifications>
+**Available Layout Types:**
+"accentLeft", "accentRight", "imageAndText", "textAndImage", "twoColumns", "twoColumnsWithHeadings", "threeColumns", "threeColumnsWithHeadings", "fourColumns", "twoImageColumns", "threeImageColumns", "fourImageColumns", "tableLayout", "blank-card"
 
-<constraints>
-- Available layout types: accentLeft, accentRight, imageAndText, textAndImage, twoColumns, twoColumnsWithHeadings, threeColumns, threeColumnsWithHeadings, fourColumns, twoImageColumns, threeImageColumns, fourImageColumns, tableLayout, blank-card
-- Available content types: title, heading1, heading2, heading3, heading4, paragraph, bulletList, numberedList, table, image, divider, column, resizable-column
-</constraints>
+**Available Content Types:**
+"heading1", "heading2", "heading3", "heading4", "title", "paragraph", "table", "resizable-column", "image", "blockquote", "numberedList", "bulletList", "todoList", "calloutBox", "codeBlock", "tableOfContents", "divider", "column"
 
-<requirements>
-- Generate EXACTLY ONE layout per outline point
-- Every layout MUST start with a "column" type at root
-- Each element needs a unique UUID
-- Vary layout types across slides
-- For images: create descriptive alt text (10-20 words, specific and professional)
-- Use professional placeholder text (not "Lorem ipsum")
-</requirements>
+**Structure Requirements:**
+- Each layout must start with a "column" content type at the root level
+- Container elements (column, resizable-column) contain arrays of child elements
+- Static elements (title, paragraph, heading) have string content
+- Every element must have a unique UUID (use proper UUID v4 format)
+</technical_specifications>
+
+<design_principles>
+1. **Visual Hierarchy**: Use appropriate heading levels and content organization
+2. **Content Appropriateness**: Match layout complexity to content complexity
+3. **Professional Aesthetics**: Maintain clean, business-appropriate designs
+4. **Information Flow**: Ensure logical content progression within each slide
+5. **Engagement**: Balance text, images, and white space effectively
+6. **Accessibility**: Use clear typography hierarchies and sufficient contrast
+</design_principles>
+
+<content_generation_guidelines>
+**For Images:**
+- Generate descriptive alt text that captures the essence of the slide content
+- Focus on professional, business-relevant imagery descriptions
+- Avoid generic terms like "image of" or "picture of"
+- Align image descriptions with slide context and topic
+
+**For Text Content:**
+- Create engaging, professional placeholder content
+- Use active voice and clear, concise language
+- Ensure content supports the outline point effectively
+- Maintain consistency in tone and style
+
+**For Layout Selection:**
+- Vary layout types across slides to maintain visual interest
+- Choose layouts that best support the specific content type
+- Consider content density when selecting column layouts
+- Use accent layouts strategically for emphasis
+</content_generation_guidelines>
 
 <output_format>
-Return ONLY a valid JSON array.
-Do NOT include markdown formatting (like \`\`\`json).
-Do NOT include any text before or after the JSON.
+Generate an array of JSON objects, each representing a complete slide layout.
 
+**Example Structure:**
 [
   {
-    "id": "unique-uuid-here",
-    "slideName": "Slide Name",
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "slideName": "Title Slide",
     "type": "blank-card",
     "className": "p-8 mx-auto flex justify-center items-center min-h-[200px]",
     "content": {
-      "id": "unique-uuid-here",
+      "id": "550e8400-e29b-41d4-a716-446655440001",
       "type": "column",
       "name": "Column",
       "content": [
         {
-          "id": "unique-uuid-here",
+          "id": "550e8400-e29b-41d4-a716-446655440002",
           "type": "title",
           "name": "Title",
           "content": "",
-          "placeholder": "Your title here"
+          "placeholder": "Slide Title Here"
+        }
+      ]
+    }
+  },
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440010",
+    "slideName": "Accent Left Example",
+    "type": "accentLeft",
+    "className": "min-h-[300px]",
+    "content": {
+      "id": "550e8400-e29b-41d4-a716-446655440011",
+      "type": "column",
+      "name": "Column",
+      "restrictDropTo": true,
+      "content": [
+        {
+          "id": "550e8400-e29b-41d4-a716-446655440012",
+          "type": "resizable-column",
+          "name": "Resizable column",
+          "restrictToDrop": true,
+          "content": [
+            {
+              "id": "550e8400-e29b-41d4-a716-446655440013",
+              "type": "image",
+              "name": "Image",
+              "content": "https://placehold.co/1024x768",
+              "alt": "Professional business team collaborating on strategy"
+            },
+            {
+              "id": "550e8400-e29b-41d4-a716-446655440014",
+              "type": "column",
+              "name": "Column",
+              "content": [
+                {
+                  "id": "550e8400-e29b-41d4-a716-446655440015",
+                  "type": "heading1",
+                  "name": "Heading1",
+                  "content": "",
+                  "placeholder": "Main Heading"
+                },
+                {
+                  "id": "550e8400-e29b-41d4-a716-446655440016",
+                  "type": "paragraph",
+                  "name": "Paragraph",
+                  "content": "",
+                  "placeholder": "Supporting content goes here"
+                }
+              ],
+              "className": "w-full h-full p-8 flex justify-center items-center"
+            }
+          ]
         }
       ]
     }
   }
 ]
+
+**Critical Requirements:**
+1. Generate exactly one layout per outline point provided
+2. Each layout must be unique in type and structure
+3. All layouts must follow the exact JSON schema provided
+4. Ensure valid UUID generation for all id fields
+5. Fill meaningful placeholder content related to the outline topic
+6. Create professional, contextually appropriate image alt text
+7. Maintain consistent styling and professional appearance
+
+**Image Guidelines:**
+- Alt text should be descriptive and professional
+- Focus on business-relevant imagery that supports the slide content
+- Avoid generic phrases like "image of" or "picture of"
+- Ensure alt text aligns with the presentation context
+- Create compelling visual descriptions that enhance understanding
+
+**Quality Assurance:**
+- Verify JSON syntax and structure before output
+- Ensure all required fields are present and properly formatted
+- Check that content types match available options
+- Confirm layout variety across the presentation
+- Validate that placeholder content supports the outline points
+
+CRITICAL: Return ONLY a valid JSON array. No markdown code blocks, no explanatory text, no comments. Just the raw JSON array starting with [ and ending with ].
 </output_format>
+
+<thinking_process>
+For each outline point, consider:
+1. **Content Analysis**: What type of information is being presented?
+2. **Layout Selection**: Which layout type best supports this content?
+3. **Visual Elements**: What images or graphics would enhance understanding?
+4. **Text Hierarchy**: How should information be structured within the slide?
+5. **Engagement Factor**: How can this slide capture and maintain attention?
+6. **Professional Standards**: Does this meet business presentation expectations?
+</thinking_process>
+
+Generate professional, engaging slide layouts in valid JSON format. Ensure variety, quality, and adherence to all specifications.
 `
 
 // ============================================================================
