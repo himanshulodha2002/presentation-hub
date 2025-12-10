@@ -13,27 +13,29 @@ import { v4 as uuidv4 } from 'uuid'
 // PRESENTATION OUTLINE GENERATION PROMPT
 // ============================================================================
 
-export const OUTLINE_GENERATION_PROMPT = `You are an expert presentation strategist creating professional presentation outlines.
+export const OUTLINE_GENERATION_PROMPT = `
+<role>
+You are an expert presentation strategist.
+</role>
 
-Create a presentation outline for: "{userPrompt}"
+<task>
+Create a professional presentation outline for: "{userPrompt}"
+</task>
 
-Requirements:
-- Generate at least 6 specific, actionable outline points
-- Each point should be a clear statement (not a question)
-- Points should flow logically from introduction to conclusion
+<requirements>
+- Generate 6-8 specific, actionable outline points
+- Each point must be a clear statement (not a question)
+- Points must flow logically from introduction to conclusion
 - Be specific and concrete, not vague or generic
 - Each point should be 10-20 words
 - Focus on delivering value to the audience
+- Do NOT include "Introduction" or "Conclusion" as points
+</requirements>
 
-Examples of good points:
-✅ "The five-step framework for implementing sustainable change in organizations"
-✅ "Data-driven insights: How top performers measure and optimize their results"
-
-Examples to avoid:
-❌ "Introduction" (too generic)
-❌ "Why is this important?" (question format)
-
-Return ONLY valid JSON in this exact format with no markdown or extra text:
+<output_format>
+Return ONLY valid JSON in this exact format.
+Do NOT include markdown formatting (like \`\`\`json).
+Do NOT include any text before or after the JSON.
 
 {
   "outlines": [
@@ -44,76 +46,104 @@ Return ONLY valid JSON in this exact format with no markdown or extra text:
     "Point 5 text here",
     "Point 6 text here"
   ]
-}`
+}
+</output_format>
+`
 
 // ============================================================================
 // SLIDE LAYOUT GENERATION PROMPT
 // ============================================================================
 
-export const LAYOUT_GENERATION_PROMPT = `You are an expert presentation designer creating professional slide layouts in JSON format.
+export const LAYOUT_GENERATION_PROMPT = `
+<role>
+You are an expert presentation designer creating professional slide layouts in JSON format.
+</role>
 
-Generate slide layouts for these outlines:
+<input>
 {outlineArray}
+</input>
 
-Available layout types: accentLeft, accentRight, imageAndText, textAndImage, twoColumns, twoColumnsWithHeadings, threeColumns, threeColumnsWithHeadings, fourColumns, twoImageColumns, threeImageColumns, fourImageColumns, tableLayout, blank-card
+<task>
+Generate a slide layout for each outline point provided in the input.
+</task>
 
-Available content types: title, heading1, heading2, heading3, heading4, paragraph, bulletList, numberedList, table, image, divider, column, resizable-column
+<constraints>
+- Available layout types: accentLeft, accentRight, imageAndText, textAndImage, twoColumns, twoColumnsWithHeadings, threeColumns, threeColumnsWithHeadings, fourColumns, twoImageColumns, threeImageColumns, fourImageColumns, tableLayout, blank-card
+- Available content types: title, heading1, heading2, heading3, heading4, paragraph, bulletList, numberedList, table, image, divider, column, resizable-column
+</constraints>
 
-Requirements:
-- Generate ONE layout per outline point
+<requirements>
+- Generate EXACTLY ONE layout per outline point
 - Every layout MUST start with a "column" type at root
 - Each element needs a unique UUID
 - Vary layout types across slides
 - For images: create descriptive alt text (10-20 words, specific and professional)
 - Use professional placeholder text (not "Lorem ipsum")
+</requirements>
 
-JSON structure for each slide:
+<output_format>
+Return ONLY a valid JSON array.
+Do NOT include markdown formatting (like \`\`\`json).
+Do NOT include any text before or after the JSON.
 
-Example simple layout:
-{
-  "id": "unique-uuid-here",
-  "slideName": "Slide Name",
-  "type": "blank-card",
-  "className": "p-8 mx-auto flex justify-center items-center min-h-[200px]",
-  "content": {
+[
+  {
     "id": "unique-uuid-here",
-    "type": "column",
-    "name": "Column",
-    "content": [
-      {
-        "id": "unique-uuid-here",
-        "type": "title",
-        "name": "Title",
-        "content": "",
-        "placeholder": "Your title here"
-      }
-    ]
+    "slideName": "Slide Name",
+    "type": "blank-card",
+    "className": "p-8 mx-auto flex justify-center items-center min-h-[200px]",
+    "content": {
+      "id": "unique-uuid-here",
+      "type": "column",
+      "name": "Column",
+      "content": [
+        {
+          "id": "unique-uuid-here",
+          "type": "title",
+          "name": "Title",
+          "content": "",
+          "placeholder": "Your title here"
+        }
+      ]
+    }
   }
-}
-
-CRITICAL: Return ONLY a valid JSON array with no markdown, no extra text, no code blocks. Just pure JSON.
+]
+</output_format>
 `
 
 // ============================================================================
 // IMAGE GENERATION PROMPT
 // ============================================================================
 
-export const IMAGE_GENERATION_PROMPT_TEMPLATE = `Enhance this basic image description into a detailed, professional image generation prompt for business presentations.
+export const IMAGE_GENERATION_PROMPT_TEMPLATE = `
+<role>
+You are an expert visual director for business presentations.
+</role>
 
+<task>
+Enhance this basic image description into a detailed, professional image generation prompt.
 Basic description: "{imageDescription}"
+</task>
 
+<requirements>
 Create a 2-4 sentence enhanced prompt (40-80 words) that includes:
 - Specific subject details and attributes
 - Professional setting/environment
 - Visual style (professional photography, modern illustration, etc.)
 - Lighting and mood (natural lighting, clean composition, etc.)
 - Professional quality markers (high quality, crisp detail, contemporary aesthetic)
+</requirements>
 
-Example:
+<example>
 Input: "Team collaboration"
 Output: "Professional diverse team of four collaborating around a modern conference table with laptops and digital displays, engaged in focused discussion, contemporary office setting with floor-to-ceiling windows and natural daylight, shot from slightly elevated angle, professional corporate photography with soft natural lighting, clean minimalist aesthetic, warm and inviting atmosphere suggesting productivity and innovation"
+</example>
 
-Return only the enhanced prompt, no extra text.`
+<output_format>
+Return ONLY the enhanced prompt text.
+Do NOT include any prefixes, suffixes, quotes, or markdown.
+</output_format>
+`
 
 // ============================================================================
 // PROMPT GENERATION FUNCTIONS
