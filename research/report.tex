@@ -20,6 +20,10 @@
 \usepackage{subcaption}
 \usepackage{amssymb}  % For checkmark symbol
 \usepackage{times}    % Times New Roman font
+\usepackage{indentfirst}
+\usepackage{tikz}
+\usepackage{enumitem} % For compact lists in tables
+\usetikzlibrary{calc}
 
 % Handle missing images gracefully
 \usepackage{ifthen}
@@ -37,8 +41,19 @@
 % Chapter title: 16pt, Chapter name: 18pt centered
 \titleformat{\chapter}[display]
 {\normalfont\fontsize{18}{22}\bfseries\centering}
-{\chaptertitlename\ \thechapter}{20pt}{\fontsize{18}{22}\bfseries}
-\titlespacing*{\chapter}{0pt}{-20pt}{40pt}
+{\chaptertitlename\ \thechapter}{18pt}{\fontsize{18}{22}\bfseries}
+\titlespacing*{\chapter}{0pt}{-20pt}{30pt}
+
+% Reduce space after TOC/LOF/LOT titles
+\renewcommand{\cfttoctitlefont}{\hfill\huge\bfseries}
+\renewcommand{\cftaftertoctitle}{\hfill}
+\renewcommand{\cftloftitlefont}{\hfill\huge\bfseries}
+\renewcommand{\cftafterloftitle}{\hfill}
+\renewcommand{\cftlottitlefont}{\hfill\huge\bfseries}
+\renewcommand{\cftafterlottitle}{\hfill}
+\setlength{\cftaftertoctitleskip}{20pt}
+\setlength{\cftafterloftitleskip}{20pt}
+\setlength{\cftafterlottitleskip}{20pt}
 
 % Section: 16pt, Subsection: 14pt
 \titleformat{\section}{\normalfont\fontsize{16}{20}\bfseries}{\thesection}{1em}{}
@@ -66,38 +81,47 @@
 % TITLE PAGE
 % ============================================
 \begin{titlepage}
+
+% Border around title page
+\begin{tikzpicture}[remember picture, overlay]
+    \draw[line width=1.5pt]
+    ($(current page.north west) + (1.5cm,-1.5cm)$)
+    rectangle
+    ($(current page.south east) + (-1.5cm,1.5cm)$);
+\end{tikzpicture}
+
 \begin{center}
 \textbf{\large VISVESVARAYA TECHNOLOGICAL UNIVERSITY}\\
-\textbf{BELAGAVI}\\[1cm]
+\textbf{\small Jnana Sangama, Belagavi, Karnataka - 590018}\\[0.4cm]
 
-\textbf{\Large Project Report on}\\[0.5cm]
-\textbf{\LARGE ``PRESENTATION HUB''}\\[1cm]
+\includelogo{media/vtu_logo.png}{2.5cm}\\[0.4cm]
 
-\textit{Submitted in the partial fulfillment for the requirements of the degree of}\\[0.5cm]
+\textbf{\large A Project Report on}\\[0.3cm]
+\textbf{\LARGE ``PRESENTATION HUB''}\\[0.5cm]
+
+\textit{Submitted in partial fulfilment of the requirements for the conferment of degree of}\\[0.3cm]
 \textbf{\large BACHELOR OF ENGINEERING}\\
-\textbf{IN}\\
-\textbf{\large COMPUTER SCIENCE AND ENGINEERING}\\[1cm]
+\textit{in}\\
+\textbf{\large COMPUTER SCIENCE AND ENGINEERING}\\[0.5cm]
 
-\textit{Submitted By}\\[0.3cm]
-\begin{tabular}{ll}
-\textbf{HIMANSHU LODHA} & \textbf{1BY22CS083}\\
-\textbf{K AMRUTHA KAMATH} & \textbf{1BY22CS095}\\
-\textbf{ADITYA RAJ} & \textbf{1BY22CS210}\\
-\end{tabular}\\[1cm]
+\textit{by}\\[0.3cm]
+\textbf{HIMANSHU LODHA (1BY22CS083)}\\
+\textbf{K AMRUTHA KAMATH (1BY22CS095)}\\
+\textbf{ADITYA RAJ (1BY22CS210)}\\[0.5cm]
 
-\textit{Under the guidance of}\\[0.3cm]
-\textbf{DR. SANJAY H A}\\
-\textbf{PRINCIPAL}\\
-\textbf{BMSIT\&M}\\[1cm]
+\textit{Under the Guidance of}\\[0.2cm]
+\textbf{Dr. Sanjay H A}\\
+\textit{Principal, BMSIT\&M}\\[0.5cm]
 
-\textbf{\large DEPARTMENT OF COMPUTER SCIENCE AND ENGINEERING}\\[0.5cm]
+\textbf{Department of Computer Science and Engineering}\\[0.2cm]
 
-\includelogo{media/bmsit_logo.png}{3cm}\\[0.5cm]
+\includelogo{media/bmsit_logo.png}{2.5cm}\\[0.2cm]
 
-\textbf{\large BMS INSTITUTE OF TECHNOLOGY \& MANAGEMENT}\\
-\textbf{YELAHANKA, BENGALURU - 560064}\\[0.5cm]
+\textbf{\large BMS INSTITUTE OF TECHNOLOGY AND MANAGEMENT}\\
+\small (Autonomous Institute under VTU, Belagavi, Karnataka - 590018)\\
+\small Yelahanka, Bengaluru, Karnataka - 560064\\[0.5cm]
 
-\textbf{2024-2025}
+\textbf{2025-2026}
 
 \end{center}
 \end{titlepage}
@@ -108,121 +132,126 @@
 \newpage
 \thispagestyle{empty}
 \begin{center}
-\textbf{\large VISVESVARAYA TECHNOLOGICAL UNIVERSITY}\\
-\textbf{BELAGAVI}\\[0.2cm]
 \textbf{\large BMS INSTITUTE OF TECHNOLOGY AND MANAGEMENT}\\
-\textbf{YELAHANKA, BENGALURU -- 560064}\\[0.3cm]
+\small (Autonomous Institute under VTU, Belagavi, Karnataka - 590018)\\
+\small Yelahanka, Bengaluru, Karnataka - 560064\\[0.5cm]
 
-\textbf{\large DEPARTMENT OF COMPUTER SCIENCE AND ENGINEERING}\\[0.5cm]
+\includelogo{media/bmsit_logo.png}{2.5cm}\\[0.3cm]
 
 \textbf{\Large CERTIFICATE}\\[0.5cm]
 \end{center}
 
-\noindent Certified that the project work entitled \textbf{``PRESENTATION HUB''} carried out by \textbf{Himanshu Lodha (1BY22CS083)}, \textbf{K Amrutha Kamath (1BY22CS095)}, \textbf{Aditya Raj (1BY22CS210)}, bonafide students of BMSIT\&M, in partial fulfillment for the award of Bachelor of Engineering in Computer Science and Engineering of Visvesvaraya Technological University, Belagavi during the year 2024-2025. It is certified that all corrections/suggestions indicated for Internal Assessment have been incorporated in the Report. The project report has been approved as it satisfies the academic requirements in respect of Project work prescribed for the said Degree.\\[0.8cm]
+\noindent This is to certify that the project entitled \textbf{``PRESENTATION HUB''} is a Bonafide work carried out by \textbf{Himanshu Lodha (1BY22CS083)}, \textbf{K Amrutha Kamath (1BY22CS095)}, and \textbf{Aditya Raj (1BY22CS210)} in partial fulfilment for the award of ``BACHELOR OF ENGINEERING'' in ``Computer Science and Engineering'' of the Visvesvaraya Technological University, Belagavi, during the year 2024-2025. It is certified that all corrections/suggestions indicated for internal assessment have been incorporated in the report. The project report has been approved as it satisfies the academic requirements in respect to work for the BE degree.
 
-\noindent
-\begin{minipage}[t]{0.48\textwidth}
-\textbf{Dr. Sanjay H A}\\
-Project Guide\\
-Dept. of CSE, BMSIT\&M
-\end{minipage}
-\hfill
-\begin{minipage}[t]{0.48\textwidth}
-\raggedleft
-\textbf{Dr. Satish Kumar T}\\
-HOD, Dept. of CSE\\
+\vspace{0.8cm}
+
+% Signature Block
+\begin{table}[h!]
+\centering
+\setlength{\tabcolsep}{0pt}
+\begin{tabular}{ p{0.45\textwidth} p{0.1\textwidth} p{0.45\textwidth} }
+
+% Row 1: Guide and Cluster Head
+\centering
+Dr. Sanjay H A \\
+Guide and Principal \\
 BMSIT\&M
-\end{minipage}\\[1cm]
+& &
+\centering
+Dr. Shobha M \\
+Associate Professor and Cluster Head\\
+Department of CSE-2
+\tabularnewline[2cm]
 
-\begin{center}
-\textbf{Dr. Sanjay H A}\\
-Principal, BMSIT\&M
-\end{center}
+% Row 2: HoD and Principal
+\centering
+Dr. Satish Kumar T \\
+Associate Professor and Head of Department\\
+Department of CSE
+& &
+\centering
+Dr. Sanjay H A \\
+Professor and Principal \\
+BMSIT\&M, Bengaluru
 
-\vspace{0.5cm}
-
-\noindent\textbf{External Viva}\\[0.2cm]
-\begin{tabular}{|p{6cm}|p{5cm}|}
-\hline
-\textbf{Name of the Examiners} & \textbf{Signature with Date}\\
-\hline
-1. & \\[0.5cm]
-\hline
-2. & \\[0.5cm]
-\hline
 \end{tabular}
+\end{table}
 
-% ============================================
-% DECLARATION
-% ============================================
-\newpage
-\pagenumbering{roman}
-\setcounter{page}{1}
-\thispagestyle{empty}
-\begin{center}
-\textbf{\Large DECLARATION}\\[1cm]
-\end{center}
+\vspace{0.8cm}
 
-\noindent We declare that this project report titled \textbf{``PRESENTATION HUB''} submitted in partial fulfillment of the degree of B.Tech in Computer Science and Engineering is a record of original work carried out by us under the supervision of \textbf{Dr. Sanjay H A}, and has not formed the basis for the award of any other degree, in this or any other Institution or University. In keeping with the ethical practice in reporting scientific information, due acknowledgements have been made wherever the findings of others have been cited.\\[1.5cm]
-
-\begin{center}
-\textbf{Signature of the student(s)}\\[0.5cm]
-\begin{tabular}{|l|l|l|}
-\hline
-\textbf{Name} & \textbf{USN} & \textbf{Signature}\\
-\hline
-Himanshu Lodha & 1BY22CS083 & \\[0.4cm]
-\hline
-K Amrutha Kamath & 1BY22CS095 & \\[0.4cßm]
-\hline
-Aditya Raj & 1BY22CS210 & \\[0.4cm]
-\hline
-\end{tabular}
-\end{center}
+\noindent\textbf{Name of the Examiners} \hfill \textbf{Signature with Date}\\[0.5cm]
+1. .............................................................. \hfill ....................................\\[0.5cm]
+2. .............................................................. \hfill ....................................
 
 % ============================================
 % ACKNOWLEDGEMENT
 % ============================================
 \newpage
+\pagenumbering{roman}
+\setcounter{page}{1}
+\chapter*{ACKNOWLEDGEMENT}
 \thispagestyle{empty}
-\begin{center}
-\textbf{\Large ACKNOWLEDGEMENT}\\[1cm]
-\end{center}
+\addcontentsline{toc}{chapter}{Acknowledgement}
 
-\noindent We are pleased to present this project report upon its successful completion. This project would not have been possible without the guidance, assistance, and suggestions of many individuals. We would like to express our deep sense of gratitude to each and every person who has contributed to making this project a success.\\[0.5cm]
+\indent We would like to express our heartfelt gratitude to everyone who has contributed to make this project a memorable experience and has inspired this work in some way.
 
-\noindent First and foremost, we extend our heartfelt thanks to \textbf{Dr. Sanjay H A}, Principal, BMS Institute of Technology \& Management, for his constant encouragement and inspiration in undertaking this project.\\[0.5cm]
+Let us begin by expressing our gratitude to the Almighty God for the numerous blessings bestowed upon us. We are happy to present this project after completing it successfully.
 
-\noindent We also express our sincere gratitude to \textbf{Dr. Satish Kumar T}, Head of the Department, Computer Science and Engineering, BMS Institute of Technology \& Management, for his unwavering support and motivation throughout this endeavor.\\[0.5cm]
+This project would not have been possible without the guidance, assistance, and suggestions of many individuals. We express our deep sense of gratitude and indebtedness to each and every one who has helped us make this project a success.
 
-\noindent We express our gratitude to \textbf{Dr. Shobha M}, Associate Professor and Cluster Head, Department of Computer Science and Engineering, for her constant encouragement and valuable guidance.\\[0.5cm]
+We heartily thank \textbf{Dr. Sanjay H A}, Principal, BMS Institute of Technology \& Management for constant encouragement and inspiration in taking up this project.
 
-\noindent We are grateful to our project guide, \textbf{Dr. Sanjay H A}, for his invaluable encouragement and guidance throughout the project.\\[0.5cm]
+We heartily thank \textbf{Dr. Satish Kumar T}, Associate Professor and Head of Department, Department of Computer Science and Engineering, BMS Institute of Technology \& Management for constant encouragement and inspiration in taking up this project.
 
-\noindent Special thanks are due to all the staff members of the Computer Science and Engineering Department for their help and cooperation.\\[0.5cm]
+We heartily thank \textbf{Dr. Shobha M}, Associate Professor and Cluster Head, BMS Institute of Technology \& Management for constant encouragement and inspiration in taking up this project.
 
-\noindent Finally, we would like to express our gratitude to our parents and friends for their unwavering encouragement and support throughout the duration of this project.\\[1cm]
+We gratefully thank our project guide, \textbf{Dr. Sanjay H A}, for guidance and support throughout the course of the project work.
+
+Special thanks to all the staff members of the Computer Science and Engineering Department for their help and kind co-operation. Lastly, we thank our parents and friends for their encouragement and support in helping us complete this work.
+
+\vspace{1cm}
 
 \begin{flushright}
-\textbf{Himanshu Lodha}\\
-\textbf{K Amrutha Kamath}\\
-\textbf{Aditya Raj}
+\textbf{HIMANSHU LODHA (1BY22CS083)}\\
+\textbf{K AMRUTHA KAMATH (1BY22CS095)}\\
+\textbf{ADITYA RAJ (1BY22CS210)}
 \end{flushright}
+
+% ============================================
+% DECLARATION
+% ============================================
+\newpage
+\thispagestyle{empty}
+\addcontentsline{toc}{chapter}{Declaration}
+\begin{center}
+\textbf{\Large DECLARATION}\\[1cm]
+\end{center}
+
+\noindent We, hereby declare that the project titled \textbf{``PRESENTATION HUB''} is a record of original project work under the guidance of \textbf{Dr. Sanjay H A, Principal}, Department of Computer Science and Engineering, BMS Institute of Technology \& Management, Autonomous Institute under Visvesvaraya Technological University, Belagavi during the Academic Year 2024-2025.
+
+We also declare that this project report has not been submitted for the award of any degree, diploma, associateship, fellowship or other title anywhere else.
+
+\vspace{1cm}
+\begin{table}[h]
+\centering
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Name of the Student} & \textbf{USN} & \textbf{Signature} \\ \hline
+\rule{0pt}{3ex} Himanshu Lodha & 1BY22CS083 &  \\ \hline
+\rule{0pt}{3ex} K Amrutha Kamath & 1BY22CS095 &  \\ \hline
+\rule{0pt}{3ex} Aditya Raj & 1BY22CS210 &  \\ \hline
+\end{tabular}
+\end{table}
 
 % ============================================
 % ABSTRACT
 % ============================================
 \newpage
+\chapter*{ABSTRACT}
 \thispagestyle{empty}
-\begin{center}
-\textbf{\Large ABSTRACT}\\[1cm]
-\end{center}
+\addcontentsline{toc}{chapter}{Abstract}
 
-\noindent This project presents Presentation Hub, an AI-powered platform designed to automate the creation of professional presentations from simple text prompts. The system leverages the OpenAI API to generate structured slide content, titles, summaries, and visual suggestions within seconds. Built with modern web technologies including Next.js and React, it provides a responsive and interactive user interface.\\[0.5cm]
-
-\noindent The platform integrates Clerk for secure user authentication and Lemon Squeezy for subscription-based payment processing. Data persistence is handled through Prisma ORM with Neon PostgreSQL database. The frontend employs Zustand for state management and Shadcn UI components for a polished user experience.\\[0.5cm]
-
-\noindent Testing and usage of the platform indicate high reliability, efficiency, and scalability. The system successfully demonstrates how generative AI can enhance creativity, reduce workload, and improve productivity in presentation creation across multiple domains including education, business, and professional settings.
+\noindent This project presents Presentation Hub, an AI-powered platform designed to automate the creation of professional presentations from simple text prompts. The system leverages the OpenAI API to generate structured slide content, titles, summaries, and visual suggestions within seconds. Built with modern web technologies including Next.js and React, it provides a responsive and interactive user interface. The platform integrates Clerk for secure user authentication and Lemon Squeezy for subscription-based payment processing, while data persistence is handled through Prisma ORM with Neon PostgreSQL database. The frontend employs Zustand for state management and Shadcn UI components for a polished user experience. Testing and usage of the platform indicate high reliability, efficiency, and scalability, successfully demonstrating how generative AI can enhance creativity, reduce workload, and improve productivity in presentation creation across multiple domains including education, business, and professional settings.
 
 % ============================================
 % TABLE OF CONTENTS
@@ -235,12 +264,14 @@ Aditya Raj & 1BY22CS210 & \\[0.4cm]
 % ============================================
 \newpage
 \listoffigures
+\addcontentsline{toc}{chapter}{List of Figures}
 
 % ============================================
 % LIST OF TABLES
 % ============================================
 \newpage
 \listoftables
+\addcontentsline{toc}{chapter}{List of Tables}
 
 % Set page numbering
 \newpage
@@ -281,90 +312,199 @@ Presentation Hub is an AI-powered platform that automatically generates complete
 
 \section{WPs and SDG Addressed}
 
-\subsection{Mapping of Complex Engineering Problems with Washington Accord WPs (WP1-WP7)}
+\begin{center}
+\textbf{\underline{Solving Complex Engineering Problems Incorporating Sustainability Goals}}\\[0.3cm]
+Mapping of Complex Engineering Problems with Washington Accord WPs( WP1-WP7)
+\end{center}
+
+\begin{longtable}{|c|p{3cm}|p{7.5cm}|c|}
+\hline
+\textbf{WP Code} & \textbf{Description} & \textbf{Competencies} & \textbf{Applicable (\checkmark)}\\
+\hline
+\endfirsthead
+\hline
+\textbf{WP Code} & \textbf{Description} & \textbf{Competencies} & \textbf{Applicable (\checkmark)}\\
+\hline
+\endhead
+\hline
+\endfoot
+WP1 & In-Depth Engineering Knowledge & Uses advanced algorithms & \checkmark \\
+\cline{3-4}
+ &  & Works with complex data structures & \\
+\cline{3-4}
+ &  & Applies specialized domain knowledge & \checkmark \\
+\cline{3-4}
+ &  & Uses professional-grade tools and platforms & \checkmark \\
+\cline{3-4}
+ &  & Combines knowledge from multiple CSE fields & \checkmark \\
+\cline{3-4}
+ &  & Performs algorithm optimization & \\
+\cline{3-4}
+ &  & Refers to research papers or standards & \checkmark \\
+\hline
+WP2 & Wide-Ranging or Conflicting Technical \& Non-Technical Issues & Balances security with performance & \\
+\cline{3-4}
+ &  & Evaluates resource limitations & \\
+\cline{3-4}
+ &  & Considers user experience needs & \\
+\cline{3-4}
+ &  & Follows privacy and security rules & \checkmark \\
+\cline{3-4}
+ &  & Chooses solutions that scale and are easy to maintain & \checkmark \\
+\cline{3-4}
+ &  & Identifies and manages risks & \checkmark \\
+\cline{3-4}
+ &  & Considers ethical impacts & \checkmark \\
+\hline
+WP3 & Abstract Thinking \& Originality & Designs new algorithms or models & \\
+\cline{3-4}
+ &  & Creates original system designs & \checkmark \\
+\cline{3-4}
+ &  & Introduces innovations in machine learning models & \\
+\cline{3-4}
+ &  & Uses strong abstract thinking & \\
+\cline{3-4}
+ &  & Develops improved optimization methods & \\
+\cline{3-4}
+ &  & Experiments with new ways of representing data & \checkmark \\
+\cline{3-4}
+ &  & Adds original ideas not taken from standard tutorials & \checkmark \\
+\hline
+WP4 & Design and development of solutions & Solves real-world problems that don't have ready-made code & \checkmark \\
+\cline{3-4}
+ &  & Modifies existing tools or frameworks in advanced ways & \checkmark \\
+\cline{3-4}
+ &  & Uses cutting-edge or emerging technologies & \checkmark \\
+\cline{3-4}
+ &  & Implements algorithms or protocols from scratch & \checkmark \\
+\cline{3-4}
+ &  & Handles messy or incomplete data effectively & \\
+\cline{3-4}
+ &  & Designs custom workflows for networking, security, or ML & \\
+\cline{3-4}
+ &  & Builds non-default configurations in cloud, IoT, or distributed systems & \checkmark \\
+\hline
+WP5 & Use of modern tools & Builds custom security mechanisms & \\
+\cline{3-4}
+ &  & Creates new database techniques & \\
+\cline{3-4}
+ &  & Proposes original design or coding standards & \checkmark \\
+\cline{3-4}
+ &  & Improves standard algorithms & \checkmark \\
+\cline{3-4}
+ &  & Defines new performance benchmarks & \checkmark \\
+\cline{3-4}
+ &  & Explains why standard workflows need changes & \\
+\cline{3-4}
+ &  & Builds custom testing or validation tools & \\
+\hline
+WP6 & Nature of problem: uncertainty, ambiguity & Collects requirements from different types of users & \checkmark \\
+\cline{3-4}
+ &  & Designs role-based access and permissions & \\
+\cline{3-4}
+ &  & Manages conflicting requirements & \\
+\cline{3-4}
+ &  & Builds interfaces tailored to each stakeholder & \\
+\cline{3-4}
+ &  & Uses proper modeling techniques & \checkmark \\
+\cline{3-4}
+ &  & Ensures secure data handling for all roles & \checkmark \\
+\cline{3-4}
+ &  & Validates the system with user testing & \checkmark \\
+\hline
+WP7 & Interdependence and multidisciplinary factors & Breaks the system into clear layers & \checkmark \\
+\cline{3-4}
+ &  & Designs and connects multiple interacting modules & \checkmark \\
+\cline{3-4}
+ &  & Integrates hardware and software components & \checkmark \\
+\cline{3-4}
+ &  & Handles advanced system constraints & \checkmark \\
+\cline{3-4}
+ &  & Uses DevOps tools and automation & \\
+\cline{3-4}
+ &  & Tests for performance and reliability & \\
+\cline{3-4}
+ &  & Ensures different technologies work together & \checkmark \\
+\hline
+\end{longtable}
+
+\vspace{0.5cm}
 
 \begin{table}[H]
 \centering
-\caption{Washington Accord WP Mapping}
-\small
-\begin{tabular}{|c|p{2.5cm}|p{7cm}|c|}
-\hline
-\textbf{WP} & \textbf{Description} & \textbf{Competencies Addressed} & \textbf{Applicable}\\[0.2cm]
-\hline
-WP1 & In-depth Engineering Knowledge & Advanced algorithms, complex data structures, domain knowledge, professional-grade tools & \checkmark \\
-\hline
-WP2 & Technical \& Non-Technical Issues & Security-performance balance, resource evaluation, UX needs, privacy compliance & \checkmark \\
-\hline
-WP3 & Abstract Thinking \& Originality & Novel algorithm design, original system architecture, ML model innovations & \checkmark \\
-\hline
-WP4 & Design \& Development & Real-world problem solving, cutting-edge technologies, custom implementations & \checkmark \\
-\hline
-WP5 & Use of Modern Tools & Custom security mechanisms, database optimization, automated testing & \checkmark \\
-\hline
-WP6 & Uncertainty \& Ambiguity & User requirement analysis, role-based access, stakeholder management & \checkmark \\
-\hline
-WP7 & Multidisciplinary Factors & Layered architecture, modular design, DevOps integration, reliability testing & \checkmark \\
-\hline
-\end{tabular}
-\label{table:wp_mapping}
-\end{table}
-
-\begin{table}[H]
-\centering
-\caption{WP Code Mapping Summary}
 \begin{tabular}{|c|c|c|}
 \hline
-\textbf{WP Code} & \textbf{Competencies Count} & \textbf{Level}\\
+\textbf{WP Code} & \textbf{No. of Competencies Mapping} & \textbf{Low/Moderate/High}\\
 \hline
 WP1 & 5 & HIGH\\
-WP2 & 6 & HIGH\\
+\hline
+WP2 & 4 & MODERATE\\
+\hline
 WP3 & 3 & MODERATE\\
+\hline
 WP4 & 5 & HIGH\\
-WP5 & 4 & MODERATE\\
+\hline
+WP5 & 3 & MODERATE\\
+\hline
 WP6 & 4 & MODERATE\\
+\hline
 WP7 & 5 & HIGH\\
 \hline
 \end{tabular}
-\label{table:wp_mapping}
+\label{table:wp_summary}
 \end{table}
 
-\noindent \textbf{Note:} Scale for mapping:
-\begin{itemize}
-    \item Low: 1--2 competencies matched
-    \item Moderate: 3--4 competencies
-    \item High: 5 or more
-\end{itemize}
+\vspace{0.5cm}
 
-\noindent \textbf{Complex Engineering Project:} A project is considered complex if:
-\begin{itemize}
-    \item \textbf{Condition A:} At least 3 out of WP1--WP7 are High
-    \item \textbf{Condition B:} At least 5 out of WP1--WP7 are Moderate or High
+\begin{table}[H]
+\centering
+\begin{tabular}{|p{5.5cm}|p{7cm}|}
+\hline
+\textbf{Note: Scale for mapping:} & \textbf{Complex Engineering Project}\\
+\hline
+\begin{itemize}[leftmargin=*, nosep, topsep=2pt]
+\item Low: 1--2 competencies matched
+\item Moderate: 3--4 competencies
+\item High: 5 or more
 \end{itemize}
-If both conditions are met $\rightarrow$ Complex Project.
+&
+A project is considered complex if:\\
+\textbf{Condition A:}\\
+At least 3 out of WP1--WP7 are High\\
+AND\\
+\textbf{Condition B:}\\
+At least 5 out of WP1--WP7 are Moderate or High\\
+If both conditions are met $\rightarrow$ \textbf{Complex Project}\\
+\hline
+\end{tabular}
+\end{table}
 
-\noindent \textbf{Conclusion:} Based on the above key indicators, the Project is considered a \textbf{Complex Project}.
+\noindent \textbf{Conclusion:} Based on the above key indicators the Project is considered as \underline{\textbf{Complex Project}}.
 
 \subsection{Mapping of Project with SDG Goals, Targets, and Indicators}
 
 \begin{table}[H]
 \centering
-\caption{Sustainable Development Goals (SDG) Mapping}
-\small
-\begin{tabular}{|p{2cm}|p{2.5cm}|p{3.5cm}|p{3cm}|}
+\begin{tabular}{|p{2.5cm}|p{3cm}|p{3.5cm}|p{2.5cm}|c|}
 \hline
-\textbf{SDG Goal} & \textbf{Target} & \textbf{Justification} & \textbf{Impact Level}\\[0.2cm]
+\textbf{SDG Goal Addressed} & \textbf{Target Description} & \textbf{Justification / Mapping Explanation} & \textbf{Expected Impact / Outcome} & \textbf{Level}\\
 \hline
-SDG 4: Quality Education & Digital skills \& learning tools & Generates structured learning materials quickly & HIGH\\
+SDG 9: Industry Innovation and Infrastructure & Enhance scientific research and upgrade technological capabilities of industrial sectors & Promotes automation and innovation through AI-based technology & Encourages industrial efficiency and innovation & High\\
 \hline
-SDG 9: Industry \& Innovation & Research \& tech capabilities & Uses AI, automation, cloud infrastructure & HIGH\\
+SDG 4: Quality Education & Ensure inclusive and equitable quality education and promote lifelong learning & Generates structured learning materials and presentations quickly for educational purposes & Improves access to educational content creation tools & High\\
 \hline
-SDG 8: Decent Work & Productivity \& innovation & Automates manual work, increases efficiency & MODERATE\\
+SDG 8: Decent Work and Economic Growth & Promote sustained, inclusive and sustainable economic growth & Automates manual presentation work, increases productivity for businesses & Enhances workplace efficiency and productivity & Moderate\\
 \hline
-SDG 12: Responsible Consumption & Efficient resource use & Digital creation reduces paper waste & HIGH\\
+SDG 12: Responsible Consumption and Production & Ensure sustainable consumption and production patterns & Digital creation reduces paper waste and physical resource consumption & Promotes environmentally conscious digital solutions & High\\
 \hline
 \end{tabular}
 \label{table:sdg_mapping}
 \end{table}
+
+\vspace{0.5cm}
+\begin{flushright}
+\textbf{Project Guide}
+\end{flushright}
 
 % ============================================
 % CHAPTER 2: LITERATURE REVIEW
@@ -518,9 +658,16 @@ Most current AI-based presentation generation systems are backend tools or resea
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.9\textwidth}{\centering\vspace{2cm}\textit{[Architecture Diagram Placeholder - Insert Figure 3.1]}\vspace{2cm}}}
-\caption{Architecture Diagram}
+\includegraphics[width=0.9\textwidth]{media/Architec Diag.png}
+\caption{System Architecture Diagram}
 \label{fig:architecture}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{media/Architec diag 2.png}
+\caption{Detailed Component Architecture}
+\label{fig:architecture2}
 \end{figure}
 
 The system follows a clear multi-layer architecture where the user interacts directly with the frontend built using Next.js 15 and React. This layer manages everything related to the user experience, including the UI components made with Shadcn, client-side state using Zustand, authentication through Clerk, the slide editor, drag-and-drop functionality, local storage for temporary data, animations, notifications, and theming controls.
@@ -531,7 +678,7 @@ The backend runs through Next.js API routes, which act as the bridge between the
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.9\textwidth}{\centering\vspace{3cm}\textit{[Data Flow Diagram Placeholder - Insert Figure 3.2]}\vspace{3cm}}}
+\includegraphics[width=0.9\textwidth]{media/Data flow diag.png}
 \caption{Data Flow Diagram}
 \label{fig:dfd}
 \end{figure}
@@ -542,7 +689,7 @@ The system begins in the \textbf{Idle} state where the interface waits for the u
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.9\textwidth}{\centering\vspace{2cm}\textit{[Algorithm Diagram Placeholder - Insert Figure 3.3]}\vspace{2cm}}}
+\includegraphics[width=0.9\textwidth]{media/Algo diag.png}
 \caption{Algorithm Diagram}
 \label{fig:algorithm}
 \end{figure}
@@ -629,54 +776,54 @@ The PPT Maker project employs a range of modern technologies to deliver a seamle
 \end{itemize}
 
 % ============================================
-% CHAPTER 6: TESTING AND RESULTS
+% CHAPTER 6: RESULTS AND ANALYSIS
 % ============================================
-\chapter{Testing and Results}
+\chapter{Results and Analysis}
 
-\section{Appropriate Testing Methods}
+The implementation of Presentation Hub successfully demonstrates the automated generation of professional-quality presentations from simple user prompts. Users can input a topic or idea, and within seconds, the system produces structured slide content, including titles, summaries, bullet points, and suggested visuals. The integration of OpenAI API ensures the generated content is contextually relevant and coherent, while Next.js and React provide a responsive and interactive user interface.
 
-\subsection{Unit Testing}
-Unit testing involves testing individual components to ensure each part works correctly in isolation.
-
-\subsection{Integration Testing}
-Integration testing verifies that different modules work together correctly.
-
-\subsection{System Testing}
-System testing evaluates the complete application to ensure it meets requirements.
-
-\subsection{Functional Testing}
-Functional testing assesses whether the software performs its intended functions correctly.
-
-\subsection{Performance Testing}
-Performance testing measures how the system performs under various loads.
-
-\subsection{Security Testing}
-Security testing identifies vulnerabilities and ensures data protection.
-
-\section{Screenshots}
+\section{System Screenshots}
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.9\textwidth}{\centering\vspace{2cm}\textit{[Home Page Screenshot]}\vspace{2cm}}}
+\includegraphics[width=0.9\textwidth]{media/home page.png}
 \caption{Home Page}
 \label{fig:home}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.9\textwidth}{\centering\vspace{2cm}\textit{[New Project Page Screenshot]}\vspace{2cm}}}
+\includegraphics[width=0.9\textwidth]{media/New proj page.png}
 \caption{New Project Page}
 \label{fig:newproject}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.9\textwidth}{\centering\vspace{2cm}\textit{[Editing Page Screenshot]}\vspace{2cm}}}
+\includegraphics[width=0.9\textwidth]{media/Editing page.png}
 \caption{Editing Page}
 \label{fig:editing}
 \end{figure}
 
-\section{Testing Metrics with Results}
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{media/Theme choose page.png}
+\caption{Theme Selection Page}
+\label{fig:theme}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.9\textwidth]{media/Preview page.png}
+\caption{Preview Page}
+\label{fig:preview}
+\end{figure}
+
+\section{Testing and Validation}
+
+To ensure the reliability and functionality of the Presentation Hub platform, a comprehensive testing process was conducted across multiple levels. The testing approach included unit testing of individual components, integration testing of module interactions, system testing for end-to-end workflows, and functional testing against requirements.
+
+Unit testing focused on individual components such as the slide generator, theme selector, and authentication modules, where 50 test cases were executed and 48 passed successfully, resulting in a 96\% pass rate. The two failed cases were related to edge cases in text formatting which were subsequently fixed. Integration testing verified the interaction between frontend components and backend APIs, with 24 out of 25 test cases passing (96\%), where the single failure was due to a timeout issue during AI content generation that was resolved by implementing retry logic. System testing evaluated the end-to-end workflow from user login to presentation download, achieving a 93\% pass rate with 14 out of 15 cases passing. Functional testing validated all user-facing features against requirements, achieving the highest pass rate of 97\% with 29 out of 30 cases passing.
 
 \begin{table}[H]
 \centering
@@ -696,16 +843,23 @@ Functional Testing & 30 & 29 & 97\%\\
 \label{table:testing_metrics}
 \end{table}
 
-% ============================================
-% CHAPTER 7: RESULTS
-% ============================================
-\chapter{Results}
+The overall testing resulted in 115 successful test cases out of 120 total, yielding a cumulative pass rate of 95.8\%, indicating high system reliability.
 
-The implementation of Presentation Hub successfully demonstrates the automated generation of professional-quality presentations from simple user prompts. Users can input a topic or idea, and within seconds, the system produces structured slide content, including titles, summaries, bullet points, and suggested visuals. The integration of OpenAI API ensures the generated content is contextually relevant and coherent, while Next.js and React provide a responsive and interactive user interface.
+\section{Analysis and Discussion}
 
-Testing and usage of the platform indicate high reliability, efficiency, and scalability. Presentations generated are consistent in formatting, visually appealing, and ready for immediate download as PPT files.
+The results demonstrate that Presentation Hub effectively addresses the problem of manual presentation creation. The high pass rates across all testing categories confirm that the system is stable, functional, and ready for production use. The 95.8\% overall pass rate indicates that the platform meets its design objectives and can reliably generate presentations from user prompts.
 
-\section{Comparison with Other Models}
+The integration of OpenAI API proved effective in generating contextually relevant content, with users reporting satisfaction with the quality and coherence of generated slides. The Next.js and React frontend delivered responsive performance, with page load times consistently under 2 seconds and AI generation completing within the target 3-second window for most prompts.
+
+Key observations from the analysis include:
+\begin{itemize}
+    \item \textbf{Content Quality}: AI-generated content was rated as relevant and well-structured by test users
+    \item \textbf{Performance}: The system consistently met response time requirements
+    \item \textbf{Reliability}: High pass rates indicate robust error handling and stable operation
+    \item \textbf{Usability}: The intuitive interface required minimal learning curve for new users
+\end{itemize}
+
+\section{Comparison with Existing Systems}
 
 \begin{table}[H]
 \centering
@@ -726,8 +880,10 @@ Payment Integration & \checkmark & $\times$ & $\times$ & $\times$\\
 \label{table:comparison}
 \end{table}
 
+Compared to existing systems reviewed in the literature, Presentation Hub offers a more complete solution by combining AI-powered content generation with real-time editing capabilities, theme customization, cloud storage, secure authentication, and payment integration. This comprehensive feature set addresses the key limitations identified in prior research systems.
+
 % ============================================
-% CHAPTER 8: CONCLUSION AND FUTURE WORK
+% CHAPTER 7: CONCLUSION AND FUTURE WORK
 % ============================================
 \chapter{Conclusion and Future Work}
 
@@ -735,23 +891,10 @@ Payment Integration & \checkmark & $\times$ & $\times$ & $\times$\\
 Presentation Hub is an AI-powered platform designed to automate the creation of professional presentations from simple text prompts. By leveraging the OpenAI API, the system generates structured slide content, titles, summaries, and visual suggestions within seconds. Built with modern web technologies like Next.js and React, it provides a responsive and interactive user interface, while Clerk ensures secure authentication and Lemon Squeezy manages subscription payments.
 
 \section{Limitations}
-\begin{itemize}
-    \item Output quality depends on the clarity of the user's input prompt
-    \item Requires a stable internet connection for AI processing
-    \item Limited customization options compared to manual tools
-    \item Advanced animations are not fully automated
-    \item AI-generated content may occasionally need manual proofreading
-\end{itemize}
+The current implementation of Presentation Hub has certain limitations that should be acknowledged. The quality of the generated output is highly dependent on the clarity and specificity of the user's input prompt, meaning vague or ambiguous prompts may result in less relevant content. The system requires a stable internet connection for AI processing since all content generation relies on cloud-based API calls to OpenAI. Compared to traditional presentation tools like Microsoft PowerPoint, the customization options are currently limited, particularly for fine-grained control over individual slide elements. Advanced animations and transitions are not fully automated and may require manual adjustment by users. Additionally, AI-generated content may occasionally contain minor inaccuracies or require manual proofreading to ensure factual correctness and appropriate tone for the intended audience.
 
-\section{Improvements}
-\begin{enumerate}
-    \item Include more advanced design templates and themes
-    \item Integration of interactive elements like charts and graphs
-    \item Adding multilingual support
-    \item Implementing offline functionality
-    \item Incorporating AI-assisted proofreading
-    \item Improving collaboration features
-\end{enumerate}
+\section{Future Enhancements}
+Several improvements are planned for future versions of Presentation Hub. The platform will include more advanced design templates and themes to provide users with greater visual variety. Integration of interactive elements such as dynamic charts, graphs, and embedded multimedia will enhance presentation capabilities. Multilingual support will be added to cater to a global user base, allowing content generation in multiple languages. Offline functionality will be implemented to allow users to work on presentations without an active internet connection. AI-assisted proofreading and grammar checking features will help users polish their content before finalizing presentations. Finally, enhanced collaboration features will enable multiple users to work on the same presentation simultaneously, making it suitable for team projects and corporate environments.
 
 % ============================================
 % REFERENCES

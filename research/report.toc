@@ -1,49 +1,46 @@
+\contentsline {chapter}{Acknowledgement}{i}{chapter*.2}%
+\contentsline {chapter}{Declaration}{ii}{chapter*.2}%
+\contentsline {chapter}{Abstract}{iii}{chapter*.4}%
+\contentsline {chapter}{List of Figures}{vi}{chapter*.4}%
+\contentsline {chapter}{List of Tables}{vii}{chapter*.4}%
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
 \contentsline {section}{\numberline {1.1}Background}{1}{section.1.1}%
 \contentsline {section}{\numberline {1.2}Problem Statement}{1}{section.1.2}%
 \contentsline {section}{\numberline {1.3}Problem Description}{2}{section.1.3}%
 \contentsline {section}{\numberline {1.4}Objectives}{2}{section.1.4}%
-\contentsline {section}{\numberline {1.5}WPs and SDG Addressed}{4}{section.1.5}%
-\contentsline {subsection}{\numberline {1.5.1}Mapping of Complex Engineering Problems with Washington Accord WPs (WP1-WP7)}{4}{subsection.1.5.1}%
-\contentsline {subsection}{\numberline {1.5.2}Mapping of Project with SDG Goals, Targets, and Indicators}{6}{subsection.1.5.2}%
-\contentsline {chapter}{\numberline {2}Literature Review}{7}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Analysis of the Literature}{7}{section.2.1}%
-\contentsline {subsection}{\numberline {2.1.1}OutlineSpark (Fengjie Wang, 2024)}{7}{subsection.2.1.1}%
-\contentsline {subsection}{\numberline {2.1.2}AI pptX (Vineeth Ravi, 2019)}{8}{subsection.2.1.2}%
-\contentsline {subsection}{\numberline {2.1.3}PPTAgent (Hao Zheng, 2025)}{8}{subsection.2.1.3}%
-\contentsline {subsection}{\numberline {2.1.4}Presentify (Atul Shreewastav, 2024)}{9}{subsection.2.1.4}%
-\contentsline {subsection}{\numberline {2.1.5}D2S -- Document to Slide (Edward Sun -- IBM, 2021)}{9}{subsection.2.1.5}%
-\contentsline {subsection}{\numberline {2.1.6}AutoPresent (Jiaxin Ge, 2025)}{10}{subsection.2.1.6}%
-\contentsline {section}{\numberline {2.2}Summary of the Review}{10}{section.2.2}%
-\contentsline {section}{\numberline {2.3}Implications}{10}{section.2.3}%
-\contentsline {section}{\numberline {2.4}Existing System}{11}{section.2.4}%
-\contentsline {chapter}{\numberline {3}System Design}{12}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Architecture Diagram}{12}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Data Flow Diagram}{13}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Algorithm Diagram}{13}{section.3.3}%
-\contentsline {chapter}{\numberline {4}System Requirements Specifications}{15}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Hardware Requirements}{15}{section.4.1}%
-\contentsline {section}{\numberline {4.2}Software Requirements}{15}{section.4.2}%
-\contentsline {section}{\numberline {4.3}Functional Requirements}{15}{section.4.3}%
-\contentsline {section}{\numberline {4.4}Non-Functional Requirements}{16}{section.4.4}%
-\contentsline {chapter}{\numberline {5}Implementation}{17}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Software Frameworks and Tools Used}{17}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Technologies Used}{17}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Algorithms Used}{17}{section.5.3}%
-\contentsline {chapter}{\numberline {6}Testing and Results}{19}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Appropriate Testing Methods}{19}{section.6.1}%
-\contentsline {subsection}{\numberline {6.1.1}Unit Testing}{19}{subsection.6.1.1}%
-\contentsline {subsection}{\numberline {6.1.2}Integration Testing}{19}{subsection.6.1.2}%
-\contentsline {subsection}{\numberline {6.1.3}System Testing}{19}{subsection.6.1.3}%
-\contentsline {subsection}{\numberline {6.1.4}Functional Testing}{19}{subsection.6.1.4}%
-\contentsline {subsection}{\numberline {6.1.5}Performance Testing}{19}{subsection.6.1.5}%
-\contentsline {subsection}{\numberline {6.1.6}Security Testing}{19}{subsection.6.1.6}%
-\contentsline {section}{\numberline {6.2}Screenshots}{20}{section.6.2}%
-\contentsline {section}{\numberline {6.3}Testing Metrics with Results}{21}{section.6.3}%
-\contentsline {chapter}{\numberline {7}Results}{22}{chapter.7}%
-\contentsline {section}{\numberline {7.1}Comparison with Other Models}{22}{section.7.1}%
-\contentsline {chapter}{\numberline {8}Conclusion and Future Work}{23}{chapter.8}%
-\contentsline {section}{\numberline {8.1}Summary}{23}{section.8.1}%
-\contentsline {section}{\numberline {8.2}Limitations}{23}{section.8.2}%
-\contentsline {section}{\numberline {8.3}Improvements}{23}{section.8.3}%
-\contentsline {chapter}{References}{24}{chapter*.13}%
+\contentsline {section}{\numberline {1.5}WPs and SDG Addressed}{3}{section.1.5}%
+\contentsline {subsection}{\numberline {1.5.1}Mapping of Project with SDG Goals, Targets, and Indicators}{7}{subsection.1.5.1}%
+\contentsline {chapter}{\numberline {2}Literature Review}{8}{chapter.2}%
+\contentsline {section}{\numberline {2.1}Analysis of the Literature}{8}{section.2.1}%
+\contentsline {subsection}{\numberline {2.1.1}OutlineSpark (Fengjie Wang, 2024)}{8}{subsection.2.1.1}%
+\contentsline {subsection}{\numberline {2.1.2}AI pptX (Vineeth Ravi, 2019)}{9}{subsection.2.1.2}%
+\contentsline {subsection}{\numberline {2.1.3}PPTAgent (Hao Zheng, 2025)}{9}{subsection.2.1.3}%
+\contentsline {subsection}{\numberline {2.1.4}Presentify (Atul Shreewastav, 2024)}{10}{subsection.2.1.4}%
+\contentsline {subsection}{\numberline {2.1.5}D2S -- Document to Slide (Edward Sun -- IBM, 2021)}{10}{subsection.2.1.5}%
+\contentsline {subsection}{\numberline {2.1.6}AutoPresent (Jiaxin Ge, 2025)}{11}{subsection.2.1.6}%
+\contentsline {section}{\numberline {2.2}Summary of the Review}{11}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Implications}{11}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Existing System}{12}{section.2.4}%
+\contentsline {chapter}{\numberline {3}System Design}{13}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Architecture Diagram}{13}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Data Flow Diagram}{15}{section.3.2}%
+\contentsline {section}{\numberline {3.3}Algorithm Diagram}{16}{section.3.3}%
+\contentsline {chapter}{\numberline {4}System Requirements Specifications}{17}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Hardware Requirements}{17}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Software Requirements}{17}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Functional Requirements}{17}{section.4.3}%
+\contentsline {section}{\numberline {4.4}Non-Functional Requirements}{18}{section.4.4}%
+\contentsline {chapter}{\numberline {5}Implementation}{19}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Software Frameworks and Tools Used}{19}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Technologies Used}{19}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Algorithms Used}{19}{section.5.3}%
+\contentsline {chapter}{\numberline {6}Results and Analysis}{21}{chapter.6}%
+\contentsline {section}{\numberline {6.1}System Screenshots}{21}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Testing and Validation}{23}{section.6.2}%
+\contentsline {section}{\numberline {6.3}Analysis and Discussion}{23}{section.6.3}%
+\contentsline {section}{\numberline {6.4}Comparison with Existing Systems}{24}{section.6.4}%
+\contentsline {chapter}{\numberline {7}Conclusion and Future Work}{25}{chapter.7}%
+\contentsline {section}{\numberline {7.1}Summary}{25}{section.7.1}%
+\contentsline {section}{\numberline {7.2}Limitations}{25}{section.7.2}%
+\contentsline {section}{\numberline {7.3}Future Enhancements}{25}{section.7.3}%
+\contentsline {chapter}{References}{27}{chapter*.20}%
