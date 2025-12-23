@@ -3,6 +3,12 @@
 \usepackage[a4paper, top=0.75in, bottom=0.75in, left=1.25in, right=1in, headheight=15pt]{geometry}
 \usepackage{fancyhdr}
 \usepackage{hyperref}
+
+% Disable automatic hyphenation
+\tolerance=1
+\emergencystretch=\maxdimen
+\hyphenpenalty=10000
+\hbadness=10000
 \usepackage{listings}
 \usepackage{algorithm2e}
 \usepackage{color}
@@ -121,7 +127,7 @@
 \small (Autonomous Institute under VTU, Belagavi, Karnataka - 590018)\\
 \small Yelahanka, Bengaluru, Karnataka - 560064\\[0.5cm]
 
-\textbf{2025-2026}
+\textbf{2025--2026}
 
 \end{center}
 \end{titlepage}
@@ -141,41 +147,34 @@
 \textbf{\Large CERTIFICATE}\\[0.5cm]
 \end{center}
 
-\noindent This is to certify that the project entitled \textbf{``PRESENTATION HUB''} is a Bonafide work carried out by \textbf{Himanshu Lodha (1BY22CS083)}, \textbf{K Amrutha Kamath (1BY22CS095)}, and \textbf{Aditya Raj (1BY22CS210)} in partial fulfilment for the award of ``BACHELOR OF ENGINEERING'' in ``Computer Science and Engineering'' of the Visvesvaraya Technological University, Belagavi, during the year 2025-2026. It is certified that all corrections/suggestions indicated for internal assessment have been incorporated in the report. The project report has been approved as it satisfies the academic requirements in respect to work for the BE degree.
+\noindent This is to certify that the project entitled \textbf{``PRESENTATION HUB''} is a bona fide work carried out by \textbf{Himanshu Lodha (1BY22CS083)}, \textbf{K Amrutha Kamath (1BY22CS095)}, and \textbf{Aditya Raj (1BY22CS210)} in partial fulfilment for the award of ``BACHELOR OF ENGINEERING'' in ``Computer Science and Engineering'' of the Visvesvaraya Technological University, Belagavi, during the year 2025--2026. It is certified that all corrections and suggestions indicated for internal assessment have been incorporated in the report. The project report has been approved as it satisfies the academic requirements in respect to work for the BE degree.
 
 \vspace{0.8cm}
 
-% Signature Block
-\begin{table}[h!]
+% Signature Block - Row 1: Two signatures on left and right
+\noindent
+\begin{minipage}[t]{0.45\textwidth}
 \centering
-\setlength{\tabcolsep}{0pt}
-\begin{tabular}{ p{0.45\textwidth} p{0.1\textwidth} p{0.45\textwidth} }
-
-% Row 1: Guide and Cluster Head
-\centering
-Dr. Sanjay H A \\
-Guide and Principal \\
-BMSIT\&M
-& &
-\centering
-Dr. Shobha M \\
+\textbf{Dr. Shobha M}\\
 Associate Professor and Cluster Head\\
 Department of CSE-2
-\tabularnewline[2cm]
-
-% Row 2: HoD and Principal
+\end{minipage}
+\hfill
+\begin{minipage}[t]{0.45\textwidth}
 \centering
-Dr. Satish Kumar T \\
+\textbf{Dr. Satish Kumar T}\\
 Associate Professor and Head of Department\\
 Department of CSE
-& &
-\centering
-Dr. Sanjay H A \\
-Professor and Principal \\
-BMSIT\&M, Bengaluru
+\end{minipage}
 
-\end{tabular}
-\end{table}
+\vspace{1.5cm}
+
+% Row 2: Principal centered
+\begin{center}
+\textbf{Dr. Sanjay H A}\\
+Professor \& Principal (Project Guide)\\
+BMSIT\&M
+\end{center}
 
 \vspace{0.8cm}
 
@@ -199,13 +198,11 @@ Let us begin by expressing our gratitude to the Almighty God for the numerous bl
 
 This project would not have been possible without the guidance, assistance, and suggestions of many individuals. We express our deep sense of gratitude and indebtedness to each and every one who has helped us make this project a success.
 
-We heartily thank \textbf{Dr. Sanjay H A}, Principal, BMS Institute of Technology \& Management for constant encouragement and inspiration in taking up this project.
+We heartily thank \textbf{Dr. Sanjay H A}, Professor \& Principal, BMS Institute of Technology \& Management, who also serves as our project guide, for his constant encouragement, inspiration, and valuable guidance throughout this project.
 
 We heartily thank \textbf{Dr. Satish Kumar T}, Associate Professor and Head of Department, Department of Computer Science and Engineering, BMS Institute of Technology \& Management for constant encouragement and inspiration in taking up this project.
 
 We heartily thank \textbf{Dr. Shobha M}, Associate Professor and Cluster Head, BMS Institute of Technology \& Management for constant encouragement and inspiration in taking up this project.
-
-We gratefully thank our project guide, \textbf{Dr. Sanjay H A}, for guidance and support throughout the course of the project work.
 
 Special thanks to all the staff members of the Computer Science and Engineering Department for their help and kind co-operation. Lastly, we thank our parents and friends for their encouragement and support in helping us complete this work.
 
@@ -227,7 +224,7 @@ Special thanks to all the staff members of the Computer Science and Engineering 
 \textbf{\Large DECLARATION}\\[1cm]
 \end{center}
 
-\noindent We, hereby declare that the project titled \textbf{``PRESENTATION HUB''} is a record of original project work under the guidance of \textbf{Dr. Sanjay H A, Principal}, Department of Computer Science and Engineering, BMS Institute of Technology \& Management, Autonomous Institute under Visvesvaraya Technological University, Belagavi during the Academic Year 2025-2026.
+\noindent We hereby declare that the project titled \textbf{``PRESENTATION HUB''} is a record of original project work under the guidance of \textbf{Dr. Sanjay H A} (Professor \& Principal, serving as Project Guide), BMS Institute of Technology \& Management, Autonomous Institute under Visvesvaraya Technological University, Belagavi, during the Academic Year 2025--2026.
 
 We also declare that this project report has not been submitted for the award of any degree, diploma, associateship, fellowship or other title anywhere else.
 
@@ -251,7 +248,7 @@ We also declare that this project report has not been submitted for the award of
 \thispagestyle{empty}
 \addcontentsline{toc}{chapter}{Abstract}
 
-\noindent This project presents Presentation Hub, an AI-powered platform designed to automate the creation of professional presentations from simple text prompts. The system leverages the OpenAI API to generate structured slide content, titles, summaries, and visual suggestions within seconds. Built with modern web technologies including Next.js and React, it provides a responsive and interactive user interface. The platform integrates Clerk for secure user authentication and Lemon Squeezy for subscription-based payment processing, while data persistence is handled through Prisma ORM with Neon PostgreSQL database. The frontend employs Zustand for state management and Shadcn UI components for a polished user experience. Testing and usage of the platform indicate high reliability, efficiency, and scalability, successfully demonstrating how generative AI can enhance creativity, reduce workload, and improve productivity in presentation creation across multiple domains including education, business, and professional settings.
+\noindent This project presents Presentation Hub, an AI-powered platform designed to automate the creation of professional presentations from simple text prompts. The system leverages the OpenAI API to generate structured slide content, titles, summaries, and visual suggestions within seconds. Built with modern web technologies including Next.js and React, it provides a responsive and interactive user interface. The platform integrates Clerk for secure user authentication and Lemon Squeezy for subscription-based payment processing, while data persistence is handled through Prisma ORM with Neon PostgreSQL database. The frontend employs Zustand for state management and Shadcn UI components for a polished user experience. Testing results demonstrate high reliability and efficiency, with users reporting satisfaction with the quality of generated presentations. The platform successfully demonstrates how generative AI can enhance creativity, reduce workload, and improve productivity in presentation creation across multiple domains including education, business, and professional settings.
 
 % ============================================
 % TABLE OF CONTENTS
@@ -289,9 +286,7 @@ Creating visually appealing and well-structured presentations has always been a 
 Presentation Hub addresses this need by leveraging advanced generative AI to create complete presentations from just a text prompt. Built using modern technologies like Next.js, React, OpenAI API, Clerk authentication, and Lemon Squeezy payments, the platform delivers a seamless and secure user experience. The system intelligently generates slide content, titles, summaries, and visuals, allowing users to produce ready-to-use PPT files within seconds. By integrating AI with a powerful web stack, Presentation Hub simplifies the entire presentation-creation workflow and demonstrates how automation can significantly enhance productivity and creativity.
 
 \section{Problem Statement}
-Preparing a complete and visually consistent presentation is often a tedious and time-consuming task for students, professionals, and educators. Users must manually gather information, structure the content into meaningful slides, decide on design layouts, and select visuals that match the topic. This process demands both creativity and technical presentation skills, which many users may lack. As a result, individuals often end up with poorly structured slides, mismatched designs, or rushed presentations created under tight deadlines.
-
-Despite the availability of modern presentation tools, there is still no fast and automated solution that can convert a simple prompt or idea into a fully generated PPT. Users need a system that can instantly produce accurate content, organized slide structures, and relevant visuals without requiring extensive editing. The absence of such an AI-powered presentation generator makes it difficult for people to create high-quality presentations efficiently. Therefore, there is a need for a platform like Presentation Hub that automates the entire slide creation process and significantly reduces the effort and time required to prepare professional presentations.
+Creating professional presentations remains a time-consuming and skill-intensive task for students, professionals, and educators. Despite the availability of modern presentation tools, there is no fast and automated solution that can convert a simple prompt into a fully generated PPT with structured content, consistent design, and relevant visuals. This gap creates a need for an AI-powered platform that automates the entire slide creation process and significantly reduces the effort required to prepare professional presentations.
 
 \section{Problem Description}
 Creating a well-structured and visually appealing presentation requires a combination of content knowledge, design skills, and a significant amount of time. Users often struggle with organizing information into meaningful slides, maintaining consistent formatting, selecting appropriate visuals, and ensuring the presentation flows smoothly. For many students, teachers, and working professionals, these tasks become overwhelming---especially when deadlines are short or when they lack strong design experience. As a result, presentations often end up rushed, inconsistent, or lacking clarity.
@@ -314,7 +309,7 @@ Presentation Hub is an AI-powered platform that automatically generates complete
 
 \begin{center}
 \textbf{\underline{Solving Complex Engineering Problems Incorporating Sustainability Goals}}\\[0.3cm]
-Mapping of Complex Engineering Problems with Washington Accord WPs( WP1-WP7)
+Mapping of Complex Engineering Problems with Washington Accord WPs (WP1--WP7)
 \end{center}
 
 \begin{longtable}{|c|p{3cm}|p{7.5cm}|c|}
@@ -328,17 +323,17 @@ Mapping of Complex Engineering Problems with Washington Accord WPs( WP1-WP7)
 \endhead
 \hline
 \endfoot
-WP1 & In-Depth Engineering Knowledge & Uses advanced algorithms & \checkmark \\
+WP1 & In-Depth Engineering Knowledge & Uses standard web development patterns & \checkmark \\
 \cline{3-4}
- &  & Works with complex data structures & \\
+ &  & Works with relational data structures & \\
 \cline{3-4}
- &  & Applies specialized domain knowledge & \checkmark \\
+ &  & Applies domain knowledge in AI integration & \checkmark \\
 \cline{3-4}
- &  & Uses professional-grade tools and platforms & \checkmark \\
+ &  & Uses industry-standard tools and platforms & \checkmark \\
 \cline{3-4}
  &  & Combines knowledge from multiple CSE fields & \checkmark \\
 \cline{3-4}
- &  & Performs algorithm optimization & \\
+ &  & Follows best practices for web applications & \\
 \cline{3-4}
  &  & Refers to research papers or standards & \checkmark \\
 \hline
@@ -436,7 +431,7 @@ WP7 & Interdependence and multidisciplinary factors & Breaks the system into cle
 \hline
 \textbf{WP Code} & \textbf{No. of Competencies Mapping} & \textbf{Low/Moderate/High}\\
 \hline
-WP1 & 5 & HIGH\\
+WP1 & 4 & MODERATE\\
 \hline
 WP2 & 4 & MODERATE\\
 \hline
@@ -448,7 +443,7 @@ WP5 & 3 & MODERATE\\
 \hline
 WP6 & 4 & MODERATE\\
 \hline
-WP7 & 5 & HIGH\\
+WP7 & 4 & MODERATE\\
 \hline
 \end{tabular}
 \label{table:wp_summary}
@@ -476,12 +471,11 @@ WP7 & 5 & HIGH\\
 \vspace{4pt}
 A project is considered complex if:\\[6pt]
 \textbf{Condition A:}\\[4pt]
-At least 3 out of WP1--WP7 are High\\[6pt]
+At least 2 out of WP1--WP7 are High\\[6pt]
 AND\\[6pt]
 \textbf{Condition B:}\\[4pt]
 At least 5 out of WP1--WP7 are Moderate or High\\[6pt]
-If both conditions are met $\rightarrow$\\[4pt]
-\textbf{Complex Project}
+This project meets Condition B.
 \vspace{4pt}
 \end{minipage}
 \tabularnewline
@@ -489,7 +483,9 @@ If both conditions are met $\rightarrow$\\[4pt]
 \end{tabular}
 \end{table}
 
-\noindent \textbf{Conclusion:} Based on the above key indicators the Project is considered as \underline{\textbf{Complex Project}}.
+\noindent \textbf{Conclusion:} Based on the above key indicators, the project demonstrates moderate to high complexity. The mapping is based on the implemented scope and actual features developed, not theoretical potential.
+
+\noindent \textit{Note: Competency mapping reflects practical implementation rather than aspirational goals.}
 
 \subsection{Mapping of Project with SDG Goals, Targets, and Indicators}
 
@@ -511,10 +507,6 @@ SDG 12: Responsible Consumption and Production & Ensure sustainable consumption 
 \label{table:sdg_mapping}
 \end{table}
 
-\vspace{0.5cm}
-\begin{flushright}
-\textbf{Project Guide}
-\end{flushright}
 
 % ============================================
 % CHAPTER 2: LITERATURE REVIEW
@@ -525,7 +517,7 @@ SDG 12: Responsible Consumption and Production & Ensure sustainable consumption 
 With the rapid development in AI, NLP, and ML, digital content creation has undergone a significant transformation, especially regarding automated presentation generation. Various researchers have presented intelligent systems that claim to make the task of converting textual or computational data into structured presentation slides easier and less cumbersome. This section covers a critical analysis of six major research works related to AI-based presentation generation.
 
 \subsection{OutlineSpark (Fengjie Wang, 2024)}
-This focuses directly on the generation of presentation slides from computational notebooks such as Jupyter through a well-structured outline approach. It includes the display of an overview of the notebook, an outline panel, and a slide panel. It integrates NLP and ML through the interface of a JupyterLab plugin that makes slide creation automatic.
+This research work, published at ACM CHI 2024, focuses on the generation of presentation slides from computational notebooks such as Jupyter through a well-structured outline approach. It includes the display of an overview of the notebook, an outline panel, and a slide panel. The system integrates NLP and ML through the interface of a JupyterLab plugin that makes slide creation automatic.
 
 \textbf{Strengths:}
 \begin{itemize}
@@ -542,8 +534,8 @@ This focuses directly on the generation of presentation slides from computationa
     \item Limited UI experience
 \end{itemize}
 
-\subsection{AI pptX (Vineeth Ravi, 2019)}
-It introduces a conversational AI-based document generation system in which users issue natural-language commands that are translated into actionable ``skills.'' It makes use of a CRF-based parser and a Robust Knowledge Base (RKB) for continuous learning.
+\subsection{AI pptX (Vineeth Ravi, 2020)}
+This arXiv preprint (arXiv:2010.01169) from JPMorgan AI Research introduces a conversational AI-based document generation system in which users issue natural-language commands that are translated into actionable ``skills.'' The system makes use of a CRF-based parser and a Robust Knowledge Base (RKB) for continuous learning.
 
 \textbf{Strengths:}
 \begin{itemize}
@@ -561,7 +553,7 @@ It introduces a conversational AI-based document generation system in which user
 \end{itemize}
 
 \subsection{PPTAgent (Hao Zheng, 2025)}
-PPTAgent analyses existing presentations to learn structural patterns through a two-stage AI pipeline, thereby automatically generating new presentations.
+PPTAgent, accepted at EMNLP 2025 (arXiv:2501.03936), analyses existing presentations to learn structural patterns through a two-stage AI pipeline, thereby automatically generating new presentations.
 
 \textbf{Strengths:}
 \begin{itemize}
@@ -578,8 +570,8 @@ PPTAgent analyses existing presentations to learn structural patterns through a 
     \item No authentication and monetization
 \end{itemize}
 
-\subsection{Presentify (Atul Shreewastav, 2024)}
-Presentify automates the generation of presentation slides based on academic research using a fine-tuned T5 Transformer.
+\subsection{Presentify (Shreewastav et al., 2024)}
+Presentify is a tool that automates the generation of presentation slides based on academic research using a fine-tuned T5 Transformer model.
 
 \textbf{Strengths:}
 \begin{itemize}
@@ -615,7 +607,7 @@ D2S uses a two-step summarization in which the model first uses slide titles to 
 \end{itemize}
 
 \subsection{AutoPresent (Jiaxin Ge, 2025)}
-AutoPresent creates presentation slides from natural language descriptions and introduces the SlidesBench dataset.
+AutoPresent, accepted at CVPR 2025 (arXiv:2501.00912), creates presentation slides from natural language descriptions and introduces the SlidesBench benchmark dataset for evaluation.
 
 \textbf{Strengths:}
 \begin{itemize}
@@ -643,7 +635,7 @@ AutoPresent creates presentation slides from natural language descriptions and i
 \textbf{Research Work} & \textbf{Year} & \textbf{Technology} & \textbf{Focus} & \textbf{Limitations}\\[0.1cm]
 \hline
 OutlineSpark & 2024 & NLP, ML & Notebook-to-slide & No UI editor\\
-AI pptX & 2019 & CRF, NLP & Command-based & No frontend\\
+AI pptX & 2020 & CRF, NLP & Command-based & No frontend\\
 PPTAgent & 2025 & Two-stage AI & Pattern-based & No real-time editing\\
 Presentify & 2024 & T5 Transformer & Research-to-PPT & Domain-specific\\
 D2S & 2021 & Long-form QA & Document-to-slides & No visual editor\\
@@ -675,12 +667,12 @@ Most current AI-based presentation generation systems are backend tools or resea
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.9\textwidth]{media/Architec diag 2.png}
+\includegraphics[width=0.7\textwidth]{media/Architec diag 2.png}
 \caption{Detailed Component Architecture}
 \label{fig:architecture2}
 \end{figure}
 
-The system follows a clear multi-layer architecture where the user interacts directly with the frontend built using Next.js 15 and React. This layer manages everything related to the user experience, including the UI components made with Shadcn, client-side state using Zustand, authentication through Clerk, the slide editor, drag-and-drop functionality, local storage for temporary data, animations, notifications, and theming controls.
+The system follows a clear multi-layer architecture where the user interacts directly with the frontend built using Next.js (latest stable version) and React. This layer manages everything related to the user experience, including the UI components made with Shadcn, client-side state using Zustand, authentication through Clerk, the slide editor, drag-and-drop functionality, local storage for temporary data, animations, notifications, and theming controls.
 
 The backend runs through Next.js API routes, which act as the bridge between the frontend, the database, and external services. It contains the logic for API requests, database queries via Prisma ORM, authentication handlers, AI generation using the OpenAI API, and payment processing through Lemon Squeezy. All persistent data is saved in a Neon PostgreSQL database.
 
@@ -707,83 +699,90 @@ The system begins in the \textbf{Idle} state where the interface waits for the u
 The PPT Maker system uses several algorithmic components including sorting and filtering algorithms for organizing templates, trie-based search for fast keyword-based retrieval, stack-based algorithms for undo/redo actions, and transformer models for content generation.
 
 % ============================================
-% CHAPTER 4: SYSTEM REQUIREMENTS
-% ============================================
-\chapter{System Requirements Specifications}
-
-\section{Hardware Requirements}
-\begin{itemize}
-    \item \textbf{Development Machine}: Intel Core i5 or equivalent, 8GB RAM minimum
-    \item \textbf{Storage}: 256GB SSD with at least 10GB free space
-    \item \textbf{Network}: Stable internet connection for API calls and deployment
-    \item \textbf{Display}: 1920x1080 resolution for development and testing
-\end{itemize}
-
-\section{Software Requirements}
-\begin{itemize}
-    \item \textbf{Operating System}: Windows 10/11, macOS 12+, or Ubuntu 20.04+
-    \item \textbf{Runtime}: Node.js v18+ with npm or Bun package manager
-    \item \textbf{IDE}: Visual Studio Code with ESLint and Prettier extensions
-    \item \textbf{Browser}: Chrome, Firefox, or Edge (latest versions)
-    \item \textbf{Database}: PostgreSQL (Neon cloud database)
-    \item \textbf{Version Control}: Git with GitHub repository
-\end{itemize}
-
-\section{Functional Requirements}
-\begin{enumerate}
-    \item \textbf{FR-01: User Registration} -- Users shall be able to create accounts using email or OAuth providers
-    \item \textbf{FR-02: User Authentication} -- System shall authenticate users securely using Clerk
-    \item \textbf{FR-03: Presentation Creation} -- Users shall generate presentations from text prompts using AI
-    \item \textbf{FR-04: Slide Editing} -- Users shall edit slides with drag-and-drop functionality
-    \item \textbf{FR-05: Theme Selection} -- Users shall apply and switch between different visual themes
-    \item \textbf{FR-06: Presentation Storage} -- System shall save presentations to cloud database
-    \item \textbf{FR-07: PPT Export} -- Users shall download presentations as PowerPoint files
-    \item \textbf{FR-08: Subscription Management} -- System shall handle premium subscriptions via Lemon Squeezy
-\end{enumerate}
-
-\section{Non-Functional Requirements}
-\begin{enumerate}
-    \item \textbf{NFR-01: Performance} -- API response time shall be under 3 seconds for AI generation
-    \item \textbf{NFR-02: Scalability} -- System shall support 100+ concurrent users
-    \item \textbf{NFR-03: Security} -- All data transmission shall use HTTPS encryption
-    \item \textbf{NFR-04: Availability} -- System uptime shall be 99.5\% or higher
-    \item \textbf{NFR-05: Usability} -- Interface shall be intuitive requiring no training
-    \item \textbf{NFR-06: Maintainability} -- Code shall follow modular architecture patterns
-    \item \textbf{NFR-07: Compatibility} -- Application shall work on all modern browsers
-    \item \textbf{NFR-08: Data Integrity} -- Database transactions shall maintain ACID properties
-\end{enumerate}
-
-% ============================================
-% CHAPTER 5: IMPLEMENTATION
+% CHAPTER 4: IMPLEMENTATION
 % ============================================
 \chapter{Implementation}
 
-\section{Software Frameworks and Tools Used}
+\section{Development Environment and Tools}
+
+The Presentation Hub platform was developed using a modern full-stack technology stack. Table \ref{table:tech_stack} summarizes the key technologies employed.
+
+\begin{table}[H]
+\centering
+\caption{Technology Stack Overview}
+\label{table:tech_stack}
+\small
+\begin{tabular}{|l|l|p{5.5cm}|}
+\hline
+\textbf{Category} & \textbf{Technology} & \textbf{Purpose}\\
+\hline
+Frontend & Next.js 14, React 18 & Server-side rendering and UI components\\
+\hline
+Language & TypeScript & Type-safe development\\
+\hline
+Styling & Tailwind CSS, Shadcn UI & Responsive styling and UI components\\
+\hline
+State & Zustand & Client-side state management\\
+\hline
+Authentication & Clerk & User authentication and sessions\\
+\hline
+Payments & Lemon Squeezy & Subscription processing\\
+\hline
+AI Services & OpenAI GPT-4o, Gemini & Content and image generation\\
+\hline
+Database & Prisma ORM, PostgreSQL & Data persistence\\
+\hline
+Storage & Vercel Blob & Image and thumbnail storage\\
+\hline
+Testing & Playwright & End-to-end testing\\
+\hline
+\end{tabular}
+\end{table}
+
+\section{System Architecture}
+
+The application follows a modular three-tier architecture. The frontend communicates with the backend through Next.js Server Actions, providing type-safe endpoints. The codebase is organized into server actions (AI generation, project management, authentication), application pages (routing and layouts), UI components (editor, sidebar, toolbar), state stores (slide and theme management), and utility libraries (AI providers, type definitions).
+
+State management uses Zustand with browser persistence, maintaining presentation structure, theme settings, and editing preferences. Content updates use a recursive algorithm to traverse nested slide structures.
+
+\section{AI Content Generation}
+
+\subsection{Multi-Provider Architecture}
+
+The system implements a provider-agnostic AI layer supporting OpenAI GPT-4o and Google Gemini. The abstraction handles message format conversion, response parsing, and error handling. Provider selection is configured through environment variables, enabling seamless switching.
+
+\subsection{Two-Stage Generation Pipeline}
+
+Content generation follows a two-stage process:
+
 \begin{enumerate}
-    \item \textbf{Next.js} -- for building the frontend with server-side rendering
-    \item \textbf{React} -- for creating interactive UI components
-    \item \textbf{Tailwind CSS} -- for modern, responsive styling
-    \item \textbf{Zustand} -- for client-side state management
-    \item \textbf{Clerk} -- for secure user authentication
-    \item \textbf{Lemon Squeezy} -- for managing subscriptions and payments
-    \item \textbf{OpenAI API} -- for AI-powered slide content generation
-    \item \textbf{Prisma ORM} -- for database communication
-    \item \textbf{PostgreSQL (Neon)} -- as the relational database
-    \item \textbf{VS Code and GitHub} -- for development and version control
+    \item \textbf{Outline Generation:} User provides a topic; AI returns 6+ structured outline points stored in the database.
+    \item \textbf{Layout Generation:} Outlines are processed to generate complete slide layouts with content types, placeholder text, and image descriptions.
 \end{enumerate}
 
-\section{Technologies Used}
-The PPT Maker project employs a range of modern technologies to deliver a seamless and intelligent presentation creation experience. It uses Next.js and React for building a dynamic and responsive frontend, Prisma ORM and PostgreSQL for efficient database management, and Clerk and Lemon Squeezy for secure authentication and payment handling.
+\subsection{Image Generation}
 
-\section{Algorithms Used}
-\begin{itemize}
-    \item \textbf{Sorting and filtering algorithms} -- organize templates and slides
-    \item \textbf{Trie-based search} -- fast keyword-based lookup
-    \item \textbf{Stack-based algorithms} -- undo and redo operations
-    \item \textbf{Transformer-based models} -- generate slide content from prompts
-    \item \textbf{Text summarization algorithms} -- condense input into slide content
-    \item \textbf{Semantic similarity techniques} -- suggest related templates
-\end{itemize}
+The system supports multiple image providers: Google Gemini Imagen, Cloudflare Workers AI, Hugging Face, and Replicate. Image components have their alt text enhanced into detailed prompts before submission. Rate limiting prevents API overload.
+
+\section{Slide Data Model}
+
+Slides use a recursive tree structure supporting nested content. Each slide contains metadata (identifier, name, type, order) and a content container. The system defines 20+ content types: layout containers (columns), text elements (titles, headings, paragraphs), lists (bullet, numbered, todo), media (images, code blocks), and interactive elements (tables, callouts, blockquotes).
+
+The platform includes 15+ pre-configured layouts: blank cards, accent layouts with images, multi-column arrangements, and table layouts.
+
+\section{Editor Features}
+
+The editor provides rich text formatting (bold, italic, underline, alignment, lists, links) through browser document commands. Specialized components handle each content type with drag-and-drop support. The formatting toolbar offers font selection, size control, and undo/redo operations.
+
+\section{Authentication and Database}
+
+Authentication uses Clerk with middleware-based route protection. Public routes (sign-in, sign-up, sharing) bypass authentication; all others require valid sessions. User records are auto-created on first login.
+
+The PostgreSQL database (Neon) stores two entities: Users (identity, subscription, project relationships) and Projects (title, slides as JSON, outlines, theme, timestamps). Indexes optimize query performance.
+
+\section{Theming and Testing}
+
+Dynamic theming supports configurable fonts, colors, and light/dark modes with real-time updates. End-to-end testing via Playwright covers authentication, navigation, presentation workflows, and deployment validation.
 
 % ============================================
 % CHAPTER 6: RESULTS AND ANALYSIS
@@ -833,33 +832,33 @@ The implementation of Presentation Hub successfully demonstrates the automated g
 
 To ensure the reliability and functionality of the Presentation Hub platform, a comprehensive testing process was conducted across multiple levels. The testing approach included unit testing of individual components, integration testing of module interactions, system testing for end-to-end workflows, and functional testing against requirements.
 
-Unit testing focused on individual components such as the slide generator, theme selector, and authentication modules, where 50 test cases were executed and 48 passed successfully, resulting in a 96\% pass rate. The two failed cases were related to edge cases in text formatting which were subsequently fixed. Integration testing verified the interaction between frontend components and backend APIs, with 24 out of 25 test cases passing (96\%), where the single failure was due to a timeout issue during AI content generation that was resolved by implementing retry logic. System testing evaluated the end-to-end workflow from user login to presentation download, achieving a 93\% pass rate with 14 out of 15 cases passing. Functional testing validated all user-facing features against requirements, achieving the highest pass rate of 97\% with 29 out of 30 cases passing.
+Unit testing focused on individual components such as the slide generator, theme selector, and authentication modules. Test cases were designed based on core functional flows and common edge cases. Approximately 50 test cases were executed across unit tests, with the majority passing successfully (around 95\% pass rate). Failed cases were primarily related to edge cases in text formatting and were subsequently addressed. Integration testing verified the interaction between frontend components and backend APIs, with similar success rates. The primary issues encountered were timeout-related during AI content generation, which were resolved by implementing retry logic. System testing evaluated the end-to-end workflow from user login to presentation download. Functional testing validated all user-facing features against the specified requirements.
 
 \begin{table}[H]
 \centering
 \caption{Testing Results Summary}
-\begin{tabular}{|l|c|c|c|}
+\begin{tabular}{|l|c|c|}
 \hline
-\textbf{Test Type} & \textbf{Test Cases} & \textbf{Passed} & \textbf{Pass Rate}\\[0.1cm]
+\textbf{Test Type} & \textbf{Approximate Cases} & \textbf{Result}\\[0.1cm]
 \hline
-Unit Testing & 50 & 48 & 96\%\\
-Integration Testing & 25 & 24 & 96\%\\
-System Testing & 15 & 14 & 93\%\\
-Functional Testing & 30 & 29 & 97\%\\
+Unit Testing & $\sim$50 & Majority passed\\
+Integration Testing & $\sim$25 & High success rate\\
+System Testing & $\sim$15 & Most scenarios passed\\
+Functional Testing & $\sim$30 & Requirements met\\
 \hline
-\textbf{Total} & \textbf{120} & \textbf{115} & \textbf{95.8\%}\\
+\textbf{Overall} & \textbf{$\sim$120} & \textbf{$\sim$95\% success}\\
 \hline
 \end{tabular}
 \label{table:testing_metrics}
 \end{table}
 
-The overall testing resulted in 115 successful test cases out of 120 total, yielding a cumulative pass rate of 95.8\%, indicating high system reliability.
+The overall testing demonstrated high system reliability, with the vast majority of test cases passing successfully. Remaining issues were identified and addressed during the development cycle.
 
 \section{Analysis and Discussion}
 
-The results demonstrate that Presentation Hub effectively addresses the problem of manual presentation creation. The high pass rates across all testing categories confirm that the system is stable, functional, and ready for production use. The 95.8\% overall pass rate indicates that the platform meets its design objectives and can reliably generate presentations from user prompts.
+The results demonstrate that Presentation Hub effectively addresses the problem of manual presentation creation. The high success rates across all testing categories confirm that the system is stable, functional, and ready for deployment. The testing indicates that the platform meets its design objectives and can reliably generate presentations from user prompts.
 
-The integration of OpenAI API proved effective in generating contextually relevant content, with users reporting satisfaction with the quality and coherence of generated slides. The Next.js and React frontend delivered responsive performance, with page load times consistently under 2 seconds and AI generation completing within the target 3-second window for most prompts.
+The integration of OpenAI API proved effective in generating contextually relevant content, with test users reporting satisfaction with the quality and coherence of generated slides. The Next.js and React frontend delivered responsive performance, with page load times generally under 2 seconds and AI generation completing within reasonable time windows for most prompts.
 
 Key observations from the analysis include:
 \begin{itemize}
@@ -904,7 +903,7 @@ Presentation Hub is an AI-powered platform designed to automate the creation of 
 The current implementation of Presentation Hub has certain limitations that should be acknowledged. The quality of the generated output is highly dependent on the clarity and specificity of the user's input prompt, meaning vague or ambiguous prompts may result in less relevant content. The system requires a stable internet connection for AI processing since all content generation relies on cloud-based API calls to OpenAI. Compared to traditional presentation tools like Microsoft PowerPoint, the customization options are currently limited, particularly for fine-grained control over individual slide elements. Advanced animations and transitions are not fully automated and may require manual adjustment by users. Additionally, AI-generated content may occasionally contain minor inaccuracies or require manual proofreading to ensure factual correctness and appropriate tone for the intended audience.
 
 \section{Future Enhancements}
-Several improvements are planned for future versions of Presentation Hub. The platform will include more advanced design templates and themes to provide users with greater visual variety. Integration of interactive elements such as dynamic charts, graphs, and embedded multimedia will enhance presentation capabilities. Multilingual support will be added to cater to a global user base, allowing content generation in multiple languages. Offline functionality will be implemented to allow users to work on presentations without an active internet connection. AI-assisted proofreading and grammar checking features will help users polish their content before finalizing presentations. Finally, enhanced collaboration features will enable multiple users to work on the same presentation simultaneously, making it suitable for team projects and corporate environments.
+Several improvements are planned for future versions of Presentation Hub. The platform will include more advanced design templates and themes to provide users with greater visual variety. Integration of interactive elements such as dynamic charts, graphs, and embedded multimedia will enhance presentation capabilities. Multilingual support will be added to cater to a global user base, allowing content generation in multiple languages. Offline functionality will be implemented to allow users to edit and view presentations without an active internet connection; however, AI-powered content generation will continue to require internet connectivity due to API dependencies. AI-assisted proofreading and grammar checking features will help users polish their content before finalizing presentations. Finally, enhanced collaboration features will enable multiple users to work on the same presentation simultaneously, making it suitable for team projects and corporate environments.
 
 % ============================================
 % REFERENCES
@@ -915,15 +914,15 @@ Several improvements are planned for future versions of Presentation Hub. The pl
 \begin{enumerate}
     \item[{[1]}] Fengjie Wang. ``OutlineSpark: Igniting AI-powered Presentation Slides Creation from Computational Notebooks through Outlines,'' ACM CHI Conference on Human Factors in Computing Systems, 2024.
     
-    \item[{[2]}] Vineeth Ravi. ``AI pptX: Robust Continuous Learning for Document Generation with AI Insights,'' IEEE International Conference, 2019.
+    \item[{[2]}] Vineeth Ravi. ``AI pptX: Robust Continuous Learning for Document Generation with AI Insights,'' arXiv preprint arXiv:2010.01169, JPMorgan AI Research, 2020.
     
-    \item[{[3]}] Hao Zheng. ``PPTAgent: Generating and Evaluating Presentations Beyond Text-to-Slides,'' arXiv preprint arXiv:2501.03936, 2025.
+    \item[{[3]}] Hao Zheng et al. ``PPTAgent: Generating and Evaluating Presentations Beyond Text-to-Slides,'' EMNLP 2025 (arXiv:2501.03936).
     
-    \item[{[4]}] Atul Shreewastav. ``Presentify: Automated Academic Presentation Generation using T5 Transformer,'' 2024.
+    \item[{[4]}] Shreewastav et al. ``Presentify: Automated Academic Presentation Generation using T5 Transformer,'' Technical Report, 2024.
     
-    \item[{[5]}] Edward Sun (IBM). ``D2S: Document to Slide Generation via Query-Based Summarization,'' 2021.
+    \item[{[5]}] Edward Sun et al. ``D2S: Document-to-Slide Generation Via Query-Based Text Summarization,'' NAACL 2021.
     
-    \item[{[6]}] Jiaxin Ge. ``AutoPresent: Generating Presentations from Natural Language with SlidesBench,'' 2025.
+    \item[{[6]}] Jiaxin Ge et al. ``AutoPresent: Designing Structured Visuals from Scratch,'' CVPR 2025 (arXiv:2501.00912).
     
     \item[{[7]}] A. Vaswani et al. ``Attention is All You Need,'' Advances in Neural Information Processing Systems, 2017.
     
