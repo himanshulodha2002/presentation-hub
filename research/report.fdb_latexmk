@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1766477591.25564 "/Users/himanshulodha/Documents/college/majorproject/presentation-hub/research/report.tex" "report.pdf" "report" 1766477594.90764 0
-  "/Users/himanshulodha/Documents/college/majorproject/presentation-hub/research/report.tex" 1766477583.47428 45871 1f1205fa08fe02bfab6c13fc6104fc5e ""
+["pdflatex"] 1766492980.76994 "/Users/himanshulodha/Documents/college/majorproject/presentation-hub/research/report.tex" "report.pdf" "report" 1766492983.51198 0
+  "/Users/himanshulodha/Documents/college/majorproject/presentation-hub/research/report.tex" 1766492979.00934 50330 2a7047a3f190450ac37ca79bcb12dd97 ""
   "/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/enc/dvips/base/8r.enc" 1741388039 4850 80dc9bab7f31fb78a000ccfed0e27cab ""
   "/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/map/fontname/texfonts.map" 1741388039 3524 cb3e574dea2d1052e39280babc910dc8 ""
   "/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/map/pdftex/updmap/pdftex.map" 1741388039 5466553 2748998d7db8078826afa1f272036265 ""
@@ -31,6 +31,7 @@
   "/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/tfm/public/cm/cmsy10.tfm" 1741388039 1124 6c73e740cf17375f03eec0ee63599741 ""
   "/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/tfm/public/cm/cmsy6.tfm" 1741388039 1116 933a60c408fc0a863a92debe84b2d294 ""
   "/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/tfm/public/cm/cmsy8.tfm" 1741388039 1120 8b7d695260f3cff42e636090a8002094 ""
+  "/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb" 1741388039 36299 5f9df58c2139e7edcf37c8fca4bd384d ""
   "/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1741388039 32569 5e5ddc8df908dea60932f3c484a54c0d ""
   "/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb" 1741388039 31764 459c573c03a4949a528c2cc7f557e217 ""
   "/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb" 1741388039 45758 19968a0990191524e34e1994d4a31cb6 ""
@@ -191,7 +192,6 @@
   "/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/xtab/xtab.sty" 1741388039 20106 cec6cadeaa62ca1707a316e38d65a9eb ""
   "/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/web2c/texmf.cnf" 1741388039 42151 79f67285bdd95beca4d137b380b4b9e5 ""
   "/opt/homebrew/Cellar/texlive/20250308_2/share/texmf-var/web2c/pdftex/pdflatex.fmt" 1741388039 3346125 851abcc596872d7f7285a006ccee0040 ""
-  "media/Algo diag.png" 1766470164.18602 993575 196a3dc4c737e7d14224512d5b302356 ""
   "media/Architec Diag.png" 1766470164.20285 649890 b441fe5849d201737f0d55a98ad0b16f ""
   "media/Architec diag 2.png" 1766470164.19915 662422 9d10f74d3c9d6de4fa89640cecab7887 ""
   "media/Data flow diag.png" 1766470164.21155 52991 bd7d59e4559dddec3b2175f1f9e4f1e3 ""
@@ -202,12 +202,12 @@
   "media/bmsit_logo.png" 1766466450.83845 32282 610c772d4e308b8c03e5470ced719cf1 ""
   "media/home page.png" 1766470164.22832 80040 be90489cde6422abfef730cbfd1b8683 ""
   "media/vtu_logo.png" 1766466450.84515 79054 75db0986e726dbe5ed2f8c20cb1c05cd ""
-  "report.aux" 1766477594.8615 10189 0880e46e6fd50f4b88f55faac8f70ebc "pdflatex"
-  "report.lof" 1766477594.86267 1017 3f025b79e675e33bb59a4502f1fc93dd "pdflatex"
-  "report.lot" 1766477594.86268 555 dd4a90d12bec74ccbe1535eb9bbd7050 "pdflatex"
-  "report.out" 1766477594.86248 7844 d747a0c07b265eaeec69e906e7a3dc37 "pdflatex"
-  "report.tex" 1766477583.47428 45871 1f1205fa08fe02bfab6c13fc6104fc5e ""
-  "report.toc" 1766477594.86265 3881 36cf07967b2cf0b637947119877a4e9c "pdflatex"
+  "report.aux" 1766492983.46472 10022 8444f83ed7dc003a89835186fa5abee3 "pdflatex"
+  "report.lof" 1766492983.46655 924 317906a7d4719d030bc0a570cb026598 "pdflatex"
+  "report.lot" 1766492983.46657 1349 06d1411d36d3b7843e2eddf7296d4b4f "pdflatex"
+  "report.out" 1766492983.46636 6231 283a51f7ff3b87c03343d8bbcd271a34 "pdflatex"
+  "report.tex" 1766492979.00934 50330 2a7047a3f190450ac37ca79bcb12dd97 ""
+  "report.toc" 1766492983.46652 3191 8cffffe1a28138fa43c7e1b4aec76e1c "pdflatex"
   (generated)
   "report.aux"
   "report.lof"

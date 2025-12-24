@@ -1,48 +1,41 @@
 \contentsline {chapter}{Acknowledgement}{i}{chapter*.1}%
-\contentsline {chapter}{Declaration}{ii}{chapter*.1}%
-\contentsline {chapter}{Abstract}{iii}{chapter*.3}%
-\contentsline {chapter}{List of Figures}{vi}{chapter*.3}%
-\contentsline {chapter}{List of Tables}{vii}{chapter*.3}%
+\contentsline {chapter}{Declaration}{iii}{chapter*.1}%
+\contentsline {chapter}{Abstract}{iv}{chapter*.3}%
+\contentsline {chapter}{List of Figures}{vii}{chapter*.3}%
+\contentsline {chapter}{List of Tables}{viii}{chapter*.3}%
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}%
 \contentsline {section}{\numberline {1.1}Background}{1}{section.1.1}%
 \contentsline {section}{\numberline {1.2}Problem Statement}{1}{section.1.2}%
 \contentsline {section}{\numberline {1.3}Problem Description}{2}{section.1.3}%
 \contentsline {section}{\numberline {1.4}Objectives}{2}{section.1.4}%
 \contentsline {section}{\numberline {1.5}WPs and SDG Addressed}{3}{section.1.5}%
-\contentsline {subsection}{\numberline {1.5.1}Mapping of Project with SDG Goals, Targets, and Indicators}{7}{subsection.1.5.1}%
+\contentsline {subsection}{\numberline {1.5.1}Washington Accord WPs Mapping}{3}{subsection.1.5.1}%
+\contentsline {subsection}{\numberline {1.5.2}Mapping of Project with SDG Goals, Targets, and Indicators}{7}{subsection.1.5.2}%
 \contentsline {chapter}{\numberline {2}Literature Review}{8}{chapter.2}%
-\contentsline {section}{\numberline {2.1}Analysis of the Literature}{8}{section.2.1}%
-\contentsline {subsection}{\numberline {2.1.1}OutlineSpark (Fengjie Wang, 2024)}{8}{subsection.2.1.1}%
-\contentsline {subsection}{\numberline {2.1.2}AI pptX (Vineeth Ravi, 2020)}{9}{subsection.2.1.2}%
-\contentsline {subsection}{\numberline {2.1.3}PPTAgent (Hao Zheng, 2025)}{9}{subsection.2.1.3}%
-\contentsline {subsection}{\numberline {2.1.4}Presentify (Shreewastav et al., 2024)}{10}{subsection.2.1.4}%
-\contentsline {subsection}{\numberline {2.1.5}D2S -- Document to Slide (Edward Sun -- IBM, 2021)}{10}{subsection.2.1.5}%
-\contentsline {subsection}{\numberline {2.1.6}AutoPresent (Jiaxin Ge, 2025)}{11}{subsection.2.1.6}%
-\contentsline {section}{\numberline {2.2}Summary of the Review}{11}{section.2.2}%
-\contentsline {section}{\numberline {2.3}Implications}{11}{section.2.3}%
-\contentsline {section}{\numberline {2.4}Existing System}{12}{section.2.4}%
-\contentsline {chapter}{\numberline {3}System Design}{13}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Architecture Diagram}{13}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Data Flow Diagram}{15}{section.3.2}%
-\contentsline {section}{\numberline {3.3}Algorithm Diagram}{16}{section.3.3}%
-\contentsline {chapter}{\numberline {4}Implementation}{17}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Development Environment and Tools}{17}{section.4.1}%
-\contentsline {section}{\numberline {4.2}System Architecture}{17}{section.4.2}%
-\contentsline {section}{\numberline {4.3}AI Content Generation}{18}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Multi-Provider Architecture}{18}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}Two-Stage Generation Pipeline}{18}{subsection.4.3.2}%
-\contentsline {subsection}{\numberline {4.3.3}Image Generation}{18}{subsection.4.3.3}%
-\contentsline {section}{\numberline {4.4}Slide Data Model}{18}{section.4.4}%
-\contentsline {section}{\numberline {4.5}Editor Features}{19}{section.4.5}%
-\contentsline {section}{\numberline {4.6}Authentication and Database}{19}{section.4.6}%
-\contentsline {section}{\numberline {4.7}Theming and Testing}{19}{section.4.7}%
-\contentsline {chapter}{\numberline {5}Results and Analysis}{20}{chapter.5}%
-\contentsline {section}{\numberline {5.1}System Screenshots}{20}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Testing and Validation}{22}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Analysis and Discussion}{22}{section.5.3}%
-\contentsline {section}{\numberline {5.4}Comparison with Existing Systems}{23}{section.5.4}%
-\contentsline {chapter}{\numberline {6}Conclusion and Future Work}{24}{chapter.6}%
-\contentsline {section}{\numberline {6.1}Summary}{24}{section.6.1}%
-\contentsline {section}{\numberline {6.2}Limitations}{24}{section.6.2}%
+\contentsline {section}{\numberline {2.1}Analysis}{8}{section.2.1}%
+\contentsline {section}{\numberline {2.2}Summary of the Review}{9}{section.2.2}%
+\contentsline {section}{\numberline {2.3}Gap Analysis}{10}{section.2.3}%
+\contentsline {chapter}{\numberline {3}System Design}{11}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Architecture Diagram}{11}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Data Flow Diagram}{13}{section.3.2}%
+\contentsline {chapter}{\numberline {4}Implementation}{15}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Development Environment and Tools}{15}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Application Architecture}{15}{section.4.2}%
+\contentsline {section}{\numberline {4.3}AI Content Generation}{16}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Multi-Provider Architecture}{16}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Two-Stage Generation Pipeline}{16}{subsection.4.3.2}%
+\contentsline {subsection}{\numberline {4.3.3}Image Generation}{16}{subsection.4.3.3}%
+\contentsline {section}{\numberline {4.4}Slide Data Model}{16}{section.4.4}%
+\contentsline {section}{\numberline {4.5}Editor Features}{17}{section.4.5}%
+\contentsline {section}{\numberline {4.6}Authentication and Database}{17}{section.4.6}%
+\contentsline {section}{\numberline {4.7}Theming and Testing}{17}{section.4.7}%
+\contentsline {chapter}{\numberline {5}Results and Analysis}{18}{chapter.5}%
+\contentsline {section}{\numberline {5.1}System Screenshots}{18}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Testing and Validation}{20}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Analysis and Discussion}{21}{section.5.3}%
+\contentsline {section}{\numberline {5.4}Comparison with Existing Systems}{22}{section.5.4}%
+\contentsline {chapter}{\numberline {6}Conclusion and Future Work}{23}{chapter.6}%
+\contentsline {section}{\numberline {6.1}Conclusion}{23}{section.6.1}%
+\contentsline {section}{\numberline {6.2}Limitations}{23}{section.6.2}%
 \contentsline {section}{\numberline {6.3}Future Enhancements}{24}{section.6.3}%
-\contentsline {chapter}{References}{26}{chapter*.20}%
+\contentsline {chapter}{References}{25}{chapter*.20}%

@@ -375,16 +375,10 @@ INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/psnfss/
 INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/psnfss/ts1ptm.fd
 INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/tfm/adobe/times/ptmr8c.tfm
-INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/tfm/adobe/times/ptmb7t.tfm
 INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/vf/adobe/times/ptmr8c.vf
+INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/tfm/adobe/times/ptmb7t.tfm
 INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/vf/adobe/times/ptmb7t.vf
 INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/tfm/adobe/times/ptmb8r.tfm
-INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/tfm/public/cm/cmr10.tfm
-INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/tfm/public/cm/cmmi10.tfm
-INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/tfm/public/cm/cmsy10.tfm
-INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/tfm/public/cm/cmex10.tfm
-INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam10.tfm
-INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
 INPUT ./media/Architec Diag.png
 INPUT ./media/Architec Diag.png
 INPUT ./media/Architec Diag.png
@@ -400,45 +394,47 @@ INPUT ./media/Data flow diag.png
 INPUT ./media/Data flow diag.png
 INPUT ./media/Data flow diag.png
 INPUT ./media/Data flow diag.png
-INPUT ./media/Algo diag.png
-INPUT ./media/Algo diag.png
-INPUT ./media/Algo diag.png
-INPUT ./media/Algo diag.png
-INPUT ./media/Algo diag.png
-INPUT ./media/home page.png
-INPUT ./media/home page.png
-INPUT ./media/home page.png
-INPUT ./media/home page.png
-INPUT ./media/home page.png
-INPUT ./media/New proj page.png
-INPUT ./media/New proj page.png
-INPUT ./media/New proj page.png
-INPUT ./media/New proj page.png
-INPUT ./media/New proj page.png
-INPUT ./media/Editing page.png
-INPUT ./media/Editing page.png
-INPUT ./media/Editing page.png
-INPUT ./media/Editing page.png
-INPUT ./media/Editing page.png
-INPUT ./media/Theme choose page.png
-INPUT ./media/Theme choose page.png
-INPUT ./media/Theme choose page.png
-INPUT ./media/Theme choose page.png
-INPUT ./media/Theme choose page.png
-INPUT ./media/Preview page.png
-INPUT ./media/Preview page.png
-INPUT ./media/Preview page.png
-INPUT ./media/Preview page.png
-INPUT ./media/Preview page.png
 INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/tex/latex/psnfss/ot1pcr.fd
 INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/tfm/adobe/courier/pcrr7t.tfm
 INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/vf/adobe/courier/pcrr7t.vf
 INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/tfm/adobe/courier/pcrr8r.tfm
+INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/tfm/public/cm/cmr10.tfm
+INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/tfm/public/cm/cmmi10.tfm
+INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/tfm/public/cm/cmsy10.tfm
+INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/tfm/public/cm/cmex10.tfm
+INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/tfm/public/amsfonts/symbols/msam10.tfm
+INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/tfm/public/amsfonts/symbols/msbm10.tfm
+INPUT ./media/home page.png
+INPUT ./media/home page.png
+INPUT ./media/home page.png
+INPUT ./media/home page.png
+INPUT ./media/home page.png
+INPUT ./media/New proj page.png
+INPUT ./media/New proj page.png
+INPUT ./media/New proj page.png
+INPUT ./media/New proj page.png
+INPUT ./media/New proj page.png
+INPUT ./media/Editing page.png
+INPUT ./media/Editing page.png
+INPUT ./media/Editing page.png
+INPUT ./media/Editing page.png
+INPUT ./media/Editing page.png
+INPUT ./media/Theme choose page.png
+INPUT ./media/Theme choose page.png
+INPUT ./media/Theme choose page.png
+INPUT ./media/Theme choose page.png
+INPUT ./media/Theme choose page.png
+INPUT ./media/Preview page.png
+INPUT ./media/Preview page.png
+INPUT ./media/Preview page.png
+INPUT ./media/Preview page.png
+INPUT ./media/Preview page.png
 INPUT report.aux
 INPUT ./report.out
 INPUT ./report.out
+INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb
 INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb
 INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb
 INPUT /opt/homebrew/Cellar/texlive/20250308_2/share/texmf-dist/fonts/type1/urw/courier/ucrr8a.pfb
